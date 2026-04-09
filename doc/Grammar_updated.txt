@@ -1,0 +1,61 @@
+
+
+Grammar for ULP (Un-natural language programming language)
+
+
+<program> ::= <program_item> | <program_item> <program>
+<program_item> ::= <block> | <subprogram_definition> | <global_declaration>
+<block> ::= <statement> "." | <statement> "," <block>
+<global_declaration> ::= <constant_definition>
+<constant_definition> ::= "Constant " <type> " " <identifier> " is equal to " <expression>
+<statement> ::= <assignment> | <selection_statement> | <looping_statement> | <print_statement>
+
+---------------
+<assignment> ::= "let" <type> " " <identifier> " be equal to " <expression> | "let " <identifier> " be equal to " <expression>
+<type> ::= "Whole Number" | "Real Number" | "String" | "Truth Value"
+<identifier> ::= <letter> | <letter> <identifier>
+<letter> ::= [a-zA-Z]
+----------------
+<expression> ::= <primary_expression> | <arithmetic_expression> | <boolean_expression>
+<primary_expression> ::= <literal> | <identifier> | <input_expression> | <subprogram_invocation_expression>
+<literal> ::= <string_literal> | <number_literal> | <boolean_literal>
+<number_literal> ::= <integer_literal> | <real_literal>
+<integer_literal> ::= <digit> | <integer_literal>
+<real_literal> ::= <integer_literal> "." <integer_literal>
+<digit> ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+<string_literal> ::= " <string_characters> "
+<string_characters> ::= <empty> | <string_character> <string_characters>
+<string_character> ::= [^"]
+<boolean_literal> ::= "True" | "False"
+
+<input_expression> ::= "input from user"
+
+<arithmetic_expression> ::= <add_expression>| <subtract_expression> | <multiply_expression> | <divide_expression>
+<add_expression> ::= "add " <expression> " to " <expression>
+<subtract_expression> ::= "remove " <expression> " from " <expression>
+<multiply_expression> ::= "multiply " <expression> " with " <expression>
+<divide_expression> ::= "divide " <expression> " by " <expression>
+
+<boolean_expression> ::= <boolean_literal> | <expression> " be " <comparison_criteria> " " <expression>
+<subprogram_invocation_expression> ::= "Invoke " <subprogram_name> " with : " <argument_list>
+<argument_list> ::= <empty> | <expression_list>
+<empty> ::= ε
+<expression_list> ::= <expression> | <expression> "," <expression_list>
+
+------------------
+<condition> ::= <boolean_expression>
+<comparison_criteria> ::= "less than" | "less than or equal to" | "more than" | "more than or equal to" | "equal to"
+------------------
+<selection_statement> ::= "Should " <condition> ", then " <block> " otherwise " <block>
+-----------------
+<looping_statement> ::= "Repeat until " <condition> " : " <block>
+-----------------
+<subprogram_definition> ::= "Description of a subprogram called " <subprogram_name> " acting on inputs: " <input_list>  " thus producing outputs " <subprogram_output> " : " <block>
+<subprogram_name> ::= <identifier>
+<input_list> ::= <empty> | <parameter_list>
+<parameter_list> ::= <parameter> | <parameter> "," <parameter_list>
+<parameter> ::= <type> " " <identifier>
+<subprogram_output> ::= <type> " " <identifier>
+--------------
+<print_statement> ::= "Display result : " <expression>
+----------------
