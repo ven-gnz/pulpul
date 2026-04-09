@@ -3,9 +3,10 @@ package org.pulp;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Scanner;
+import java.util.List;
 
-public class Pulper{
+
+public class Pulper {
 
     static boolean hadError = false;
 
@@ -15,13 +16,15 @@ public class Pulper{
         {
             System.out.println("Usage : Pupler [script]");
             System.exit(64);
-        }else if (args.length == 1) {
+        } else if (args.length == 1) {
             runFile(args[0]);
-
         }
         else{
             runPrompt();
         }
+    }
+
+    private static void runFile(String arg) {
     }
 
 
@@ -41,12 +44,12 @@ public class Pulper{
 
     private static void run(String source)
     {
-        Scanner scanner = new Scanner(source);
+        PScanner scanner = new PScanner(source);
         List<Token> tokens = scanner.scanTokens();
 
         for(Token token : tokens)
         {
-            System.out.printlnt(token);
+            System.out.println(token);
         }
         if(hadError)
         {
