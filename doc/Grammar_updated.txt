@@ -33,7 +33,7 @@ Grammar for ULP (Un-natural language programming language)
 <arithmetic_expression> ::= <add_expression>| <subtract_expression> | <multiply_expression> | <divide_expression>
 <add_expression> ::= "add " <expression> " to " <expression>
 <subtract_expression> ::= "remove " <expression> " from " <expression>
-<multiply_expression> ::= "multiply " <expression> " with " <expression>
+<multiply_expression> ::= "multiply " <expression> " by " <expression>
 <divide_expression> ::= "divide " <expression> " by " <expression>
 
 <boolean_expression> ::= <boolean_literal> | <expression> " be " <comparison_criteria> " " <expression>

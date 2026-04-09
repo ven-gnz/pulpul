@@ -1,13 +1,48 @@
 package org.pulp;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static org.pulp.TokenType.*;
 
 public class PScanner {
 
 
     private final String source;
     private final List<Token> tokens = new ArrayList<>();
+
+    private static final Map<String, TokenType> keywords;
+
+    static {
+        keywords = new HashMap<>();
+        keywords.put("Constant", CONSTANT);
+        keywords.put("let", LET);
+        keywords.put("invoke", INVOKE);
+        keywords.put("with", WITH);
+        keywords.put("should", SHOULD);
+        keywords.put("then", THEN);
+        keywords.put("otherwise", OTHERWISE);
+
+        keywords.put("add", ADD);
+        keywords.put("to", TO);
+        keywords.put("remove", REMOVE);
+        keywords.put("from", FROM);
+        keywords.put("divide", DIVIDE);
+        keywords.put("by", BY);
+        keywords.put("multiply", MULTIPLY);
+
+
+        
+
+
+
+
+
+
+    }
+
     private int start = 0;
     private int current = 0;
     private int line = 1;
@@ -49,6 +84,28 @@ public class PScanner {
         return source.charAt(current);
     }
 
+    private void identifier()
+    {
+        while(isAlphaNumeric(peek())) advance();
+        String text = source.substring(start, current);
+        TokenType type = keywords.get(text);
+        if(type == null) type = IDENTIFIER;
+        addToken(type);
+    }
+
+
+    private boolean isAlpha(char c)
+    {
+        return  (c >= 'a' && c <= 'z')
+                || (c >= 'A' && c <= 'Z')
+                || c == '_';
+    }
+
+    private boolean isAlphaNumeric(char c)
+    {
+        return isAlpha(c) || isDigit(c);
+    }
+
     private void scanToken() {
 
         char c = advance();
@@ -58,7 +115,23 @@ public class PScanner {
             case ':': addToken(TokenType.COLON); break;
             case '.':addToken(TokenType.DOT); break;
             case '"':string(); break;
+
+            default:
+                if(isDigit(c))
+                {
+                    number();
+                }
+                else if(isAlpha(c))
+                {
+                    identifier();
+                }
         }
+    }
+
+    private char peekNext()
+    {
+        if (current + 1 >= source.length()) return '\0';
+        return source.charAt(current+1);
     }
 
     public boolean isDigit(char c) {
@@ -67,7 +140,15 @@ public class PScanner {
 
     private void number()
     {
-        while()
+        while(isDigit(peek())) { advance(); }
+
+        if(peek() == '.' && isDigit(peekNext()))
+        {
+            advance();
+            while(isDigit(peek())) advance();
+        }
+
+        addToken(NUMBER_LITERAL,Double.parseDouble(source.substring(start, current)));
     }
 
     private void string()
