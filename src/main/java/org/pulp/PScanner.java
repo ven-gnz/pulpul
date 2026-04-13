@@ -17,8 +17,11 @@ public class PScanner {
 
     static {
         keywords = new HashMap<>();
-        keywords.put("Constant", CONSTANT);
+        keywords.put("constant", CONSTANT);
         keywords.put("let", LET);
+        keywords.put("be", BE);
+        keywords.put("set", SET);
+
         keywords.put("invoke", INVOKE);
         keywords.put("with", WITH);
         keywords.put("should", SHOULD);
@@ -33,11 +36,37 @@ public class PScanner {
         keywords.put("by", BY);
         keywords.put("multiply", MULTIPLY);
 
+        keywords.put("equal", EQUAL);
+        keywords.put("or", OR);
+        keywords.put("more", MORE);
+        keywords.put("less", LESS);
+        keywords.put("is", IS);
+        keywords.put("than", THAN);
 
-        
+        keywords.put("display", DISPLAY);
+        keywords.put("result", RESULT);
 
+        keywords.put("input", INPUT);
+        keywords.put("user", USER);
+        keywords.put("repeat", REPEAT);
+        keywords.put("until", UNTIL);
 
+        keywords.put("description", DESCRIPTION);
+        keywords.put("of", OF);
+        keywords.put("a", A);
+        keywords.put("subprogram", SUBPROGRAM);
+        keywords.put("called", CALLED);
 
+        keywords.put("acting", ACTING);
+        keywords.put("on", ON);
+        keywords.put("inputs", INPUTS);
+        keywords.put("producing", PRODUCING);
+        keywords.put("outputs", OUTPUTS);
+
+        keywords.put("boolean", TYPE_BOOLEAN);
+        keywords.put("string", TYPE_STRING);
+        keywords.put("true", LITERAL_TRUE);
+        keywords.put("false", LITERAL_FALSE);
 
 
 
@@ -87,7 +116,7 @@ public class PScanner {
     private void identifier()
     {
         while(isAlphaNumeric(peek())) advance();
-        String text = source.substring(start, current);
+        String text = source.substring(start, current).toLowerCase();
         TokenType type = keywords.get(text);
         if(type == null) type = IDENTIFIER;
         addToken(type);
@@ -125,6 +154,7 @@ public class PScanner {
                 {
                     identifier();
                 }
+                // parse keyword next
         }
     }
 
@@ -148,7 +178,19 @@ public class PScanner {
             while(isDigit(peek())) advance();
         }
 
-        addToken(NUMBER_LITERAL,Double.parseDouble(source.substring(start, current)));
+        double p = Double.parseDouble(source.substring(start,current));
+        if(p == p % 1)
+        {
+            addToken(WHOLE);
+            addToken(NUMBER);
+            addToken(NUMBER_LITERAL, Double.parseDouble(source.substring(start, current)));
+        }
+        else{
+            addToken(REAL);
+            addToken(NUMBER);
+            addToken(NUMBER_LITERAL, p);
+        }
+
     }
 
     private void string()

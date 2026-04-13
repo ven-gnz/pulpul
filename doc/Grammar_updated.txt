@@ -7,12 +7,12 @@ Grammar for ULP (Un-natural language programming language)
 <program_item> ::= <block> | <subprogram_definition> | <global_declaration>
 <block> ::= <statement> "." | <statement> "," <block>
 <global_declaration> ::= <constant_definition>
-<constant_definition> ::= "Constant " <type> " " <identifier> " is equal to " <expression>
+<constant_definition> ::= "Constant" <type> " " <identifier> "set" "to" <expression>
 <statement> ::= <assignment> | <selection_statement> | <looping_statement> | <print_statement>
 
 ---------------
-<assignment> ::= "let" <type> " " <identifier> " be equal to " <expression> | "let " <identifier> " be equal to " <expression>
-<type> ::= "Whole Number" | "Real Number" | "String" | "Truth Value"
+<assignment> ::= "let" <type> " " <identifier> "be" "equal" "to" <expression> | "let" <identifier> "be" "equal" "to" <expression> //REASSIGN
+<type> ::= "Whole" "Number" | "Real" "Number" | "String" | "Boolean"
 <identifier> ::= <letter> | <letter> <identifier>
 <letter> ::= [a-zA-Z]
 ----------------
@@ -28,15 +28,15 @@ Grammar for ULP (Un-natural language programming language)
 <string_character> ::= [^"]
 <boolean_literal> ::= "True" | "False"
 
-<input_expression> ::= "input from user"
+<input_expression> ::= "input" "from" "user"
 
 <arithmetic_expression> ::= <add_expression>| <subtract_expression> | <multiply_expression> | <divide_expression>
-<add_expression> ::= "add " <expression> " to " <expression>
-<subtract_expression> ::= "remove " <expression> " from " <expression>
-<multiply_expression> ::= "multiply " <expression> " by " <expression>
-<divide_expression> ::= "divide " <expression> " by " <expression>
+<add_expression> ::= "add" <expression> "to" <expression>
+<subtract_expression> ::= "remove" <expression> "from" <expression>
+<multiply_expression> ::= "multiply" <expression> "by" <expression>
+<divide_expression> ::= "divide" <expression> "by" <expression>
 
-<boolean_expression> ::= <boolean_literal> | <expression> " be " <comparison_criteria> " " <expression>
+<boolean_expression> ::= <boolean_literal> | <expression> "be" <comparison_criteria> " " <expression>
 <subprogram_invocation_expression> ::= "Invoke " <subprogram_name> " with : " <argument_list>
 <argument_list> ::= <empty> | <expression_list>
 <empty> ::= ε
@@ -44,18 +44,19 @@ Grammar for ULP (Un-natural language programming language)
 
 ------------------
 <condition> ::= <boolean_expression>
-<comparison_criteria> ::= "less than" | "less than or equal to" | "more than" | "more than or equal to" | "equal to"
+
+<comparison_criteria> ::= "is" ("less" "than" | "less" "than" "or" "equal" "to" | "more" "than" | "more" "than" "or" "equal" "to" | "equal" "to")
 ------------------
-<selection_statement> ::= "Should " <condition> ", then " <block> " otherwise " <block>
+<selection_statement> ::= "Should" <condition> "," "then" <block> " otherwise " <block>
 -----------------
-<looping_statement> ::= "Repeat until " <condition> " : " <block>
+<looping_statement> ::= "Repeat" "until" <condition> ":" <block>
 -----------------
-<subprogram_definition> ::= "Description of a subprogram called " <subprogram_name> " acting on inputs: " <input_list>  " thus producing outputs " <subprogram_output> " : " <block>
+<subprogram_definition> ::= "Description" "of" "a" "subprogram" "called" <subprogram_name> "acting" "on" "inputs" : " <input_list>  "producing" "outputs" <subprogram_output> " : " <block>
 <subprogram_name> ::= <identifier>
 <input_list> ::= <empty> | <parameter_list>
 <parameter_list> ::= <parameter> | <parameter> "," <parameter_list>
 <parameter> ::= <type> " " <identifier>
 <subprogram_output> ::= <type> " " <identifier>
 --------------
-<print_statement> ::= "Display result : " <expression>
+<print_statement> ::= "Display" "result" " : " <expression>
 ----------------
