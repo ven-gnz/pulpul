@@ -14,7 +14,7 @@ public class Pulper {
     {
         if(args.length > 1)
         {
-            System.out.println("Usage : Pupler [script]");
+            System.out.println("Usage : Pulper [script]");
             System.exit(64);
         } else if (args.length == 1) {
             runFile(args[0]);

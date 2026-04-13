@@ -53,7 +53,6 @@ public class PScanner {
 
         keywords.put("description", DESCRIPTION);
         keywords.put("of", OF);
-        keywords.put("a", A);
         keywords.put("subprogram", SUBPROGRAM);
         keywords.put("called", CALLED);
 
@@ -67,6 +66,10 @@ public class PScanner {
         keywords.put("string", TYPE_STRING);
         keywords.put("true", LITERAL_TRUE);
         keywords.put("false", LITERAL_FALSE);
+
+        keywords.put("number", NUMBER);
+        keywords.put("real", REAL);
+        keywords.put("whole", WHOLE);
 
 
 
@@ -154,7 +157,6 @@ public class PScanner {
                 {
                     identifier();
                 }
-                // parse keyword next
         }
     }
 
@@ -179,7 +181,7 @@ public class PScanner {
         }
 
         double p = Double.parseDouble(source.substring(start,current));
-        if(p == p % 1)
+        if(p % 1 == 0)
         {
             addToken(WHOLE);
             addToken(NUMBER);
