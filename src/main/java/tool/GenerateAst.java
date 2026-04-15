@@ -42,7 +42,7 @@ public class GenerateAst {
 
             for(String type : types)
             {
-                String className = type.split(".")[0].trim();
+                String className = type.split(":")[0].trim();
                 String fields = type.split(":")[1].trim();
                 defineType(writer,baseName,className,fields);
             }
@@ -57,13 +57,14 @@ public class GenerateAst {
             PrintWriter writer, String baseName, String className, String fieldList)
     {
 
-        writer.println(" static class" + className + " extends " + baseName + " {");
+        writer.println(" static class " + className + " extends " + baseName + " {");
 
         writer.println("    " + className + "(" + fieldList + ") {");
 
         String[] fields = fieldList.split(",");
         for(String field : fields)
         {
+            field = field.trim();
             String name = field.split(" ")[1];
             writer.println("    this." + name + " = " + name + ";");
         }
@@ -71,6 +72,7 @@ public class GenerateAst {
 
         writer.println();
         for (String field : fields) {
+            field = field.trim();
             writer.println("    final " + field + ";");
         }
 
