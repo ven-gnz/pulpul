@@ -1,4 +1,4 @@
-package org.pulp;
+package pulp;
 
 public class Token {
 

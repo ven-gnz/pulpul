@@ -1,4 +1,4 @@
-package org.pulp;
+package pulp;
 
 import java.io.BufferedReader;
 import java.io.IOException;

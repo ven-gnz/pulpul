@@ -1,11 +1,11 @@
-package org.pulp;
+package pulp;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.pulp.TokenType.*;
+import static pulp.TokenType.*;
 
 public class PScanner {
 
