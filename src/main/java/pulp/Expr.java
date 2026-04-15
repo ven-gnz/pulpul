@@ -2,9 +2,20 @@ package pulp;
 import java.util.List;
 
 abstract class Expr{
+    interface Visitor<R> {
+    R visitLiteralExpr(Literal expr);
+    R visitIdentifierExpr(Identifier expr);
+    R visitAssignExpr(Assign expr);
+    R visitAddExpr(Add expr);
+ }
  static class Literal extends Expr {
     Literal(Object value) {
     this.value = value;
+    }
+
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+    return visitor.visitLiteralExpr(this);
     }
 
     final Object value;
@@ -12,6 +23,11 @@ abstract class Expr{
  static class Identifier extends Expr {
     Identifier(String name) {
     this.name = name;
+    }
+
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+    return visitor.visitIdentifierExpr(this);
     }
 
     final String name;
@@ -22,8 +38,13 @@ abstract class Expr{
     this.value = value;
     }
 
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+    return visitor.visitAssignExpr(this);
+    }
+
     final String name;
-    final  Expr value;
+    final Expr value;
   }
  static class Add extends Expr {
     Add(Expr left, Expr right) {
@@ -31,7 +52,13 @@ abstract class Expr{
     this.right = right;
     }
 
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+    return visitor.visitAddExpr(this);
+    }
+
     final Expr left;
-    final  Expr right;
+    final Expr right;
   }
+    abstract <R> R accept(Visitor<R> visitor);
 }
