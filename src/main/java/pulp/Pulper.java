@@ -47,16 +47,25 @@ public class Pulper {
     {
         PScanner scanner = new PScanner(source);
         List<Token> tokens = scanner.scanTokens();
+/*
 
-        for(Token token : tokens)
-        {
-            System.out.println(token);
+
+        for (Token token : tokens) {
+            System.out.println(token.type + " " + token.lexeme);
         }
+
+ */
+
+        Parser parser = new Parser(tokens);
+        Expr expression = parser.parse();
+
         if(hadError)
         {
             hadError = false;
             System.exit(65);
         }
+        AstPrinter p = new AstPrinter();
+        System.out.println(p.print(expression));
     }
 
     static void error(int line, String message)

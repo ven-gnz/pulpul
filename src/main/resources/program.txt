@@ -1,6 +1,3 @@
 
 
-let identifier whole number a be equal to 3
-let identifier whole number b be equal to add a to 5
-
-display result b.
+add 1 to 3

@@ -8,6 +8,10 @@ abstract class Expr{
     R visitNotExpr(Not expr);
     R visitAssignExpr(Assign expr);
     R visitAddExpr(Add expr);
+    R visitRemoveExpr(Remove expr);
+    R visitMultiplyExpr(Multiply expr);
+    R visitDivideExpr(Divide expr);
+    R visitCompareExpr(Compare expr);
  }
  static class Literal extends Expr {
     Literal(Object value) {
@@ -71,6 +75,64 @@ abstract class Expr{
     }
 
     final Expr left;
+    final Expr right;
+  }
+ static class Remove extends Expr {
+    Remove(Expr left, Expr right) {
+    this.left = left;
+    this.right = right;
+    }
+
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+    return visitor.visitRemoveExpr(this);
+    }
+
+    final Expr left;
+    final Expr right;
+  }
+ static class Multiply extends Expr {
+    Multiply(Expr left, Expr right) {
+    this.left = left;
+    this.right = right;
+    }
+
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+    return visitor.visitMultiplyExpr(this);
+    }
+
+    final Expr left;
+    final Expr right;
+  }
+ static class Divide extends Expr {
+    Divide(Expr left, Expr right) {
+    this.left = left;
+    this.right = right;
+    }
+
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+    return visitor.visitDivideExpr(this);
+    }
+
+    final Expr left;
+    final Expr right;
+  }
+ static class Compare extends Expr {
+    Compare(Expr left, ComparisonType type, Expr right) {
+    this.left = left;
+    this.type = type;
+    this.right = right;
+    }
+
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+    return visitor.visitCompareExpr(this);
+    }
+
+    final Expr left;
+    final ComparisonType type;
     final Expr right;
   }
     abstract <R> R accept(Visitor<R> visitor);

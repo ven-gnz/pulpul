@@ -180,20 +180,7 @@ public class PScanner {
             advance();
             while(isDigit(peek())) advance();
         }
-
-        double p = Double.parseDouble(source.substring(start,current));
-        if(p % 1 == 0)
-        {
-            addToken(WHOLE);
-            addToken(NUMBER);
             addToken(NUMBER_LITERAL, Double.parseDouble(source.substring(start, current)));
-        }
-        else{
-            addToken(REAL);
-            addToken(NUMBER);
-            addToken(NUMBER_LITERAL, p);
-        }
-
     }
 
     private void string()
