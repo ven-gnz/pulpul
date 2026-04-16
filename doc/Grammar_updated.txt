@@ -31,15 +31,17 @@ Grammar for ULP (Un-natural language programming language)
 
 <input_expression> ::= "input" "from" "user"
 
-<arithmetic_expression> ::= <add_expression>| <subtract_expression> | <multiply_expression> | <divide_expression>
-<add_expression> ::= "add" <expression> "to" <expression>
-<subtract_expression> ::= "remove" <expression> "from" <expression>
-<multiply_expression> ::= "multiply" <expression> "by" <expression>
-<divide_expression> ::= "divide" <expression> "by" <expression>
+<arithmetic_expression> ::= <arithmetic_term> | <add_expression>| <subtract_expression> | <multiply_expression> | <divide_expression>
+<arithmetic_term> ::= <number_literal> | <identifier> #### Subprogram invocation later???
+<add_expression> ::= "add" <arithmetic_expression> "to" <arithmetic_expression>
+<subtract_expression> ::= "remove" <arithmetic_expression> "from" <arithmetic_expression>
+<multiply_expression> ::= "multiply" <arithmetic_expression> "by" <arithmetic_expression>
+<divide_expression> ::= "divide" <arithmetic_expression> "by" <arithmetic_expression>
 
+<comparison_expression> ::= <arithmetic_expression> "be" <comparison_criteria> " " <arithmetic_expression>
 <boolean_expression> ::= <boolean_literal> | <comparison_expression> | <not_expression>
 <not_expression> ::= "not" <boolean_expression>
-<comparison_expression> ::= <expression> "be" <comparison_criteria> " " <expression>
+
 
 <subprogram_invocation_expression> ::= "Invoke " <subprogram_name> " with " <argument_list>
 <argument_list> ::= <empty> | <expression_list>
