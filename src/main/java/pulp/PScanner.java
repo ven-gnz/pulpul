@@ -21,6 +21,7 @@ public class PScanner {
         keywords.put("let", LET);
         keywords.put("be", BE);
         keywords.put("set", SET);
+        keywords.put("not", NOT);
 
         keywords.put("invoke", INVOKE);
         keywords.put("with", WITH);

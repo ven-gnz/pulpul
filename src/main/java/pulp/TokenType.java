@@ -8,7 +8,7 @@ public enum TokenType {
 
     // character tokens
     COMMA, DOT, COLON, EOF,
-    LESS, THAN, OR, MORE, EQUAL,
+    LESS, THAN, OR, MORE, EQUAL, NOT,
 
     CONSTANT, LET, SET,
     IDENTIFIER,

@@ -36,7 +36,10 @@ Grammar for ULP (Un-natural language programming language)
 <multiply_expression> ::= "multiply" <expression> "by" <expression>
 <divide_expression> ::= "divide" <expression> "by" <expression>
 
-<boolean_expression> ::= <boolean_literal> | <expression> "be" <comparison_criteria> " " <expression>
+<boolean_expression> ::= <boolean_literal> | <comparison_expression> | <not_expression>
+<not_expression> ::= "not" <boolean_expression>
+<comparison_expression> ::= <expression> "be" <comparison_criteria> " " <expression>
+
 <subprogram_invocation_expression> ::= "Invoke " <subprogram_name> " with : " <argument_list>
 <argument_list> ::= <empty> | <expression_list>
 <empty> ::= ε
