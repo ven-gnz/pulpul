@@ -22,7 +22,12 @@ public class GenerateAst {
                         "Identifier : String name",
                         "Not : Expr expression",
                         "Assign : String name, Expr value",
-                        "Add : Expr left, Expr right"
+                        "Add : Expr left, Expr right",
+                        "Remove : Expr left, Expr right",
+                        "Multiply : Expr left, Expr right",
+                        "Divide : Expr left, Expr right",
+                        "Compare : Expr left, ComparisonType type, Expr right"
+
                 ));
     }
 
@@ -38,6 +43,7 @@ public class GenerateAst {
 
             writer.println("package pulp;");
             writer.println("import java.util.List;");
+            writer.println("import pulp.ComparisonType");
             writer.println();
             writer.println("abstract class " + baseName + "{");
 
