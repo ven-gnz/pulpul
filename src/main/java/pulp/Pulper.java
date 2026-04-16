@@ -69,4 +69,17 @@ public class Pulper {
         System.err.println("[line " + line + "] Error" + where + ": " + message);
         hadError=true;;
     }
+
+    /**
+     *
+     * @param token error generating token on expression parsing
+     * @param message additional message such as line
+     */
+    static void error(Token token, String message) {
+        if (token.type == TokenType.EOF) {
+            report(token.line, " at end", message);
+        } else {
+            report(token.line, " at '" + token.lexeme + "'", message);
+        }
+    }
 }

@@ -5,6 +5,7 @@ abstract class Expr{
     interface Visitor<R> {
     R visitLiteralExpr(Literal expr);
     R visitIdentifierExpr(Identifier expr);
+    R visitNotExpr(Not expr);
     R visitAssignExpr(Assign expr);
     R visitAddExpr(Add expr);
  }
@@ -31,6 +32,18 @@ abstract class Expr{
     }
 
     final String name;
+  }
+ static class Not extends Expr {
+    Not(Expr expression) {
+    this.expression = expression;
+    }
+
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+    return visitor.visitNotExpr(this);
+    }
+
+    final Expr expression;
   }
  static class Assign extends Expr {
     Assign(String name, Expr value) {
