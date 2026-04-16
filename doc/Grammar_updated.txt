@@ -5,7 +5,8 @@ Grammar for ULP (Un-natural language programming language)
 
 <program> ::= <program_item> | <program_item> <program>
 <program_item> ::= <block> | <subprogram_definition> | <global_declaration>
-<block> ::= <statement> "." | <statement> "," <block>
+<block> ::= ":" <statement_list>
+<statement_list> ::= <statement> "." | <statement> "," <block>
 <global_declaration> ::= <constant_definition>
 <constant_definition> ::= "Constant" <type> " " <identifier> "set" "to" <expression>
 <statement> ::= <assignment> | <selection_statement> | <looping_statement> | <print_statement>
@@ -40,7 +41,7 @@ Grammar for ULP (Un-natural language programming language)
 <not_expression> ::= "not" <boolean_expression>
 <comparison_expression> ::= <expression> "be" <comparison_criteria> " " <expression>
 
-<subprogram_invocation_expression> ::= "Invoke " <subprogram_name> " with : " <argument_list>
+<subprogram_invocation_expression> ::= "Invoke " <subprogram_name> " with " <argument_list>
 <argument_list> ::= <empty> | <expression_list>
 <empty> ::= ε
 <expression_list> ::= <expression> | <expression> "," <expression_list>
@@ -52,14 +53,14 @@ Grammar for ULP (Un-natural language programming language)
 ------------------
 <selection_statement> ::= "Should" <condition> "," "then" <block> " otherwise " <block>
 -----------------
-<looping_statement> ::= "Repeat" "until" <condition> ":" <block>
+<looping_statement> ::= "Repeat" "until" <condition> <block>
 -----------------
-<subprogram_definition> ::= "Description" "of" "subprogram" "called" <subprogram_name> "acting" "on" "inputs" : " <input_list>  "producing" "outputs" <subprogram_output> " : " <block>
+<subprogram_definition> ::= "Description" "of" "subprogram" "called" <subprogram_name> "acting" "on" "inputs" <input_list> "producing" "outputs" <subprogram_output> <block>
 <subprogram_name> ::= <identifier>
 <input_list> ::= <empty> | <parameter_list>
 <parameter_list> ::= <parameter> | <parameter> "," <parameter_list>
 <parameter> ::= <type> " " <identifier>
 <subprogram_output> ::= <type> " " <identifier>
 --------------
-<print_statement> ::= "Display" "result" " : " <expression>
+<print_statement> ::= "Display" "result" <expression>
 ----------------
