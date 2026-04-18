@@ -9,6 +9,8 @@ import java.util.List;
 public class Pulper {
 
     static boolean hadError = false;
+    static boolean hadRuntimeError = false;
+    private static final Interpreter interpreter = new Interpreter();
 
     public static void main(String[] args) throws IOException
     {
@@ -64,13 +66,22 @@ public class Pulper {
             hadError = false;
             System.exit(65);
         }
-        AstPrinter p = new AstPrinter();
-        System.out.println(p.print(expression));
+        if(hadRuntimeError) System.exit(70);
+        //AstPrinter p = new AstPrinter();
+        //System.out.println(p.print(expression));
+
+        interpreter.interpret(expression);
     }
 
     static void error(int line, String message)
     {
         report(line, "", message);
+    }
+
+    static void runtimeError(RuntimeError error)
+    {
+        System.err.println(error.getMessage() + "\n[line " + error.token.line + "]");
+        hadRuntimeError = false;
     }
 
     private static void report(int line, String where, String message)

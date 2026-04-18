@@ -3,6 +3,35 @@ package pulp;
 public class Interpreter implements Expr.Visitor<Object>{
 
 
+
+
+    void interpret(Expr expression)
+    {
+        try
+        {
+            Object value = evaluate(expression);
+            System.out.println(stringify(value));
+        } catch (RuntimeError error)
+        {
+            Pulper.runtimeError(error);
+        }
+    }
+
+    private String stringify(Object object) {
+        if (object == null) return "nil";
+
+        if (object instanceof Double) {
+            String text = object.toString();
+            if (text.endsWith(".0")) {
+                text = text.substring(0, text.length() - 2);
+            }
+            return text;
+        }
+
+        return object.toString();
+    }
+
+
     private Object evaluate(Expr expr)
     {
         return expr.accept(this);
@@ -52,10 +81,14 @@ public class Interpreter implements Expr.Visitor<Object>{
     private void checkNumberOperands(ComparisonType type, Object left, Object right)
     {
         if(left instanceof Double && right instanceof Double) return;
-        throw new RuntimeError(type, " Operators must be numbers");
+        throw new RuntimeError(type, " Cannot compare between non-numbers");
     }
 
 
+
+    /*
+        Is assign an expression or a statement ? Let's see what the book says
+     */
     @Override
     public Object visitAssignExpr(Expr.Assign expr) {
         return null;
@@ -63,47 +96,50 @@ public class Interpreter implements Expr.Visitor<Object>{
 
     @Override
     public Object visitAddExpr(Expr.Add expr) {
-        return null;
+        Object left = evaluate(expr.left);
+        Object right = evaluate(expr.right);
+        if(!(left instanceof Double) || !(right instanceof Double)) throw new RuntimeError("Operands must be number type!");
+        return (double)left + (double)right;
     }
 
     @Override
     public Object visitRemoveExpr(Expr.Remove expr) {
-        return null;
+        Object left = evaluate(expr.left);
+        Object right = evaluate(expr.right);
+        if(!(left instanceof Double) || !(right instanceof Double)) throw new RuntimeError("Operands must be number type!");
+        return (double)left - (double)right;
     }
 
     @Override
     public Object visitMultiplyExpr(Expr.Multiply expr) {
-        return null;
+        Object left = evaluate(expr.left);
+        Object right = evaluate(expr.right);
+        if(!(left instanceof Double) || !(right instanceof Double)) throw new RuntimeError("Operands must be number type!");
+        return (double)left * (double)right;
     }
 
     @Override
     public Object visitDivideExpr(Expr.Divide expr) {
-        return null;
+        Object left = evaluate(expr.left);
+        Object right = evaluate(expr.right);
+        if(!(left instanceof Double) || !(right instanceof Double)) throw new RuntimeError("Operands must be number type!");
+        return (double)left / (double)right;
     }
 
     @Override
     public Object visitCompareExpr(Expr.Compare expr) {
         Object left = evaluate(expr.left);
         Object right = evaluate(expr.right);
-
+        checkNumberOperands(expr.type, expr.left, expr.right);
         switch(expr.type)
         {
-            case GREATER ->
-                checkNumberOperands(expr.type, expr.left, expr.right);
-                return (double)left > (double)right;
-                break;
 
-                //TODO
-            /*
-            18.04
-             */
-
-
-            case LESS -> break;
-            case EQUAL -> break;
-            case NOT_EQUAL -> break;
-            case GREATER_EQUAL -> break;
-            case LESS_EQUAL -> break;
+            case GREATER -> { return (double)left > (double)right; }
+            case LESS -> { return (double)left < (double)right; }
+            case EQUAL -> { return(double)left == (double)right; }
+            case NOT_EQUAL -> { return (double)left != (double)right; }
+            case GREATER_EQUAL -> { return (double)left >= (double)right; }
+            case LESS_EQUAL -> { return (double)left <= (double)right; }
         }
         return null;
     }
