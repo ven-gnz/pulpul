@@ -18,8 +18,8 @@ class AstPrinter implements Expr.Visitor<String> {
     }
 
     @Override
-    public String visitNotExpr(Expr.Not expr) {
-        return "not " + wrap(expr.expression.accept(this));
+    public String visitUnaryExpr(Expr.Unary expr) {
+        return expr.operator.lexeme + wrap(expr.right.accept(this));
     }
 
     @Override

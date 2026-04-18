@@ -1,11 +1,12 @@
 package pulp;
 import java.util.List;
+import pulp.ComparisonType;
 
 abstract class Expr{
     interface Visitor<R> {
     R visitLiteralExpr(Literal expr);
     R visitIdentifierExpr(Identifier expr);
-    R visitNotExpr(Not expr);
+    R visitUnaryExpr(Unary expr);
     R visitAssignExpr(Assign expr);
     R visitAddExpr(Add expr);
     R visitRemoveExpr(Remove expr);
@@ -37,17 +38,19 @@ abstract class Expr{
 
     final String name;
   }
- static class Not extends Expr {
-    Not(Expr expression) {
-    this.expression = expression;
+ static class Unary extends Expr {
+    Unary(Token operator, Expr right) {
+    this.operator = operator;
+    this.right = right;
     }
 
     @Override
     <R> R accept(Visitor<R> visitor) {
-    return visitor.visitNotExpr(this);
+    return visitor.visitUnaryExpr(this);
     }
 
-    final Expr expression;
+    final Token operator;
+    final Expr right;
   }
  static class Assign extends Expr {
     Assign(String name, Expr value) {

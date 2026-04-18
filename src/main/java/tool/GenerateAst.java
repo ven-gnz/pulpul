@@ -20,7 +20,7 @@ public class GenerateAst {
                 Arrays.asList(
                         "Literal : Object value",
                         "Identifier : String name",
-                        "Not : Expr expression",
+                        "Unary : Token operator, Expr right",
                         "Assign : String name, Expr value",
                         "Add : Expr left, Expr right",
                         "Remove : Expr left, Expr right",

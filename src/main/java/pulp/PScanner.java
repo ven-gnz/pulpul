@@ -147,6 +147,7 @@ public class PScanner {
             case ',': addToken(TokenType.COMMA); break;
             case ':': addToken(TokenType.COLON); break;
             case '.':addToken(TokenType.DOT); break;
+            case '-':addToken(TokenType.MINUS); break;
             case '"':string(); break;
 
             default:

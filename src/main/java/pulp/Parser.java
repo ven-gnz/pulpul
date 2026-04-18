@@ -5,7 +5,6 @@ import java.util.List;
 
 import static pulp.Pulper.error;
 import static pulp.TokenType.*;
-import pulp.ComparisonType;
 
 class Parser {
 
@@ -31,7 +30,6 @@ class Parser {
 
     private Expr expression()
     {
-        if(match(NOT)) return notExpression();
         if(check(LITERAL_TRUE) || check(LITERAL_FALSE)){ return booleanLiteral(); }
 
         Expr expr = arithmeticExpression();
@@ -92,6 +90,11 @@ class Parser {
 
     private Expr arithmeticPrimary()
     {
+        if(match(MINUS)) {
+            Token operator = previous();
+            Expr right = arithmeticPrimary();
+            return new Expr.Unary(operator, right);
+        }
         if(match(NUMBER_LITERAL)) { return new Expr.Literal(previous().literal); }
         if(match(IDENTIFIER)) { return new Expr.Identifier(previous().lexeme); }
         throw error(peek(), "Except expression");
@@ -101,11 +104,18 @@ class Parser {
 
 
 
-    private Expr notExpression()
+    private Expr unary()
     {
-        consume(NOT, "Except 'not'");
-        Expr right = expression();
-        return new Expr.Not(right);
+
+        System.out.println("Enter unary");
+        if(match(MINUS, NOT))
+        {
+            Token operator = previous();
+            Expr right = unary();
+            return new Expr.Unary(operator, right);
+        }
+
+        return arithmeticPrimary();
     }
 
     private Expr comparisonExpression(Expr left)
