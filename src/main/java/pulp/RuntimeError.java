@@ -1,0 +1,16 @@
+package pulp;
+
+public class RuntimeError extends RuntimeException{
+    final Token token;
+
+    RuntimeError(Token tokne, String msg)
+    {
+        super(msg);
+        this.token = tokne;
+    }
+    RuntimeError(ComparisonType type, String message)
+    {
+        super(message);
+        this.token = null;
+    }
+}
