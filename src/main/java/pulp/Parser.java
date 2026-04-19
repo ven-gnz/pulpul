@@ -35,12 +35,21 @@ class Parser {
 
         Expr expr = arithmeticExpression();
 
-        if(match(BE)) {
-            return comparisonExpression(expr);
+        if(match(IS)) {
+            return logical(expr);
         }
 
         return expr;
 
+    }
+
+
+    private Expr logical()
+    {
+        // is x less than 5
+
+        consume(IS, "Except identifier or literal");
+        System.out.println();
     }
 
     private Expr booleanLiteral()

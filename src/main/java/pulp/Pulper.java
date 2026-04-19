@@ -49,14 +49,14 @@ public class Pulper {
     {
         PScanner scanner = new PScanner(source);
         List<Token> tokens = scanner.scanTokens();
-/*
+
 
 
         for (Token token : tokens) {
             System.out.println(token.type + " " + token.lexeme);
         }
 
-*/
+
 
         Parser parser = new Parser(tokens);
         Expr expression = parser.parse();
@@ -67,8 +67,8 @@ public class Pulper {
             System.exit(65);
         }
         if(hadRuntimeError) System.exit(70);
-        //AstPrinter p = new AstPrinter();
-        //System.out.println(p.print(expression));
+        AstPrinter p = new AstPrinter();
+        System.out.println(p.print(expression));
 
         interpreter.interpret(expression);
     }

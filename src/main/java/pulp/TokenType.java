@@ -22,6 +22,7 @@ public enum TokenType {
     ADD, REMOVE, MULTIPLY, DIVIDE,
     TO, FROM, WITH, BY,
     BE, IS, DISPLAY, RESULT,
+    AND,
 
 
     //Multi word keywords
