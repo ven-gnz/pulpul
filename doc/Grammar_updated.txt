@@ -17,7 +17,7 @@ Grammar for ULP (Un-natural language programming language)
 <identifier> ::= <letter> | <letter> <identifier>
 <letter> ::= [a-zA-Z]
 ----------------
-<expression> ::= <primary_expression> | <arithmetic_expression> | <boolean_expression>
+<expression> ::= <primary_expression> | <arithmetic_expression> | <logical_expression>
 <primary_expression> ::= <literal> | <identifier> | <input_expression> | <subprogram_invocation_expression>
 <literal> ::= <string_literal> | <number_literal> | <boolean_literal>
 <number_literal> ::= <integer_literal> | <real_literal>
@@ -29,8 +29,6 @@ Grammar for ULP (Un-natural language programming language)
 <string_character> ::= [^"]
 <boolean_literal> ::= "True" | "False"
 
-<input_expression> ::= "input" "from" "user"
-
 <arithmetic_expression> ::= <arithmetic_term> | <add_expression>| <subtract_expression> | <multiply_expression> | <divide_expression>
 <arithmetic_term> ::= <number_literal> | <identifier> #### Subprogram invocation later???
 <add_expression> ::= "add" <arithmetic_expression> "to" <arithmetic_expression>
@@ -38,24 +36,24 @@ Grammar for ULP (Un-natural language programming language)
 <multiply_expression> ::= "multiply" <arithmetic_expression> "by" <arithmetic_expression>
 <divide_expression> ::= "divide" <arithmetic_expression> "by" <arithmetic_expression>
 
-<comparison_expression> ::= <arithmetic_expression> "be" <comparison_criteria> " " <arithmetic_expression>
-<boolean_expression> ::= <boolean_literal> | <comparison_expression> | <not_expression>
-<not_expression> ::= "not" <boolean_expression>
-
+<logical_expression> ::= <logical_expression> "and" <logical_expression> | <logical_expression> "or" <logical expression> | <logic_term>
+<logic_term> ::= <boolean_literal> | <comparison_expression> | <not_expression>
+<not_expression> ::= "not" <logical_expression>
+<comparison_expression> ::= "is" <arithmetic_expression> <comparison_criteria> <arithmetic_expression>
 
 <subprogram_invocation_expression> ::= "Invoke " <subprogram_name> " with " <argument_list>
 <argument_list> ::= <empty> | <expression_list>
 <empty> ::= ε
 <expression_list> ::= <expression> | <expression> "," <expression_list>
 
-------------------
-<condition> ::= <boolean_expression>
+<input_expression> ::= "input" "from" "user"
 
-<comparison_criteria> ::= "is" ("less" "than" | "less" "than" "or" "equal" "to" | "more" "than" | "more" "than" "or" "equal" "to" | "equal" "to")
 ------------------
-<selection_statement> ::= "Should" <condition> "," "then" <block> " otherwise " <block>
+<comparison_criteria> ::= ("less" "than" | "less" "than" "or" "equal" "to" | "more" "than" | "more" "than" "or" "equal" "to" | "equal" "to")
+------------------
+<selection_statement> ::= "Should" <logical_expression> "," "then" <block> " otherwise " <block>
 -----------------
-<looping_statement> ::= "Repeat" "until" <condition> <block>
+<looping_statement> ::= "Repeat" "until" <logical_expression> <block>
 -----------------
 <subprogram_definition> ::= "Description" "of" "subprogram" "called" <subprogram_name> "acting" "on" "inputs" <input_list> "producing" "outputs" <subprogram_output> <block>
 <subprogram_name> ::= <identifier>
