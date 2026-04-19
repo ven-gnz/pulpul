@@ -21,6 +21,7 @@ public class GenerateAst {
                         "Literal : Object value",
                         "Identifier : String name",
                         "Unary : Token operator, Expr right",
+                        "Logical : Expr left, Token operator, Expr right",
                         "Assign : String name, Expr value",
                         "Add : Expr left, Expr right",
                         "Remove : Expr left, Expr right",

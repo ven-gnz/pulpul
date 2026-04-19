@@ -65,8 +65,8 @@ public class PScanner {
 
         keywords.put("boolean", TYPE_BOOLEAN);
         keywords.put("string", TYPE_STRING);
-        keywords.put("true", LITERAL_TRUE);
-        keywords.put("false", LITERAL_FALSE);
+        keywords.put("true", TRUE);
+        keywords.put("false", FALSE);
 
         keywords.put("number", NUMBER);
         keywords.put("real", REAL);

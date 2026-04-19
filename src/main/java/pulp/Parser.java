@@ -30,19 +30,31 @@ class Parser {
 
     private Expr expression()
     {
-        if(check(LITERAL_TRUE) || check(LITERAL_FALSE)){ return booleanLiteral(); }
+        if(check(TRUE) || check(FALSE)) { return booleanLiteral(); }
+
 
         Expr expr = arithmeticExpression();
 
         if(match(BE)) {
             return comparisonExpression(expr);
         }
+
         return expr;
+
     }
 
     private Expr booleanLiteral()
     {
-        return new Expr.Literal(previous().literal);
+        if(check(TRUE)) {
+            consume(TRUE, "Except truth value true");
+            return new Expr.Literal(TRUE);
+        }
+        if(check(FALSE))
+        {
+            consume(FALSE, "Except truth value false");
+            return new Expr.Literal(FALSE);
+        }
+        throw error(tokens.get(current), " cannot parse boolean literal");
     }
 
     private Expr arithmeticExpression()

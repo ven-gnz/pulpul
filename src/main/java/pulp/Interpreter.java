@@ -72,6 +72,11 @@ public class Interpreter implements Expr.Visitor<Object>{
         return null;
     }
 
+    @Override
+    public Object visitLogicalExpr(Expr.Logical expr) {
+        return null;
+    }
+
     private void checkNumberOperand(Token operator, Object operand)
     {
         if(operand instanceof Double) return;

@@ -23,6 +23,13 @@ class AstPrinter implements Expr.Visitor<String> {
     }
 
     @Override
+    public String visitLogicalExpr(Expr.Logical expr) {
+        return wrap(expr.left.accept(this)) +
+                " " + expr.operator.lexeme + " " +
+                wrap(expr.right.accept(this));
+    }
+
+    @Override
     public String visitAssignExpr(Expr.Assign expr) {
         return "let " + expr.name + " be equal to " + expr.value.accept(this);
     }
@@ -53,8 +60,8 @@ class AstPrinter implements Expr.Visitor<String> {
 
     @Override
     public String visitCompareExpr(Expr.Compare expr) {
-        return wrap(expr.left.accept(this)) +
-                " be " + comparisonToString(expr.type) + " " +
+        return  "is "+wrap(expr.left.accept(this)) + " " +
+                comparisonToString(expr.type) + " " +
                 wrap(expr.right.accept(this));
     }
 
