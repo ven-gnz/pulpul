@@ -30,17 +30,20 @@ class Parser {
 
     private Expr expression()
     {
-        if(check(TRUE) || check(FALSE)) { return booleanLiteral(); }
+
 
         // parse unaries here ?
 
-        if(match(IS, TRUE, FALSE)) {
-            return logicalTerm();
+        if(match(IS, TRUE, FALSE, AND, OR)) {
+            return parseLogicalExpression();
         }
+        /*
         if(match(AND,OR))
         {
             return parseLogicalExpression();
         }
+        */
+
 
         Expr expr = arithmeticExpression();
 
@@ -50,7 +53,27 @@ class Parser {
 
     private Expr parseLogicalExpression() {
 
-        return null;
+
+        System.out.println("Parsing logical " + previous());
+        if(match(TRUE) || match(FALSE)) { return booleanLiteral(); }
+        
+        Expr left = logicalTerm();
+
+        if(match(AND,OR)){
+            Token prev = previous();
+            if(prev.type == AND)
+            {
+                consume(IS, "Except 'is' for boolean binary and");
+            }
+            else if(prev.type == OR)
+            {
+                consume(IS, "Except 'is' for boolean binary or");
+            }
+            Expr right = parseLogicalExpression();
+            return new Expr.Logical(left, prev, right);
+        }
+        return left;
+
     }
 
     // this is logical term?
@@ -60,8 +83,7 @@ class Parser {
         // is comparisontype, it consumes than, then parse right expression
         System.out.println("logical term parsed");
         Expr left = arithmeticExpression();
-        Expr comparison = comparisonExpression(left);
-        return comparison;
+        return comparisonExpression(left);
 
     }
 

@@ -1,3 +1,1 @@
-
-
-add 157 to multiply 17 by 11
+is 3 less than 5 and is 3 less than 6

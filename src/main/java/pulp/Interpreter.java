@@ -78,26 +78,22 @@ public class Interpreter implements Expr.Visitor<Object>{
             case NOT:
                 return !isTruthy(right);
         }
-
         return null;
     }
 
     @Override
     public Object visitLogicalExpr(Expr.Logical expr) {
 
-        Object left = evaluate(expr.left); // So this is supposed to be a logical expression, so maybe something that compare produces?
+        Object left = evaluate(expr.left);// So this is supposed to be a logical expression, so maybe something that compare produces?
+        boolean l_val = isTruthy(left);
         Object right = evaluate(expr.right);
+        boolean r_val = isTruthy(right);
 
         switch(expr.operator.type)
         {
-            case MORE -> { return null; }
-            case LESS -> { return null;}
+            case AND -> { return l_val && r_val; }
+            case OR -> { return l_val || r_val; }
         }
-
-
-
-
-
 
         return null;
     }
@@ -163,18 +159,10 @@ public class Interpreter implements Expr.Visitor<Object>{
 
     @Override
     public Object visitCompareExpr(Expr.Compare expr) {
-        //System.out.println("Evaluating compare expression");
-
 
         Object left_eval = evaluate(expr.left);
         Object right_eval = evaluate(expr.right);
-
-
-
-        //System.out.println("left : "+ left);
-
         checkNumberOperands(expr.type, left_eval, right_eval);
-        System.out.println(expr.type + " expression type");
         switch(expr.type)
         {
 
@@ -185,7 +173,6 @@ public class Interpreter implements Expr.Visitor<Object>{
             case GREATER_EQUAL -> { return (double)left_eval >= (double)right_eval; }
             case LESS_EQUAL -> { return (double)left_eval <= (double)right_eval; }
         }
-        //System.out.println("I did not evaluate expression type");
         return null;
     }
 }
