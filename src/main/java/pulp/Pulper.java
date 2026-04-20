@@ -80,14 +80,17 @@ public class Pulper {
 
     static void runtimeError(RuntimeError error)
     {
-        System.err.println(error.getMessage() + "\n[line " + error.token.line + "]");
+        if(error.token != null)
+        {
+            System.err.println(error.getMessage() + "\n[line " + error.token.line + "]");
+        }
         hadRuntimeError = false;
     }
 
     private static void report(int line, String where, String message)
     {
         System.err.println("[line " + line + "] Error" + where + ": " + message);
-        hadError=true;;
+        hadError=true;
     }
 
     /**

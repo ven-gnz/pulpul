@@ -32,24 +32,37 @@ class Parser {
     {
         if(check(TRUE) || check(FALSE)) { return booleanLiteral(); }
 
+        // parse unaries here ?
+
+        if(match(IS, TRUE, FALSE)) {
+            return logicalTerm();
+        }
+        if(match(AND,OR))
+        {
+            return parseLogicalExpression();
+        }
 
         Expr expr = arithmeticExpression();
-
-        if(match(IS)) {
-            return logical(expr);
-        }
 
         return expr;
 
     }
 
+    private Expr parseLogicalExpression() {
 
-    private Expr logical()
+        return null;
+    }
+
+    // this is logical term?
+    private Expr logicalTerm()
     {
-        // is x less than 5
 
-        consume(IS, "Except identifier or literal");
-        System.out.println();
+        // is comparisontype, it consumes than, then parse right expression
+        System.out.println("logical term parsed");
+        Expr left = arithmeticExpression();
+        Expr comparison = comparisonExpression(left);
+        return comparison;
+
     }
 
     private Expr booleanLiteral()
@@ -135,7 +148,7 @@ class Parser {
             Expr right = unary();
             return new Expr.Unary(operator, right);
         }
-
+        // Do I need this?
         return arithmeticPrimary();
     }
 
@@ -143,6 +156,7 @@ class Parser {
     {
         ComparisonType type = parseComparisonCriteria();
         Expr right = arithmeticExpression();
+        //System.out.println("type :" + type.toString());
         return new Expr.Compare(left, type, right);
     }
 
@@ -152,32 +166,45 @@ class Parser {
 
     private ComparisonType parseComparisonCriteria()
     {
+
+
         if(match(EQUAL))
         {
             consume(TO, "Except identifier");
             return ComparisonType.EQUAL;
         }
 
-
         if(match(NOT)){
             consume(EQUAL, "Except 'equal'");
             consume(TO, "Except 'to'");
-            return ComparisonType.EQUAL;
+            return ComparisonType.NOT_EQUAL;
         }
-
+        // add less than or equal to and more than or equal to cases
         if(match(LESS))
         {
-            consume(THAN, "Except 'than'");
-            return ComparisonType.LESS;
+            consume(THAN, "Except 'than' after less");
+            if(match(OR)){
+                consume(EQUAL, "Except 'equal' after or");
+                consume(TO, "Except 'to' after equal");
+                return ComparisonType.LESS_EQUAL;
+            }
+            else {
+                return ComparisonType.LESS;
+            }
         }
 
         if(match(MORE))
         {
             consume(THAN, "Except 'than'");
-            return ComparisonType.GREATER;
+            if(match(OR))
+            {
+                consume(EQUAL, "Except 'equal' after or");
+                consume(TO, "Except 'to' after equal");
+                return ComparisonType.GREATER_EQUAL;
+            }
+            else { return ComparisonType.GREATER; }
+
         }
-
-
 
         // default case : delete
         throw error(peek(), "Invalid comparison");

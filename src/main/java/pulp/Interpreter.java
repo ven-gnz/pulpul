@@ -10,6 +10,10 @@ public class Interpreter implements Expr.Visitor<Object>{
         try
         {
             Object value = evaluate(expression);
+            if (value == null) {
+                System.out.println("null value :"+ value);
+            }
+            System.out.println(value);
             System.out.println(stringify(value));
         } catch (RuntimeError error)
         {
@@ -27,6 +31,12 @@ public class Interpreter implements Expr.Visitor<Object>{
             }
             return text;
         }
+        if(object instanceof Boolean)
+        {
+            if(isTruthy(object)) { return "true"; }
+            else{ return "false"; }
+        }
+
 
         return object.toString();
     }
@@ -74,6 +84,21 @@ public class Interpreter implements Expr.Visitor<Object>{
 
     @Override
     public Object visitLogicalExpr(Expr.Logical expr) {
+
+        Object left = evaluate(expr.left); // So this is supposed to be a logical expression, so maybe something that compare produces?
+        Object right = evaluate(expr.right);
+
+        switch(expr.operator.type)
+        {
+            case MORE -> { return null; }
+            case LESS -> { return null;}
+        }
+
+
+
+
+
+
         return null;
     }
 
@@ -85,7 +110,12 @@ public class Interpreter implements Expr.Visitor<Object>{
 
     private void checkNumberOperands(ComparisonType type, Object left, Object right)
     {
-        if(left instanceof Double && right instanceof Double) return;
+
+
+        if(left instanceof Double && right instanceof Double)
+        {
+            return;
+        }
         throw new RuntimeError(type, " Cannot compare between non-numbers");
     }
 
@@ -133,19 +163,29 @@ public class Interpreter implements Expr.Visitor<Object>{
 
     @Override
     public Object visitCompareExpr(Expr.Compare expr) {
-        Object left = evaluate(expr.left);
-        Object right = evaluate(expr.right);
-        checkNumberOperands(expr.type, expr.left, expr.right);
+        //System.out.println("Evaluating compare expression");
+
+
+        Object left_eval = evaluate(expr.left);
+        Object right_eval = evaluate(expr.right);
+
+
+
+        //System.out.println("left : "+ left);
+
+        checkNumberOperands(expr.type, left_eval, right_eval);
+        System.out.println(expr.type + " expression type");
         switch(expr.type)
         {
 
-            case GREATER -> { return (double)left > (double)right; }
-            case LESS -> { return (double)left < (double)right; }
-            case EQUAL -> { return(double)left == (double)right; }
-            case NOT_EQUAL -> { return (double)left != (double)right; }
-            case GREATER_EQUAL -> { return (double)left >= (double)right; }
-            case LESS_EQUAL -> { return (double)left <= (double)right; }
+            case GREATER -> { return (double)left_eval > (double)right_eval; }
+            case LESS -> { return (double)left_eval < (double)right_eval; }
+            case EQUAL -> { return(double)left_eval == (double)right_eval; }
+            case NOT_EQUAL -> { return (double)left_eval != (double)right_eval; }
+            case GREATER_EQUAL -> { return (double)left_eval >= (double)right_eval; }
+            case LESS_EQUAL -> { return (double)left_eval <= (double)right_eval; }
         }
+        //System.out.println("I did not evaluate expression type");
         return null;
     }
 }
