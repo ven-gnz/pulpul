@@ -31,19 +31,9 @@ class Parser {
     private Expr expression()
     {
 
-
-        // parse unaries here ?
-
-        if(match(IS, TRUE, FALSE, AND, OR)) {
+        if(match(IS, TRUE, FALSE, AND, OR, NOT)) {
             return parseLogicalExpression();
         }
-        /*
-        if(match(AND,OR))
-        {
-            return parseLogicalExpression();
-        }
-        */
-
 
         Expr expr = arithmeticExpression();
 
@@ -53,19 +43,23 @@ class Parser {
 
     private Expr parseLogicalExpression() {
 
-
         System.out.println("Parsing logical " + previous());
-        if(match(TRUE) || match(FALSE)) { return booleanLiteral(); }
-        
+        if(previous().type == TRUE || previous().type == FALSE) { return booleanLiteral(); }
+        if(previous().type == NOT)
+        {
+
+            return new Expr.Unary(tokens.get(current), expression());
+        }
+
         Expr left = logicalTerm();
 
         if(match(AND,OR)){
             Token prev = previous();
-            if(prev.type == AND)
+            if(previous().type == AND)
             {
                 consume(IS, "Except 'is' for boolean binary and");
             }
-            else if(prev.type == OR)
+            else if(previous().type == OR)
             {
                 consume(IS, "Except 'is' for boolean binary or");
             }
@@ -156,24 +150,6 @@ class Parser {
         throw error(peek(), "Except expression");
     }
 
-
-
-
-
-    private Expr unary()
-    {
-
-        System.out.println("Enter unary");
-        if(match(MINUS, NOT))
-        {
-            Token operator = previous();
-            Expr right = unary();
-            return new Expr.Unary(operator, right);
-        }
-        // Do I need this?
-        return arithmeticPrimary();
-    }
-
     private Expr comparisonExpression(Expr left)
     {
         ComparisonType type = parseComparisonCriteria();
@@ -181,10 +157,6 @@ class Parser {
         //System.out.println("type :" + type.toString());
         return new Expr.Compare(left, type, right);
     }
-
-
-
-
 
     private ComparisonType parseComparisonCriteria()
     {
