@@ -137,7 +137,7 @@ class Parser {
         }
         if(match(NUMBER_LITERAL)) { return new Expr.Literal(previous().literal); }
         if(match(IDENTIFIER)) { return new Expr.Identifier(previous().lexeme); }
-        throw error(peek(), "Except expression : cannot parse this as arithmetic");
+        throw error(peek(), "Except expression : cannot parse this as arithmetic or identifier");
     }
 
     private Expr comparisonExpression(Expr left)
