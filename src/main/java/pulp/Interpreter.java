@@ -1,5 +1,8 @@
 package pulp;
 
+import static pulp.TokenType.FALSE;
+import static pulp.TokenType.TRUE;
+
 public class Interpreter implements Expr.Visitor<Object>{
 
 
@@ -57,6 +60,9 @@ public class Interpreter implements Expr.Visitor<Object>{
 
     @Override
     public Object visitLiteralExpr(Expr.Literal expr) {
+
+        if(expr.value == TRUE) return true;
+        if(expr.value == FALSE) return false;
         return expr.value;
     }
 
@@ -84,7 +90,7 @@ public class Interpreter implements Expr.Visitor<Object>{
     @Override
     public Object visitLogicalExpr(Expr.Logical expr) {
 
-        Object left = evaluate(expr.left);// So this is supposed to be a logical expression, so maybe something that compare produces?
+        Object left = evaluate(expr.left);
         boolean l_val = isTruthy(left);
         Object right = evaluate(expr.right);
         boolean r_val = isTruthy(right);

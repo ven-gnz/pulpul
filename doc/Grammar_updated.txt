@@ -37,9 +37,9 @@ Grammar for ULP (Un-natural language programming language)
 <divide_expression> ::= "divide" <arithmetic_expression> "by" <arithmetic_expression>
 
 <logical_expression> ::= <logical_expression> "and" <logical_expression> | <logical_expression> "or" <logical expression> | <logic_term>
-<logic_term> ::= <boolean_literal> | <comparison_expression> | <not_expression>
+<logic_term> ::= "is" (<boolean_literal> | <comparison_expression> | <not_expression>)
 <not_expression> ::= "not" <logical_expression>
-<comparison_expression> ::= "is" <arithmetic_expression> <comparison_criteria> <arithmetic_expression>
+<comparison_expression> ::= <arithmetic_expression> <comparison_criteria> <arithmetic_expression>
 
 <subprogram_invocation_expression> ::= "Invoke " <subprogram_name> " with " <argument_list>
 <argument_list> ::= <empty> | <expression_list>

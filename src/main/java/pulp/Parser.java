@@ -1,5 +1,6 @@
 package pulp;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -31,7 +32,8 @@ class Parser {
     private Expr expression()
     {
 
-        if(match(IS, TRUE, FALSE, AND, OR, NOT)) {
+        if(check(IS)) {
+            consume(IS, "Except logical expression or primary after 'is'");
             return parseLogicalExpression();
         }
 
@@ -43,29 +45,34 @@ class Parser {
 
     private Expr parseLogicalExpression() {
 
-        System.out.println("Parsing logical " + previous());
-        if(previous().type == TRUE || previous().type == FALSE) { return booleanLiteral(); }
-        if(previous().type == NOT)
-        {
 
-            return new Expr.Unary(tokens.get(current), expression());
+        if(check(TRUE)) {
+            consume(TRUE, "Except boolean literal true after 'is'");
+            return new Expr.Literal(TRUE);
+        }
+        if(check(FALSE))
+        {
+            consume(FALSE, "Except boolean literal false after 'is'");
+            return new Expr.Literal(FALSE);
+        }
+        if(check(NOT))
+        {
+            consume(NOT,"Except boolean expression after 'not'");
+            return new Expr.Unary(previous(), parseLogicalExpression());
         }
 
         Expr left = logicalTerm();
+        if(check(AND))
+       {
+           consume(AND, "Except boolean expression after 'and'");
+           return new Expr.Logical(left, previous(), expression());
+       }
+       if(check(OR))
+       {
+           consume(OR, "Except boolen expression after 'or'");
+           return new Expr.Logical(left, previous(), expression());
+       }
 
-        if(match(AND,OR)){
-            Token prev = previous();
-            if(previous().type == AND)
-            {
-                consume(IS, "Except 'is' for boolean binary and");
-            }
-            else if(previous().type == OR)
-            {
-                consume(IS, "Except 'is' for boolean binary or");
-            }
-            Expr right = parseLogicalExpression();
-            return new Expr.Logical(left, prev, right);
-        }
         return left;
 
     }
@@ -73,27 +80,10 @@ class Parser {
     // this is logical term?
     private Expr logicalTerm()
     {
-
-        // is comparisontype, it consumes than, then parse right expression
-        System.out.println("logical term parsed");
         Expr left = arithmeticExpression();
         return comparisonExpression(left);
-
     }
 
-    private Expr booleanLiteral()
-    {
-        if(check(TRUE)) {
-            consume(TRUE, "Except truth value true");
-            return new Expr.Literal(TRUE);
-        }
-        if(check(FALSE))
-        {
-            consume(FALSE, "Except truth value false");
-            return new Expr.Literal(FALSE);
-        }
-        throw error(tokens.get(current), " cannot parse boolean literal");
-    }
 
     private Expr arithmeticExpression()
     {
@@ -147,14 +137,13 @@ class Parser {
         }
         if(match(NUMBER_LITERAL)) { return new Expr.Literal(previous().literal); }
         if(match(IDENTIFIER)) { return new Expr.Identifier(previous().lexeme); }
-        throw error(peek(), "Except expression");
+        throw error(peek(), "Except expression : cannot parse this as arithmetic");
     }
 
     private Expr comparisonExpression(Expr left)
     {
         ComparisonType type = parseComparisonCriteria();
         Expr right = arithmeticExpression();
-        //System.out.println("type :" + type.toString());
         return new Expr.Compare(left, type, right);
     }
 
