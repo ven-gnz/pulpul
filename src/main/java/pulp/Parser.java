@@ -19,14 +19,37 @@ class Parser {
         this.tokens = tokens;
     }
 
-    Expr parse()
+    List<Stmt> parse()
     {
-        try{
-            return expression();
-        } catch (ParseError pe)
+        List<Stmt> statements = new ArrayList<>();
+        while(!isAtEnd())
         {
-            return null;
+            statements.add(statement());
         }
+        return statements;
+    }
+
+
+    private Stmt statement()
+    {
+        if(match(DISPLAY))
+        {
+            return printstatement();
+        }
+        return expressionStatement();
+    }
+
+    private Stmt expressionStatement()
+    {
+        return new Stmt.Expression(expression());
+    }
+
+    private Stmt printstatement()
+    {
+        consume(RESULT, "Except 'result' after print command");
+        Expr value = expression();
+        return new Stmt.Print(value);
+
     }
 
     private Expr expression()

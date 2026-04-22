@@ -1,4 +1,1 @@
-is 3 less than 5 and is 3 less than 6
-
-is 5 less than add 6 to multiply 5 by 7 and is 5 equal to 5 or is 3 more than 4 and is 6 less than 7 and is 8 less than 7 and is 4 less than or equal to 4 and is 8 more than or equal to 7
-
+display result is 5 less than add 6 to multiply 5 by 7 and is 5 equal to 5 or is 3 more than 4 and is 6 less than 7 and is 8 less than 7 and is 4 less than or equal to 4 and is 8 more than or equal to 7

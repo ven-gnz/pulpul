@@ -1,27 +1,32 @@
 package pulp;
 
+import java.util.List;
+
 import static pulp.TokenType.FALSE;
 import static pulp.TokenType.TRUE;
 
-public class Interpreter implements Expr.Visitor<Object>{
+public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
 
 
 
 
-    void interpret(Expr expression)
+    void interpret(List<Stmt> statements)
     {
-        try
-        {
-            Object value = evaluate(expression);
-            if (value == null) {
-                System.out.println("null value :"+ value);
+        try {
+            for (Stmt statement : statements) {
+                execute(statement);
+
             }
-            System.out.println(value);
-            System.out.println(stringify(value));
-        } catch (RuntimeError error)
-        {
-            Pulper.runtimeError(error);
         }
+        catch (RuntimeError error) { Pulper.runtimeError(error); }
+
+
+        }
+
+
+    private void execute(Stmt stmt)
+    {
+        stmt.accept(this);
     }
 
     private String stringify(Object object) {
@@ -179,6 +184,19 @@ public class Interpreter implements Expr.Visitor<Object>{
             case GREATER_EQUAL -> { return (double)left_eval >= (double)right_eval; }
             case LESS_EQUAL -> { return (double)left_eval <= (double)right_eval; }
         }
+        return null;
+    }
+
+    @Override
+    public Void visitExpressionStmt(Stmt.Expression stmt) {
+        evaluate(stmt.expression);
+        return null;
+    }
+
+    @Override
+    public Void visitPrintStmt(Stmt.Print stmt) {
+        Object value = evaluate(stmt.expression);
+        System.out.println(stringify(value));
         return null;
     }
 }
