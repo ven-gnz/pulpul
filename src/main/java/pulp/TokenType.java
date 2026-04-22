@@ -10,7 +10,7 @@ public enum TokenType {
     COMMA, DOT, COLON, EOF,
     LESS, THAN, OR, MORE, EQUAL, NOT, MINUS,
 
-    CONSTANT, LET, SET,
+    GLOBAL, LET, SET,
     IDENTIFIER,
     INVOKE,
 

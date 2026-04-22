@@ -4,11 +4,12 @@ Grammar for ULP (Un-natural language programming language)
 
 
 <program> ::= <program_item> | <program_item> <program>
-<program_item> ::= <block> | <subprogram_definition> | <global_declaration>
+<program_item> ::= <block> | <subprogram_definition> | <declaration>
 <block> ::= ":" <statement_list>
 <statement_list> ::= <statement> "." | <statement> "," <block>
-<global_declaration> ::= <constant_definition>
-<constant_definition> ::= "Constant" <type> " " <identifier> "set" "to" <expression>
+<declaration> ::= <declaration> | <statement>
+<declaration> ::= <global_definition>
+<global_definition> ::= "global" <type> " " <identifier> "set" "to" <expression>
 <statement> ::= <assignment> | <selection_statement> | <looping_statement> | <print_statement>
 
 ---------------

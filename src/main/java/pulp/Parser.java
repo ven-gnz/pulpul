@@ -29,6 +29,22 @@ class Parser {
         return statements;
     }
 
+    private Stmt declaration()
+    {
+        try
+        {
+            if(match(GLOBAL))
+            {
+                return globalDeclaration();
+            }
+            return statement();
+        } catch (ParseError per)
+        {
+            synchronize();
+            return null;
+        }
+    }
+
 
     private Stmt statement()
     {
@@ -263,6 +279,23 @@ class Parser {
     {
         Pulper.error(token, msg);
         return new ParseError();
+    }
+
+    private void synchronize()
+    {
+        System.out.println("Synchronizing error");
+
+        advance();
+
+        while(!isAtEnd())
+        {
+            if(previous().type == DOT) return;
+
+            switch (peek().type)
+            {
+               // this needs some thinking : do I want really to do the dot, as to search for the next scope?
+            }
+        }
     }
 }
 

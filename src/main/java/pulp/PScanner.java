@@ -17,7 +17,7 @@ public class PScanner {
 
     static {
         keywords = new HashMap<>();
-        keywords.put("constant", CONSTANT);
+        keywords.put("global", GLOBAL);
         keywords.put("let", LET);
         keywords.put("be", BE);
         keywords.put("set", SET);

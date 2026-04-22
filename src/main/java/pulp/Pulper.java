@@ -68,7 +68,6 @@ public class Pulper {
         }
         if(hadRuntimeError) System.exit(70);
         AstPrinter p = new AstPrinter();
-        //System.out.println(p.print(expression));
 
         interpreter.interpret(statements);
     }
