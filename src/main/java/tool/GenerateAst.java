@@ -30,6 +30,12 @@ public class GenerateAst {
                         "Compare : Expr left, ComparisonType type, Expr right"
 
                 ));
+
+        defineAst(outputDir, "Stmt",
+                Arrays.asList(
+                        "Expression : Expr expression",
+                        "Print : Expr expression"
+                ));
     }
 
 
@@ -44,7 +50,8 @@ public class GenerateAst {
 
             writer.println("package pulp;");
             writer.println("import java.util.List;");
-            writer.println("import pulp.ComparisonType");
+            writer.println("import pulp.ComparisonType;");
+            writer.println("import pulp.Expr;");
             writer.println();
             writer.println("abstract class " + baseName + "{");
 
