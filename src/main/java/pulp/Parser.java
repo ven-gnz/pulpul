@@ -68,7 +68,23 @@ class Parser {
         {
             return printstatement();
         }
+        if(match(COLON))
+        {
+            return new Stmt.Block(block());
+        }
         return expressionStatement();
+    }
+
+    private List <Stmt> block()
+    {
+        List<Stmt> statements = new ArrayList<>();
+
+        while(!check(DOT) && !isAtEnd())
+        {
+            statements.add(declaration());
+        }
+        consume(DOT, "Except '.' to end block");
+        return statements;
     }
 
     private Stmt expressionStatement()

@@ -151,6 +151,15 @@ public class PScanner {
             case '-':addToken(TokenType.MINUS); break;
             case '"':string(); break;
 
+            case ' ':
+            case '\r':
+            case '\t':
+                // Ignore whitespace.
+                break;
+            case '\n':
+                line++;
+                break;
+
             default:
                 if(isDigit(c))
                 {
@@ -160,6 +169,8 @@ public class PScanner {
                 {
                     identifier();
                 }
+
+
         }
     }
 
