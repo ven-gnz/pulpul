@@ -12,10 +12,6 @@ class AstPrinter implements Expr.Visitor<String> {
         return expr.value.toString();
     }
 
-    @Override
-    public String visitIdentifierExpr(Expr.Identifier expr) {
-        return expr.name;
-    }
 
     @Override
     public String visitUnaryExpr(Expr.Unary expr) {
@@ -63,6 +59,11 @@ class AstPrinter implements Expr.Visitor<String> {
         return  "is "+wrap(expr.left.accept(this)) + " " +
                 comparisonToString(expr.type) + " " +
                 wrap(expr.right.accept(this));
+    }
+
+    @Override
+    public String visitVariableExpr(Expr.Variable expr) {
+        return expr.name.lexeme;
     }
 
     private String comparisonToString(ComparisonType type) {

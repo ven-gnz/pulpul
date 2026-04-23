@@ -24,7 +24,7 @@ class Parser {
         List<Stmt> statements = new ArrayList<>();
         while(!isAtEnd())
         {
-            statements.add(statement());
+            statements.add(declaration());
         }
         return statements;
     }
@@ -33,10 +33,11 @@ class Parser {
     {
         try
         {
-            if(match(GLOBAL))
+            if(match(LET))
             {
-                return globalDeclaration();
+               return varDeclaration();
             }
+
             return statement();
         } catch (ParseError per)
         {
@@ -44,6 +45,21 @@ class Parser {
             return null;
         }
     }
+
+    private Stmt varDeclaration()
+    {
+        // check for globals here
+
+        Token name = consume(IDENTIFIER, "Except variable name");
+
+        consume(BE, "Except 'be' after variable name in assignment");
+        consume(EQUAL, "Except 'equal' after be for assignment");
+        consume(TO, "Except 'to' after equal for assignment");
+
+        return new Stmt.Var(name, expression());
+    }
+
+
 
 
     private Stmt statement()
@@ -175,7 +191,8 @@ class Parser {
             return new Expr.Unary(operator, right);
         }
         if(match(NUMBER_LITERAL)) { return new Expr.Literal(previous().literal); }
-        if(match(IDENTIFIER)) { return new Expr.Identifier(previous().lexeme); }
+        if(match(IDENTIFIER)) { return new Expr.Variable(previous()); }
+
         throw error(peek(), "Except expression : cannot parse this as arithmetic or identifier");
     }
 

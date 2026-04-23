@@ -6,7 +6,6 @@ import pulp.Expr;
 abstract class Expr{
     interface Visitor<R> {
     R visitLiteralExpr(Literal expr);
-    R visitIdentifierExpr(Identifier expr);
     R visitUnaryExpr(Unary expr);
     R visitLogicalExpr(Logical expr);
     R visitAssignExpr(Assign expr);
@@ -15,6 +14,7 @@ abstract class Expr{
     R visitMultiplyExpr(Multiply expr);
     R visitDivideExpr(Divide expr);
     R visitCompareExpr(Compare expr);
+    R visitVariableExpr(Variable expr);
  }
  static class Literal extends Expr {
     Literal(Object value) {
@@ -27,18 +27,6 @@ abstract class Expr{
     }
 
     final Object value;
-  }
- static class Identifier extends Expr {
-    Identifier(String name) {
-    this.name = name;
-    }
-
-    @Override
-    <R> R accept(Visitor<R> visitor) {
-    return visitor.visitIdentifierExpr(this);
-    }
-
-    final String name;
   }
  static class Unary extends Expr {
     Unary(Token operator, Expr right) {
@@ -71,7 +59,7 @@ abstract class Expr{
     final Expr right;
   }
  static class Assign extends Expr {
-    Assign(String name, Expr value) {
+    Assign(Token name, Expr value) {
     this.name = name;
     this.value = value;
     }
@@ -81,7 +69,7 @@ abstract class Expr{
     return visitor.visitAssignExpr(this);
     }
 
-    final String name;
+    final Token name;
     final Expr value;
   }
  static class Add extends Expr {
@@ -155,6 +143,18 @@ abstract class Expr{
     final Expr left;
     final ComparisonType type;
     final Expr right;
+  }
+ static class Variable extends Expr {
+    Variable(Token name) {
+    this.name = name;
+    }
+
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+    return visitor.visitVariableExpr(this);
+    }
+
+    final Token name;
   }
     abstract <R> R accept(Visitor<R> visitor);
 }

@@ -51,11 +51,11 @@ public class Pulper {
         List<Token> tokens = scanner.scanTokens();
 
 
-/*
+
         for (Token token : tokens) {
             System.out.println(token.type + " " + token.lexeme);
         }
-*/
+
 
 
         Parser parser = new Parser(tokens);

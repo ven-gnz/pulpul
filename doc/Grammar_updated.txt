@@ -9,11 +9,12 @@ Grammar for ULP (Un-natural language programming language)
 <statement_list> ::= <statement> "." | <statement> "," <block>
 <declaration> ::= <declaration> | <statement>
 <declaration> ::= <global_definition>
-<global_definition> ::= "global" <type> " " <identifier> "set" "to" <expression>
+<global_definition> ::= "let" "global" <type> <identifier> "be" "equal" "to" <expression>
 <statement> ::= <assignment> | <selection_statement> | <looping_statement> | <print_statement>
 
 ---------------
-<assignment> ::= "let" <type> " " <identifier> "be" "equal" "to" <expression> | "let" <identifier> "be" "equal" "to" <expression> //REASSIGN
+<assignment> ::= "let" <type> " " <identifier> "be" "equal" "to" <expression> | <reassignment>
+<reassignment> ::= "set" <identifier> "to" <expression>
 <type> ::= "Whole" "Number" | "Real" "Number" | "String" | "Boolean"
 <identifier> ::= <letter> | <letter> <identifier>
 <letter> ::= [a-zA-Z]

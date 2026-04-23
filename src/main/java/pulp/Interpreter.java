@@ -8,6 +8,7 @@ import static pulp.TokenType.TRUE;
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
 
 
+    private Environment environment = new Environment();
 
 
     void interpret(List<Stmt> statements)
@@ -46,6 +47,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         }
 
 
+
         return object.toString();
     }
 
@@ -71,10 +73,6 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         return expr.value;
     }
 
-    @Override
-    public Object visitIdentifierExpr(Expr.Identifier expr) {
-        return null;
-    }
 
     @Override
     public Object visitUnaryExpr(Expr.Unary expr) {
@@ -188,6 +186,12 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
     }
 
     @Override
+    public Object visitVariableExpr(Expr.Variable expr) {
+        return environment.get(expr.name);
+
+    }
+
+    @Override
     public Void visitExpressionStmt(Stmt.Expression stmt) {
         evaluate(stmt.expression);
         return null;
@@ -199,4 +203,23 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         System.out.println(stringify(value));
         return null;
     }
+
+    /**
+     * This method works on a side effect : it pushes the variable declaration into an environment
+     * @param stmt the Statement containing tokens for variable initialization
+     * @return void
+     */
+    @Override
+    public Void visitVarStmt(Stmt.Var stmt) {
+
+        Object value = null;
+        if(stmt.initializer != null)
+        {
+            value = evaluate(stmt.initializer);
+        }
+        environment.define(stmt.name.lexeme, value);
+        return null;
+    }
+
+
 }

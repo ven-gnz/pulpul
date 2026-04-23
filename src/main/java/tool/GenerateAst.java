@@ -19,15 +19,15 @@ public class GenerateAst {
         defineAst(outputDir, "Expr",
                 Arrays.asList(
                         "Literal : Object value",
-                        "Identifier : String name",
                         "Unary : Token operator, Expr right",
                         "Logical : Expr left, Token operator, Expr right",
-                        "Assign : String name, Expr value",
+                        "Assign : Token name, Expr value",
                         "Add : Expr left, Expr right",
                         "Remove : Expr left, Expr right",
                         "Multiply : Expr left, Expr right",
                         "Divide : Expr left, Expr right",
-                        "Compare : Expr left, ComparisonType type, Expr right"
+                        "Compare : Expr left, ComparisonType type, Expr right",
+                        "Variable : Token name"
 
                 ));
 
@@ -35,7 +35,7 @@ public class GenerateAst {
                 Arrays.asList(
                         "Expression : Expr expression",
                         "Print : Expr expression",
-                        "Global : "
+                        "Var : Token name, Expr initializer"
                 ));
     }
 
