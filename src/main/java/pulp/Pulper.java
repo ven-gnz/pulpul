@@ -3,7 +3,12 @@ package pulp;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+import java.nio.file.Files;
 
 
 public class Pulper {
@@ -26,37 +31,45 @@ public class Pulper {
         }
     }
 
-    private static void runFile(String arg) {
+    private static void runFile(String path) throws IOException {
+        byte[] bytes = Files.readAllBytes(Paths.get(path));
+        run(new String(bytes, Charset.defaultCharset()));
+//> exit-code
 
+        // Indicate an error in the exit code.
+        if (hadError) System.exit(65);
+//< exit-code
+//> Evaluating Expressions check-runtime-error
+        if (hadRuntimeError) System.exit(70);
+//< Evaluating Expressions check-runtime-error
     }
-
-
-    private static void runPrompt() throws IOException
-    {
+    //< run-file
+//> prompt
+    private static void runPrompt() throws IOException {
         InputStreamReader input = new InputStreamReader(System.in);
         BufferedReader reader = new BufferedReader(input);
 
-        for(;;)
-        {
+        for (;;) { // [repl]
             System.out.print("> ");
             String line = reader.readLine();
-            if(line == null) break;
+            if (line == null) break;
             run(line);
+//> reset-had-error
+            hadError = false;
+//< reset-had-error
         }
     }
+
+
 
     private static void run(String source)
     {
         PScanner scanner = new PScanner(source);
         List<Token> tokens = scanner.scanTokens();
 
-
-
         for (Token token : tokens) {
             System.out.println(token.type + " " + token.lexeme);
         }
-
-
 
         Parser parser = new Parser(tokens);
         List<Stmt> statements = parser.parse();
@@ -67,7 +80,6 @@ public class Pulper {
             System.exit(65);
         }
         if(hadRuntimeError) System.exit(70);
-        AstPrinter p = new AstPrinter();
 
         interpreter.interpret(statements);
     }

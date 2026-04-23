@@ -1,4 +1,2 @@
-display result is 5 less than add 6 to multiply 5 by 7 and is 5 equal to 5 or is 3 more than 4 and is 6 less than 7 and is 8 less than 7 and is 4 less than or equal to 4 and is 8 more than or equal to 7
-
-
-let a be equal to 5 let b be equal to add 1 to a display result add a to b ####produces eleven
+let a be equal to
+5 display result a
