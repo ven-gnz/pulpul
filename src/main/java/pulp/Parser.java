@@ -87,6 +87,10 @@ class Parser {
     private Expr expression()
     {
 
+        if(peek().type == SET)
+        {
+            return assignment();
+        }
         if(check(IS)) {
             consume(IS, "Except logical expression or primary after 'is'");
             return parseLogicalExpression();
@@ -96,6 +100,21 @@ class Parser {
 
         return expr;
 
+    }
+
+    private Expr assignment()
+    {
+
+        if(match(SET))
+        {
+            consume(IDENTIFIER, "Except 'identifier' after set");
+            Token id = previous();
+            consume(TO, "Except 'to' after identifier on reassign");
+            Expr value = expression();
+            return new Expr.Assign(id,value);
+        }
+        error(tokens.get(current), "Invalid assignment target.");
+        return null;
     }
 
     private Expr parseLogicalExpression() {
