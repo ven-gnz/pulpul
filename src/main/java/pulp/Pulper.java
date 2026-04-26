@@ -66,11 +66,13 @@ public class Pulper {
     {
         PScanner scanner = new PScanner(source);
         List<Token> tokens = scanner.scanTokens();
+/*
+
 
         for (Token token : tokens) {
             System.out.println(token.type + " " + token.lexeme);
         }
-
+ */
         Parser parser = new Parser(tokens);
         List<Stmt> statements = parser.parse();
 

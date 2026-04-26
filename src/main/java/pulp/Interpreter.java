@@ -2,8 +2,7 @@ package pulp;
 
 import java.util.List;
 
-import static pulp.TokenType.FALSE;
-import static pulp.TokenType.TRUE;
+import static pulp.TokenType.*;
 
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
 
