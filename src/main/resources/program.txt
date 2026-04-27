@@ -7,6 +7,9 @@ check is a more than 2, then:
     display result add a to b
     display result loopvar
     set loopvar to remove 1 from loopvar
+    check is a more than 42, then:
+        display result "break condition"
+        break.
     .
 .
 otherwise:

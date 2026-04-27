@@ -103,6 +103,7 @@ class Parser {
         {
             return new Stmt.Block(block());
         }
+        if(match(BREAK)) { return new Stmt.Break(previous()); }
         return expressionStatement();
     }
 
@@ -257,6 +258,7 @@ class Parser {
             return new Expr.Unary(operator, right);
         }
         if(match(NUMBER_LITERAL)) { return new Expr.Literal(previous().literal); }
+
         if(match(IDENTIFIER)) { return new Expr.Variable(previous()); }
         if(match(STRING_LITERAL)) return new Expr.Literal(previous().literal);
         throw error(peek(), "Except expression : cannot parse this as arithmetic or identifier");

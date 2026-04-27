@@ -13,6 +13,7 @@ public enum TokenType {
     GLOBAL, LET, SET,
     IDENTIFIER,
     INVOKE,
+    BREAK,
 
 
     DESCRIPTION, OF, SUBPROGRAM, CALLED,
