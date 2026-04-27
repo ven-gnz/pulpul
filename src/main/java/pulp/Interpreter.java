@@ -138,7 +138,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         Object left = evaluate(expr.left);
         Object right = evaluate(expr.right);
         if(!(left instanceof Double) || !(right instanceof Double)) throw new RuntimeError("Operands must be number type!");
-        return (double)left + (double)right;
+        return (double)right + (double)left;
     }
 
     @Override
@@ -146,7 +146,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         Object left = evaluate(expr.left);
         Object right = evaluate(expr.right);
         if(!(left instanceof Double) || !(right instanceof Double)) throw new RuntimeError("Operands must be number type!");
-        return (double)left - (double)right;
+        return (double)right - (double)left;
     }
 
     @Override
@@ -154,7 +154,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         Object left = evaluate(expr.left);
         Object right = evaluate(expr.right);
         if(!(left instanceof Double) || !(right instanceof Double)) throw new RuntimeError("Operands must be number type!");
-        return (double)left * (double)right;
+        return (double)right * (double)left;
     }
 
     @Override
@@ -162,7 +162,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         Object left = evaluate(expr.left);
         Object right = evaluate(expr.right);
         if(!(left instanceof Double) || !(right instanceof Double)) throw new RuntimeError("Operands must be number type!");
-        return (double)left / (double)right;
+        return (double)right / (double)left;
     }
 
     @Override

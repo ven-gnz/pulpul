@@ -1,12 +1,13 @@
 let a be equal to 5
 let loopvar be equal to 5
 check is a more than 2, then:
-    repeat until is loopvar more than or equal to 0:
+    repeat until is loopvar more than 0:
     let b be equal to 3
     set a to multiply a by 2
     display result add a to b
+    display result loopvar
     set loopvar to remove 1 from loopvar
-    display result loopvar.
+    .
 .
 otherwise:
     display result "your condition was not true".
