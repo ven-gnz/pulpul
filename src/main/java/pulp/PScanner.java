@@ -26,7 +26,7 @@ public class PScanner {
 
         keywords.put("invoke", INVOKE);
         keywords.put("with", WITH);
-        keywords.put("should", SHOULD);
+        keywords.put("check", CHECK);
         keywords.put("then", THEN);
         keywords.put("otherwise", OTHERWISE);
 

@@ -37,6 +37,10 @@ class Parser {
             {
                return varDeclaration();
             }
+            if(match(CHECK))
+            {
+                return ifStatement();
+            }
 
             return statement();
         } catch (ParseError per)
@@ -44,6 +48,22 @@ class Parser {
             synchronize();
             return null;
         }
+    }
+
+    private Stmt ifStatement() {
+
+        Expr condition = expression();
+        consume(COMMA, "Except comma after boolean expression on if clause");
+        consume(THEN, "Except then after comma on if clause");
+        Stmt thenBrach = statement();
+        //this parses the block until the dot
+        Stmt elseBranch = null;
+        if (match(OTHERWISE))
+        {
+            elseBranch = statement();
+        }
+        return new Stmt.If(condition, thenBrach, elseBranch);
+
     }
 
     private Stmt varDeclaration()

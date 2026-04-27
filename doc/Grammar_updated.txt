@@ -10,7 +10,7 @@ Grammar for ULP (Un-natural language programming language)
 <declaration> ::= <declaration> | <statement>
 <declaration> ::= <global_definition>
 <global_definition> ::= "let" "global" <type> <identifier> "be" "equal" "to" <expression>
-<statement> ::= <assignment> | <selection_statement> | <looping_statement> | <print_statement>
+<statement> ::= <assignment> | <selection_statement> | <looping_statement> | <print_statement> | <expression>
 
 ---------------
 <assignment> ::= "let" <type> " " <identifier> "be" "equal" "to" <expression> | <reassignment>
@@ -53,7 +53,7 @@ Grammar for ULP (Un-natural language programming language)
 ------------------
 <comparison_criteria> ::= ("less" "than" | "less" "than" "or" "equal" "to" | "more" "than" | "more" "than" "or" "equal" "to" | "equal" "to")
 ------------------
-<selection_statement> ::= "Should" <logical_expression> "," "then" <block> " otherwise " <block>
+<selection_statement> ::= "check" <logical_expression> "," "then" <block> " otherwise " <block>
 -----------------
 <looping_statement> ::= "Repeat" "until" <logical_expression> <block>
 -----------------
