@@ -92,18 +92,16 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
     @Override
     public Object visitLogicalExpr(Expr.Logical expr) {
 
+
         Object left = evaluate(expr.left);
-        boolean l_val = isTruthy(left);
-        Object right = evaluate(expr.right);
-        boolean r_val = isTruthy(right);
-
-        switch(expr.operator.type)
+        if(expr.operator.type == OR)
         {
-            case AND -> { return l_val && r_val; }
-            case OR -> { return l_val || r_val; }
+            if (isTruthy(left)) return left;
         }
-
-        return null;
+        else {
+            if (!isTruthy(left)) return left;
+        }
+        return evaluate(expr.right);
     }
 
     private void checkNumberOperand(Token operator, Object operand)
@@ -252,6 +250,15 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         }else if(stmt.elseBranch != null)
         {
             execute(stmt.elseBranch);
+        }
+        return null;
+    }
+
+    @Override
+    public Void visitWhileStmt(Stmt.While stmt) {
+        while(isTruthy(evaluate(stmt.condition)))
+        {
+            execute(stmt.body);
         }
         return null;
     }

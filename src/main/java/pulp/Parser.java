@@ -41,6 +41,10 @@ class Parser {
             {
                 return ifStatement();
             }
+            if(match(REPEAT))
+            {
+                return whileStatement();
+            }
 
             return statement();
         } catch (ParseError per)
@@ -48,6 +52,13 @@ class Parser {
             synchronize();
             return null;
         }
+    }
+
+    private Stmt whileStatement() {
+        consume(UNTIL, "Except 'until' after repeat to start loop");
+        Expr condition = expression();
+        Stmt body = statement();
+        return new Stmt.While(condition, body);
     }
 
     private Stmt ifStatement() {
@@ -157,12 +168,12 @@ class Parser {
 
 
         if(check(TRUE)) {
-            consume(TRUE, "Except boolean literal true after 'is'");
+            consume(TRUE, "Except boolean literal after 'is'");
             return new Expr.Literal(TRUE);
         }
         if(check(FALSE))
         {
-            consume(FALSE, "Except boolean literal false after 'is'");
+            consume(FALSE, "Except boolean literal after 'is'");
             return new Expr.Literal(FALSE);
         }
         if(check(NOT))
