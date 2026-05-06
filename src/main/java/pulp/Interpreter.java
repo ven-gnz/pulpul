@@ -224,7 +224,6 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
             arguments.add(evaluate(argument));
         }
 
-        System.out.println(callee);
         if(!(callee instanceof PulpCallable))
         {
             throw new RuntimeError(expr.paren, "Can only call functions");
@@ -336,7 +335,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
 
     @Override
     public Void visitSubprogramStmt(Stmt.Subprogram stmt) {
-        PulpFunction function = new PulpFunction(stmt);
+        PulpFunction function = new PulpFunction(stmt, environment);
         environment.define(stmt.name.lexeme, function);
         return null;
     }

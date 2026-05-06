@@ -5,9 +5,11 @@ import java.util.List;
 public class PulpFunction implements PulpCallable{
 
     private final Stmt.Subprogram declaration;
+    private final Environment closure;
 
-    public PulpFunction(Stmt.Subprogram declaration) {
+    public PulpFunction(Stmt.Subprogram declaration, Environment closure) {
         this.declaration = declaration;
+        this.closure = closure;
     }
 
     @Override

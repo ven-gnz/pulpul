@@ -64,7 +64,8 @@ class Parser {
         consume(SUBPROGRAM, "Excepted keyword 'subprogram' as the next keyword in the subprogram definition");
         consume(CALLED, "Excepted keyword 'called' as the next keyword in the subprogram definition");
 
-        Token name = consume(IDENTIFIER, "Except "+kind+ " name");
+        //TODO : 06.05.2026
+        Token name = consume(VARIABLE, "Except "+kind+ " name");
         // <subprogram_definition> ::= "Description" "of" "subprogram" "called" <subprogram_name> "acting" "on" "inputs" <input_list> "producing" "outputs" <subprogram_output> <block>
         consume(ACTING, "Expected keyword 'acting' as the next keyword in the subprogram definition");
         consume(ON, " Expected keyword 'of' as the next keyword in the subprogram definition");
