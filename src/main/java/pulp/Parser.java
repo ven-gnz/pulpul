@@ -83,6 +83,7 @@ class Parser {
         }
         consume(PRODUCING, "Expect keyword producing to end input argument list on function defition");
         consume(OUTPUTS, "Expected keyword 'outputs' to begin list of function return values");
+        consume(COLON, "");
         List<Stmt> body = block();
         return new Stmt.Subprogram(name, parameters, body);
 
@@ -138,7 +139,20 @@ class Parser {
             return new Stmt.Block(block());
         }
         if(match(BREAK)) { return new Stmt.Break(previous()); }
+        if(match(RETURN)) { return returnStatement(); }
         return expressionStatement();
+    }
+
+    private Stmt returnStatement() {
+
+        Token keyword = previous();
+        Expr value = null;
+        if(!check(SEMICOLON))
+        {
+            value = expression();
+        }
+        consume(SEMICOLON, "Except ';' after return value");
+        return new Stmt.Return(keyword, value);
     }
 
     private List <Stmt> block()
@@ -179,6 +193,7 @@ class Parser {
         }
         if(check(INVOKE))
         {
+
             consume(INVOKE, "Except invocation of method called as an expression");
             return call();
         }
@@ -317,19 +332,17 @@ class Parser {
 
         // TODO : this is the culprit here, so work out a way to consume the colon between the expressions
         // or complete rewrite of loop? Might be simpler...
-        if(!check(SEMICOLON))
+
+        while(!check(SEMICOLON))
         {
-            do {
-
-                arguments.add(expression());
-                consume(COMMA, "Excepted 'comma' to continue argument list for invokated function");
-
-            } while (check(COMMA));
+            arguments.add(expression());
+            if(!check(COMMA)) { break; }
+            consume(COMMA, "Expected 'comma' to continue argument list for invokation ");
         }
 
-        Token paren = consume(SEMICOLON, "Except semicolon to end argument list on invokation");
+        Token sc = consume(SEMICOLON, "Except semicolon to end argument list on invokation");
 
-        return new Expr.Call(callee, paren, arguments);
+        return new Expr.Call(callee, sc, arguments);
     }
 
     private Expr comparisonExpression(Expr left)

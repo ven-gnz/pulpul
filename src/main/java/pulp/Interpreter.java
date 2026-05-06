@@ -224,6 +224,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
             arguments.add(evaluate(argument));
         }
 
+        System.out.println(callee);
         if(!(callee instanceof PulpCallable))
         {
             throw new RuntimeError(expr.paren, "Can only call functions");
@@ -288,6 +289,13 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
             value = evaluate(stmt.initializer);
         }
         environment.define(stmt.name.lexeme, value);
+        return null;
+    }
+
+    @Override
+    public Void visitReturnStmt(Stmt.Return stmt) {
+        Object value = null;
+        if(stmt.value != null) value = evaluate(stmt.value);
         return null;
     }
 

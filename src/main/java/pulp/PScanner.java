@@ -24,6 +24,7 @@ public class PScanner {
         keywords.put("not", NOT);
         keywords.put("and", AND);
         keywords.put("break", BREAK);
+        keywords.put("return", RETURN);
 
         keywords.put("invoke", INVOKE);
         keywords.put("with", WITH);

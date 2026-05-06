@@ -4,4 +4,4 @@ description of subprogram called test acting on inputs str1, str2 producing outp
     display result "parameter 1 " + str1 + "parameter 2".
 
 
-invoke test with "moi","piip";
+invoke test with "moi", "piip";
