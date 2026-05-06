@@ -9,7 +9,7 @@ import static pulp.TokenType.*;
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
 
 
-    private Environment globals = new Environment();
+    final Environment globals = new Environment();
     private Environment environment = globals;
 
     Interpreter()
@@ -328,6 +328,8 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
 
     @Override
     public Void visitSubprogramStmt(Stmt.Subprogram stmt) {
+        PulpFunction function = new PulpFunction(stmt);
+        environment.define(stmt.name.lexeme, function);
         return null;
     }
 

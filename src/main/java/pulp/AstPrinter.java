@@ -66,6 +66,11 @@ class AstPrinter implements Expr.Visitor<String> {
         return expr.name.lexeme;
     }
 
+    @Override
+    public String visitCallExpr(Expr.Call expr) {
+        return "";
+    }
+
     private String comparisonToString(ComparisonType type) {
         return switch (type) {
             case EQUAL -> "equal to";

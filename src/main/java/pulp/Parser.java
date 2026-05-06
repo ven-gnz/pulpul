@@ -177,6 +177,13 @@ class Parser {
             consume(IS, "Except logical expression or primary after 'is'");
             return parseLogicalExpression();
         }
+        if(check(INVOKE))
+        {
+            consume(INVOKE, "Except invocation of method called as an expression");
+            return call();
+        }
+
+
 
         Expr expr = arithmeticExpression();
 
@@ -295,7 +302,6 @@ class Parser {
 
         if(match(IDENTIFIER)) { return new Expr.Variable(previous()); }
         if(match(STRING_LITERAL)) return new Expr.Literal(previous().literal);
-        if(match(INVOKE)) return call();
         throw error(peek(), "Except expression : cannot parse this as arithmetic or identifier");
     }
 
@@ -303,18 +309,24 @@ class Parser {
     {
 
 
-        Expr callee = expression(); // get name parsed
+        Expr callee = new Expr.Literal(consume(IDENTIFIER, "Except method name")); // get name parsed
         consume(WITH, "Except with to list arguments for subprogram call");
 
         // parse arguments until semicolon
         List<Expr> arguments = new ArrayList<>();
+
+        // TODO : this is the culprit here, so work out a way to consume the colon between the expressions
+        // or complete rewrite of loop? Might be simpler...
         if(!check(SEMICOLON))
         {
             do {
+
                 arguments.add(expression());
+                consume(COMMA, "Excepted 'comma' to continue argument list for invokated function");
 
             } while (check(COMMA));
         }
+
         Token paren = consume(SEMICOLON, "Except semicolon to end argument list on invokation");
 
         return new Expr.Call(callee, paren, arguments);
