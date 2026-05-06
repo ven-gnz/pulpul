@@ -261,7 +261,29 @@ class Parser {
 
         if(match(IDENTIFIER)) { return new Expr.Variable(previous()); }
         if(match(STRING_LITERAL)) return new Expr.Literal(previous().literal);
+        if(match(INVOKE)) return call();
         throw error(peek(), "Except expression : cannot parse this as arithmetic or identifier");
+    }
+
+    private Expr call()
+    {
+
+
+        Expr callee = expression(); // get name parsed
+        consume(WITH, "Except with to list arguments for subprogram call");
+
+        // parse arguments until semicolon
+        List<Expr> arguments = new ArrayList<>();
+        if(!check(SEMICOLON))
+        {
+            do {
+                arguments.add(expression());
+
+            } while (check(COMMA));
+        }
+        Token paren = consume(SEMICOLON, "Except semicolon to end argument list on invokation");
+
+        return new Expr.Call(callee, paren, arguments);
     }
 
     private Expr comparisonExpression(Expr left)

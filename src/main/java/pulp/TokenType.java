@@ -7,7 +7,7 @@ Refactor each word to be its own keyword
 public enum TokenType {
 
     // character tokens
-    COMMA, DOT, COLON, EOF,
+    COMMA, DOT, COLON, SEMICOLON, EOF,
     LESS, THAN, OR, MORE, EQUAL, NOT, MINUS,
 
     GLOBAL, LET, SET,

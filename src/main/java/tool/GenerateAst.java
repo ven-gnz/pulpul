@@ -27,7 +27,8 @@ public class GenerateAst {
                         "Multiply : Expr left, Expr right",
                         "Divide : Expr left, Expr right",
                         "Compare : Expr left, ComparisonType type, Expr right",
-                        "Variable : Token name"
+                        "Variable : Token name",
+                        "Call : Expr callee, Token paren, List<Expr> arguments"
 
                 ));
 

@@ -46,7 +46,7 @@ Grammar for ULP (Un-natural language programming language)
 <subprogram_invocation_expression> ::= "Invoke " <subprogram_name> " with " <argument_list>
 <argument_list> ::= <empty> | <expression_list>
 <empty> ::= ε
-<expression_list> ::= <expression> | <expression> "," <expression_list>
+<expression_list> ::= <expression> ";" | <expression> "," <expression_list>
 
 <input_expression> ::= "input" "from" "user"
 

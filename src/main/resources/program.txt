@@ -14,3 +14,18 @@ check is a more than 2, then:
 .
 otherwise:
     display result "your condition was not true".
+
+
+
+description of subprogram called testSubProgram, acting on inputs whole number a, whole number b, producing outputs whole number c:
+    return add a to multiply b by 1.
+
+
+
+let result be equal to invoke testSubProgram with 2,3
+
+
+let another be equal to invoke nonExisting with 54, 54, 54;
+invoke testSubProgram with 2,3,4,5,6,7
+
+
