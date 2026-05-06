@@ -45,6 +45,10 @@ class Parser {
             {
                 return whileStatement();
             }
+            if(match(DESCRIPTION))
+            {
+                return subProgram("function");
+            }
 
             return statement();
         } catch (ParseError per)
@@ -52,6 +56,36 @@ class Parser {
             synchronize();
             return null;
         }
+    }
+
+    private Stmt subProgram(String kind) {
+
+        consume(OF, "Except keyword 'of' as the next keyword in the subprogram definition");
+        consume(SUBPROGRAM, "Excepted keyword 'subprogram' as the next keyword in the subprogram definition");
+        consume(CALLED, "Excepted keyword 'called' as the next keyword in the subprogram definition");
+
+        Token name = consume(IDENTIFIER, "Except "+kind+ " name");
+        // <subprogram_definition> ::= "Description" "of" "subprogram" "called" <subprogram_name> "acting" "on" "inputs" <input_list> "producing" "outputs" <subprogram_output> <block>
+        consume(ACTING, "Expected keyword 'acting' as the next keyword in the subprogram definition");
+        consume(ON, " Expected keyword 'of' as the next keyword in the subprogram definition");
+        consume(INPUTS, "Excepted keyword 'inputs' as the next keyword in the subprogram definition");
+
+        List<Token> parameters = new ArrayList<>();
+        if(!check(PRODUCING))
+        {
+            do {
+                if (parameters.size() >= 127)
+                {
+                    error(peek(), "Cannot exceed 127 parameters");
+                }
+                parameters.add(consume(IDENTIFIER, "Except parameter name."));
+            }while(match(COMMA));
+        }
+        consume(PRODUCING, "Expect keyword producing to end input argument list on function defition");
+        consume(OUTPUTS, "Expected keyword 'outputs' to begin list of function return values");
+        List<Stmt> body = block();
+        return new Stmt.Subprogram(name, parameters, body);
+
     }
 
     private Stmt whileStatement() {

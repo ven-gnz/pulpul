@@ -40,7 +40,8 @@ public class GenerateAst {
                         "Var : Token name, Expr initializer",
                         "If : Expr condition, Stmt thenBranch," + "Stmt elseBranch",
                         "While : Expr condition, Stmt body",
-                        "Break : Token keyword"
+                        "Break : Token keyword",
+                        "Subprogram : Token name, List<Token> params," + " List<Stmt> body"
                 ));
     }
 

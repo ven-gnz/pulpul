@@ -29,7 +29,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
             public String toString() { return "<native fn>"; }
         });
 
-        
+
 
     }
 
@@ -324,6 +324,11 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
     @Override
     public Void visitBreakStmt(Stmt.Break stmt) {
         throw new LoopBreakException();
+    }
+
+    @Override
+    public Void visitSubprogramStmt(Stmt.Subprogram stmt) {
+        return null;
     }
 
 

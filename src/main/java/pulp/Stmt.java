@@ -12,6 +12,7 @@ abstract class Stmt{
     R visitIfStmt(If stmt);
     R visitWhileStmt(While stmt);
     R visitBreakStmt(Break stmt);
+    R visitSubprogramStmt(Subprogram stmt);
  }
  static class Block extends Stmt {
     Block(List<Stmt> statements) {
@@ -104,6 +105,22 @@ abstract class Stmt{
     }
 
     final Token keyword;
+  }
+ static class Subprogram extends Stmt {
+    Subprogram(Token name, List<Token> params, List<Stmt> body) {
+    this.name = name;
+    this.params = params;
+    this.body = body;
+    }
+
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+    return visitor.visitSubprogramStmt(this);
+    }
+
+    final Token name;
+    final List<Token> params;
+    final List<Stmt> body;
   }
     abstract <R> R accept(Visitor<R> visitor);
 }
