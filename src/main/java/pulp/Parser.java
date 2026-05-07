@@ -99,6 +99,7 @@ class Parser {
 
     private Stmt ifStatement() {
 
+
         Expr condition = expression();
         consume(COMMA, "Except comma after boolean expression on if clause");
         consume(THEN, "Except then after comma on if clause");
@@ -184,12 +185,12 @@ class Parser {
     private Expr expression()
     {
 
-        if(peek().type == SET)
+        if(check(SET))
         {
             return assignment();
         }
-        if(check(IS)) {
-            consume(IS, "Except logical expression or primary after 'is'");
+        if(match(IS)) {
+            System.out.println("ENTER BLOCK");
             return parseLogicalExpression();
         }
 
@@ -243,7 +244,7 @@ class Parser {
        }
        if(check(OR))
        {
-           consume(OR, "Except boolen expression after 'or'");
+           consume(OR, "Except boolean expression after 'or'");
            return new Expr.Logical(left, previous(), expression());
        }
 
@@ -254,7 +255,7 @@ class Parser {
     // this is logical term?
     private Expr logicalTerm()
     {
-        Expr left = expression();
+        Expr left = primary();
         if(check(EQUAL) || check(NOT) || check(LESS) || check(MORE))
         {
             return comparisonExpression(left);
@@ -308,12 +309,20 @@ class Parser {
 
     private Expr arithmeticPrimary()
     {
+
         if(match(MINUS)) {
             Token operator = previous();
+            System.out.println("ARITHMETIC PRIMARY EDNLESS RECURSION");
             Expr right = arithmeticPrimary();
             return new Expr.Unary(operator, right);
         }
-        return new Expr.Literal(previous().literal);
+        if(match((NUMBER_LITERAL)))
+        {
+            return new Expr.Literal(previous().literal);
+        };
+
+        error(tokens.get(current), "What is going on");
+        return null;
 
     }
 
@@ -341,6 +350,7 @@ class Parser {
 
     private Expr comparisonExpression(Expr left)
     {
+        System.out.println("COMPARISON EXPRESSION");
         ComparisonType type = parseComparisonCriteria();
         Expr right = arithmeticExpression();
         return new Expr.Compare(left, type, right);
