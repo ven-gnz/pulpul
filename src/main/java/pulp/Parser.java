@@ -255,7 +255,11 @@ class Parser {
     private Expr logicalTerm()
     {
         Expr left = expression();
-        return comparisonExpression(left);
+        if(check(EQUAL) || check(NOT) || check(LESS) || check(MORE))
+        {
+            return comparisonExpression(left);
+        }
+        return left;
     }
 
 
