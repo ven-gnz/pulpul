@@ -12,7 +12,7 @@ public enum TokenType {
 
     GLOBAL, LET, SET,
     IDENTIFIER,
-    INVOKE,
+    LEFT_PAREN, RIGHT_PAREN,
     BREAK,
     RETURN,
 

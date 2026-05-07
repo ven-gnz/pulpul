@@ -65,7 +65,7 @@ class Parser {
         consume(CALLED, "Excepted keyword 'called' as the next keyword in the subprogram definition");
 
         //TODO : 06.05.2026
-        Token name = consume(VARIABLE, "Except "+kind+ " name");
+        Token name = consume(IDENTIFIER, "Except "+kind+ " name");
         // <subprogram_definition> ::= "Description" "of" "subprogram" "called" <subprogram_name> "acting" "on" "inputs" <input_list> "producing" "outputs" <subprogram_output> <block>
         consume(ACTING, "Expected keyword 'acting' as the next keyword in the subprogram definition");
         consume(ON, " Expected keyword 'of' as the next keyword in the subprogram definition");
@@ -192,19 +192,29 @@ class Parser {
             consume(IS, "Except logical expression or primary after 'is'");
             return parseLogicalExpression();
         }
-        if(check(INVOKE))
-        {
 
-            consume(INVOKE, "Except invocation of method called as an expression");
-            return call();
+        //PARSE : primary, unary, arithmetic, literals
+        if (check(ADD) || check(REMOVE) || check(DIVIDE) || check(MULTIPLY)) {
+            return arithmeticExpression();
         }
 
+        return primary();
 
+    }
 
-        Expr expr = arithmeticExpression();
+    private Expr primary()
+    {
 
-        return expr;
+        if(match(IDENTIFIER)) { return new Expr.Variable(previous()); }
+        if(match(STRING_LITERAL)) return new Expr.Literal(previous().literal);
+        if(check(NUMBER_LITERAL) || check(MINUS)) return arithmeticPrimary();
 
+        if(match(TRUE)) { return new Expr.Literal(TRUE); }
+        if(match(FALSE)) { return new Expr.Literal(FALSE); }
+        if(match(NOT)) { return new Expr.Unary(previous(), parseLogicalExpression()); }
+
+        if(match(LEFT_PAREN)) return call();
+        throw error(peek(), "Except expression : cannot parse this as arithmetic or identifier");
     }
 
     private Expr assignment()
@@ -225,21 +235,6 @@ class Parser {
     private Expr parseLogicalExpression() {
 
 
-        if(check(TRUE)) {
-            consume(TRUE, "Except boolean literal after 'is'");
-            return new Expr.Literal(TRUE);
-        }
-        if(check(FALSE))
-        {
-            consume(FALSE, "Except boolean literal after 'is'");
-            return new Expr.Literal(FALSE);
-        }
-        if(check(NOT))
-        {
-            consume(NOT,"Except boolean expression after 'not'");
-            return new Expr.Unary(previous(), parseLogicalExpression());
-        }
-
         Expr left = logicalTerm();
         if(check(AND))
        {
@@ -259,7 +254,7 @@ class Parser {
     // this is logical term?
     private Expr logicalTerm()
     {
-        Expr left = arithmeticExpression();
+        Expr left = expression();
         return comparisonExpression(left);
     }
 
@@ -314,11 +309,8 @@ class Parser {
             Expr right = arithmeticPrimary();
             return new Expr.Unary(operator, right);
         }
-        if(match(NUMBER_LITERAL)) { return new Expr.Literal(previous().literal); }
+        return new Expr.Literal(previous().literal);
 
-        if(match(IDENTIFIER)) { return new Expr.Variable(previous()); }
-        if(match(STRING_LITERAL)) return new Expr.Literal(previous().literal);
-        throw error(peek(), "Except expression : cannot parse this as arithmetic or identifier");
     }
 
     private Expr call()
@@ -330,9 +322,6 @@ class Parser {
 
         // parse arguments until semicolon
         List<Expr> arguments = new ArrayList<>();
-
-        // TODO : this is the culprit here, so work out a way to consume the colon between the expressions
-        // or complete rewrite of loop? Might be simpler...
 
         while(!check(SEMICOLON))
         {

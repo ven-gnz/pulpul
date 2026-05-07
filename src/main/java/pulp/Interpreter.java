@@ -216,8 +216,9 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
 
     @Override
     public Object visitCallExpr(Expr.Call expr) {
-        Object callee = evaluate(expr.callee);
 
+        Object callee = evaluate(expr.callee);
+        System.out.println(callee + " callee");
         List<Object> arguments = new ArrayList<>();
         for(Expr argument : expr.arguments)
         {

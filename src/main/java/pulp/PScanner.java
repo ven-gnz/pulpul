@@ -26,7 +26,6 @@ public class PScanner {
         keywords.put("break", BREAK);
         keywords.put("return", RETURN);
 
-        keywords.put("invoke", INVOKE);
         keywords.put("with", WITH);
         keywords.put("check", CHECK);
         keywords.put("then", THEN);
@@ -152,6 +151,8 @@ public class PScanner {
             case '.':addToken(TokenType.DOT); break;
             case '-':addToken(TokenType.MINUS); break;
             case ';':addToken(TokenType.SEMICOLON); break;
+            case '(':addToken(LEFT_PAREN); break;
+            case ')':addToken(RIGHT_PAREN); break;
             case '"':string(); break;
 
             case ' ':

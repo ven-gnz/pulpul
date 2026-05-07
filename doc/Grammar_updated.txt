@@ -43,7 +43,7 @@ Grammar for ULP (Un-natural language programming language)
 <not_expression> ::= "not" <logical_expression>
 <comparison_expression> ::= <arithmetic_expression> <comparison_criteria> <arithmetic_expression>
 
-<subprogram_invocation_expression> ::= "Invoke " <subprogram_name> " with " <argument_list>
+<subprogram_invocation_expression> ::= <subprogram_name> "(" <argument_list> ")"
 <argument_list> ::= <empty> | <expression_list>
 <empty> ::= ε
 <expression_list> ::= <expression> ";" | <expression> "," <expression_list>
