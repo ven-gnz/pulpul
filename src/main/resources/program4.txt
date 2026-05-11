@@ -1,0 +1,7 @@
+let a be equal to 5
+let loopvar be equal to 5
+check is a more than 2, then:
+    display result "hello from if block"
+.
+otherwise:
+    display result "your condition was not true".

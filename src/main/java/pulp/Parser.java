@@ -208,7 +208,8 @@ class Parser {
 
         if(match(IDENTIFIER)) { return new Expr.Variable(previous()); }
         if(match(STRING_LITERAL)) return new Expr.Literal(previous().literal);
-        if(check(NUMBER_LITERAL) || check(MINUS)) return arithmeticPrimary();
+        if(match(NUMBER_LITERAL)) return new Expr.Literal(previous().literal);
+        if(match(MINUS)) return arithmeticPrimary();
 
         if(match(TRUE)) { return new Expr.Literal(TRUE); }
         if(match(FALSE)) { return new Expr.Literal(FALSE); }
@@ -267,6 +268,8 @@ class Parser {
     private Expr arithmeticExpression()
     {
 
+        System.out.println("Arithmetic expression parsing");
+        System.out.println(tokens.get(current));
         if(match(ADD)) return addExpression();
         if(match(REMOVE)) return subtractExpression();
         if(match(MULTIPLY)) return multiplyExpression();
@@ -312,14 +315,15 @@ class Parser {
 
         if(match(MINUS)) {
             Token operator = previous();
-            System.out.println("ARITHMETIC PRIMARY EDNLESS RECURSION");
-            Expr right = arithmeticPrimary();
+            Expr right = expression();
             return new Expr.Unary(operator, right);
         }
         if(match((NUMBER_LITERAL)))
         {
             return new Expr.Literal(previous().literal);
         };
+
+        if(match(IDENTIFIER)) return new Expr.Variable(previous());
 
         error(tokens.get(current), "What is going on");
         return null;
