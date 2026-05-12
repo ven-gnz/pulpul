@@ -15,6 +15,7 @@ public enum TokenType {
     LEFT_PAREN, RIGHT_PAREN,
     BREAK,
     RETURN,
+    PLUS,
 
 
     DESCRIPTION, OF, SUBPROGRAM, CALLED,

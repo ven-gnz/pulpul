@@ -40,8 +40,8 @@ abstract class Stmt{
     final Expr expression;
   }
  static class Print extends Stmt {
-    Print(Expr expression) {
-    this.expression = expression;
+    Print(List<Expr> expressions) {
+    this.expressions = expressions;
     }
 
     @Override
@@ -49,7 +49,7 @@ abstract class Stmt{
     return visitor.visitPrintStmt(this);
     }
 
-    final Expr expression;
+    final List<Expr> expressions;
   }
  static class Var extends Stmt {
     Var(Token name, Expr initializer) {

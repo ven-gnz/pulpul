@@ -154,6 +154,7 @@ public class PScanner {
             case '(':addToken(LEFT_PAREN); break;
             case ')':addToken(RIGHT_PAREN); break;
             case '"':string(); break;
+            case '+':addToken(TokenType.PLUS); break;
 
             case ' ':
             case '\r':

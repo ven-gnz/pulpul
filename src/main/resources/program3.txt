@@ -1,7 +1,7 @@
 
 
 description of subprogram called test acting on inputs str1, str2 producing outputs:
-    display result "parameter 1 " + str1 + "parameter 2".
+    display result "parameter 1 " + str1 + "parameter 2" + str2.
 
 
 test("moi", "piip")

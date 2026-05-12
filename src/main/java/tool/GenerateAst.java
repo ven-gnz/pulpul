@@ -36,7 +36,7 @@ public class GenerateAst {
                 Arrays.asList(
                         "Block : List<Stmt> statements",
                         "Expression : Expr expression",
-                        "Print : Expr expression",
+                        "Print : List<Expr> expressions",
                         "Var : Token name, Expr initializer",
                         "Return : Token keyword, Expr value",
                         "If : Expr condition, Stmt thenBranch," + "Stmt elseBranch",

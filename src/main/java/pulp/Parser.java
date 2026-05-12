@@ -177,8 +177,13 @@ class Parser {
     private Stmt printstatement()
     {
         consume(RESULT, "Except 'result' after print command");
-        Expr value = expression();
-        return new Stmt.Print(value);
+        List<Expr> expressions = new ArrayList<>();
+        expressions.add(expression());
+        while(match(PLUS))
+        {
+            expressions.add(expression());
+        }
+        return new Stmt.Print(expressions);
 
     }
 
@@ -194,14 +199,16 @@ class Parser {
             return parseLogicalExpression();
         }
 
-        //PARSE : primary, unary, arithmetic, literals
+
         if (check(ADD) || check(REMOVE) || check(DIVIDE) || check(MULTIPLY)) {
             return arithmeticExpression();
         }
 
-        return primary();
+        return call();
 
     }
+
+
 
     private Expr primary()
     {
@@ -209,14 +216,15 @@ class Parser {
         if(match(IDENTIFIER)) { return new Expr.Variable(previous()); }
         if(match(STRING_LITERAL)) return new Expr.Literal(previous().literal);
         if(match(NUMBER_LITERAL)) return new Expr.Literal(previous().literal);
-        if(match(MINUS)) return arithmeticPrimary();
+        if(match(MINUS)) return new Expr.Unary(previous(),primary());
 
         if(match(TRUE)) { return new Expr.Literal(TRUE); }
         if(match(FALSE)) { return new Expr.Literal(FALSE); }
         if(match(NOT)) { return new Expr.Unary(previous(), parseLogicalExpression()); }
-
         if(match(LEFT_PAREN)) return call();
-        throw error(peek(), "Except expression : cannot parse this as arithmetic or identifier");
+
+        error(tokens.get(current), "Cannot parse expression");
+        return null;
     }
 
     private Expr assignment()
@@ -268,14 +276,12 @@ class Parser {
     private Expr arithmeticExpression()
     {
 
-        System.out.println("Arithmetic expression parsing");
-        System.out.println(tokens.get(current));
         if(match(ADD)) return addExpression();
         if(match(REMOVE)) return subtractExpression();
         if(match(MULTIPLY)) return multiplyExpression();
         if(match(DIVIDE)) return divideExpression();
+        return primary();
 
-        return arithmeticPrimary();
     }
 
     private Expr subtractExpression()
@@ -310,46 +316,40 @@ class Parser {
         return new Expr.Divide(left,right);
     }
 
-    private Expr arithmeticPrimary()
-    {
 
-        if(match(MINUS)) {
-            Token operator = previous();
-            Expr right = expression();
-            return new Expr.Unary(operator, right);
-        }
-        if(match((NUMBER_LITERAL)))
-        {
-            return new Expr.Literal(previous().literal);
-        };
-
-        if(match(IDENTIFIER)) return new Expr.Variable(previous());
-
-        error(tokens.get(current), "What is going on");
-        return null;
-
-    }
 
     private Expr call()
     {
 
 
-        Expr callee = new Expr.Literal(consume(IDENTIFIER, "Except method name")); // get name parsed
-        consume(WITH, "Except with to list arguments for subprogram call");
+        Expr expr = primary();
 
-        // parse arguments until semicolon
-        List<Expr> arguments = new ArrayList<>();
-
-        while(!check(SEMICOLON))
+        while(true)
         {
-            arguments.add(expression());
-            if(!check(COMMA)) { break; }
-            consume(COMMA, "Expected 'comma' to continue argument list for invokation ");
+            if(match(LEFT_PAREN))
+            {
+                expr = finishCall(expr);
+            }
+            else {
+                break;
+            }
         }
 
-        Token sc = consume(SEMICOLON, "Except semicolon to end argument list on invokation");
+        return expr;
+    }
 
-        return new Expr.Call(callee, sc, arguments);
+    private Expr finishCall(Expr callee)
+    {
+        List<Expr> args = new ArrayList<>();
+        if(!check(RIGHT_PAREN))
+        {
+            do{
+                args.add(expression());
+            }while(match(COMMA));
+        }
+        Token paren = consume(RIGHT_PAREN, "Except ')' to end argument list");
+
+        return new Expr.Call(callee, paren, args);
     }
 
     private Expr comparisonExpression(Expr left)
