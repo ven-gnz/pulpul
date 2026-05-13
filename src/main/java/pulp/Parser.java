@@ -178,7 +178,7 @@ class Parser {
         consume(RESULT, "Except 'result' after print command");
         List<Expr> expressions = new ArrayList<>();
         expressions.add(expression());
-        while(match(PLUS))
+        while(match(COMMA))
         {
             expressions.add(expression());
         }
