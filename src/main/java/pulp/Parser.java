@@ -213,7 +213,7 @@ class Parser {
     {
 
         if(match(IDENTIFIER)) { return new Expr.Variable(previous()); }
-        if(match(STRING_LITERAL)) return new Expr.Literal(previous().literal);
+        if(match(STRING_LITERAL)) return parseString();
         if(match(NUMBER_LITERAL)) return new Expr.Literal(previous().literal);
         if(match(MINUS)) return new Expr.Unary(previous(),primary());
 
@@ -224,6 +224,22 @@ class Parser {
 
         error(tokens.get(current), "Cannot parse expression");
         return null;
+    }
+
+    private Expr parseString()
+    {
+
+
+        List<Expr> strings = new ArrayList<>();
+
+        strings.add(new Expr.Literal(previous().literal));
+        while(match(PLUS))
+        {
+            strings.add(expression());
+        }
+        return new Expr.Multistring(strings);
+
+
     }
 
     private Expr assignment()

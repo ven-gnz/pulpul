@@ -6,6 +6,7 @@ import pulp.Expr;
 abstract class Expr{
     interface Visitor<R> {
     R visitLiteralExpr(Literal expr);
+    R visitMultistringExpr(Multistring expr);
     R visitUnaryExpr(Unary expr);
     R visitLogicalExpr(Logical expr);
     R visitAssignExpr(Assign expr);
@@ -28,6 +29,18 @@ abstract class Expr{
     }
 
     final Object value;
+  }
+ static class Multistring extends Expr {
+    Multistring(List<Expr> strings) {
+    this.strings = strings;
+    }
+
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+    return visitor.visitMultistringExpr(this);
+    }
+
+    final List<Expr> strings;
   }
  static class Unary extends Expr {
     Unary(Token operator, Expr right) {

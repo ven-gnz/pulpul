@@ -12,6 +12,16 @@ class AstPrinter implements Expr.Visitor<String> {
         return expr.value.toString();
     }
 
+    @Override
+    public String visitMultistringExpr(Expr.Multistring expr) {
+        StringBuilder sb = new StringBuilder();
+        for(Expr e : expr.strings)
+        {
+            sb.append(e.toString());
+        }
+        return sb.toString();
+    }
+
 
     @Override
     public String visitUnaryExpr(Expr.Unary expr) {

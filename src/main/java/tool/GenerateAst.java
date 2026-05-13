@@ -19,6 +19,7 @@ public class GenerateAst {
         defineAst(outputDir, "Expr",
                 Arrays.asList(
                         "Literal : Object value",
+                        "Multistring : List<Expr> strings",
                         "Unary : Token operator, Expr right",
                         "Logical : Expr left, Token operator, Expr right",
                         "Assign : Token name, Expr value",

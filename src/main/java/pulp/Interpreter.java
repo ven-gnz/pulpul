@@ -96,6 +96,16 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         return expr.value;
     }
 
+    @Override
+    public Object visitMultistringExpr(Expr.Multistring expr) {
+        StringBuilder builder = new StringBuilder();
+        for(Expr e : expr.strings)
+        {
+            builder.append(stringify(evaluate(e)));
+        }
+        return builder.toString();
+    }
+
 
     @Override
     public Object visitUnaryExpr(Expr.Unary expr) {
