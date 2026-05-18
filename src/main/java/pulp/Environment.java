@@ -32,6 +32,30 @@ public class Environment {
         throw new RuntimeError(name, "Undefined variable '" + name.lexeme +"' !");
     }
 
+    Object getAt(int distance, String name)
+    {
+        return ancestor(distance).values.get(name);
+    }
+
+    void assignAt(int distance, Token name, Object value) {
+        ancestor(distance).values.put(name.lexeme, value);
+    }
+
+    /**
+     * Worth noting, that the ancestor method always produces a variable, as long as it is only used for resolved variables.
+     * @param distance the resolved distance in nested scopes
+     * @return the environment which is found
+     */
+    Environment ancestor(int distance)
+    {
+        Environment environment = this;
+        for(int i = 0; i < distance; i++) {
+            environment = environment.enclosing;
+        }
+
+        return environment;
+    }
+
     void define(String name, Object value)
     {
         values.put(name, value);

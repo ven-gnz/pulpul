@@ -85,6 +85,14 @@ public class Pulper {
         }
         if(hadRuntimeError) System.exit(70);
 
+        Resolver resolver = new Resolver(interpreter);
+        resolver.resolve(statements);
+
+        if(hadError)
+        {
+            return;
+        }
+
         interpreter.interpret(statements);
     }
 

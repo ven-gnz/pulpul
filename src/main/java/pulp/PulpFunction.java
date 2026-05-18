@@ -19,7 +19,7 @@ public class PulpFunction implements PulpCallable{
 
     @Override
     public Object call(Interpreter interpreter, List<Object> arguments) {
-        Environment environment = new Environment(interpreter.globals);
+        Environment environment = new Environment(closure);
 
 
         for(int i = 0; i < declaration.params.size(); i++)
