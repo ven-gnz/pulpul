@@ -254,6 +254,12 @@ import java.util.Stack;
         }
 
         @Override
+        public Void visitGetExpr(Expr.Get expr) {
+            resolve(expr.object);
+            return null;
+        }
+
+        @Override
         public Void visitLiteralExpr(Expr.Literal expr)
         {
             return null;
@@ -272,6 +278,13 @@ import java.util.Stack;
         public Void visitLogicalExpr(Expr.Logical expr) {
             resolve(expr.left);
             resolve(expr.right);
+            return null;
+        }
+
+        @Override
+        public Void visitSetExpr(Expr.Set expr) {
+            resolve(expr.value);
+            resolve(expr.object);
             return null;
         }
 

@@ -240,7 +240,6 @@ class Parser {
             return assignment();
         }
         if(match(IS)) {
-            System.out.println("ENTER BLOCK");
             return parseLogicalExpression();
         }
 
@@ -266,7 +265,6 @@ class Parser {
         if(match(TRUE)) { return new Expr.Literal(TRUE); }
         if(match(FALSE)) { return new Expr.Literal(FALSE); }
         if(match(NOT)) { return new Expr.Unary(previous(), parseLogicalExpression()); }
-        if(match(LEFT_PAREN)) return call();
 
         error(tokens.get(current), "Cannot parse expression");
         return null;
@@ -291,16 +289,17 @@ class Parser {
     private Expr assignment()
     {
 
-        if(match(SET))
-        {
-            consume(IDENTIFIER, "Except 'identifier' after set");
-            Token id = previous();
-            consume(TO, "Except 'to' after identifier on reassign");
-            Expr value = expression();
-            return new Expr.Assign(id,value);
+        consume(SET, "Except set to reassign variables");
+        Expr target = call();
+        consume(TO, "Expected 'to' as the next keyword");
+        Expr value = expression();
+        if (target instanceof Expr.Variable v) {
+            return new Expr.Assign(v.name, value);
         }
-        error(tokens.get(current), "Invalid assignment target.");
-        return null;
+        if (target instanceof Expr.Get g) {
+            return new Expr.Set(g.object, g.name, value);
+        }
+        throw error(peek(), "Invalid assignment target");
     }
 
     private Expr parseLogicalExpression() {
@@ -390,6 +389,11 @@ class Parser {
             if(match(LEFT_PAREN))
             {
                 expr = finishCall(expr);
+            }
+            else if (match(OF))
+            {
+                Token name = consume(IDENTIFIER, "Except identifier after 'of'");
+                expr = new Expr.Get(expr,name);
             }
             else {
                 break;

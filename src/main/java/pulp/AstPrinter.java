@@ -36,6 +36,11 @@ class AstPrinter implements Expr.Visitor<String> {
     }
 
     @Override
+    public String visitSetExpr(Expr.Set expr) {
+        return "";
+    }
+
+    @Override
     public String visitAssignExpr(Expr.Assign expr) {
         return "let " + expr.name + " be equal to " + expr.value.accept(this);
     }
@@ -78,6 +83,11 @@ class AstPrinter implements Expr.Visitor<String> {
 
     @Override
     public String visitCallExpr(Expr.Call expr) {
+        return "";
+    }
+
+    @Override
+    public String visitGetExpr(Expr.Get expr) {
         return "";
     }
 
