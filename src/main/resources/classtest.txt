@@ -1,0 +1,9 @@
+
+program myProgram:
+    Description of subprogram called mMethod acting on inputs producing outputs:
+        Display result "mMethod called".
+
+
+
+.
+Display result myProgram

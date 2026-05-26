@@ -16,6 +16,7 @@ public enum TokenType {
     BREAK,
     RETURN,
     PLUS,
+    PROGRAM,
 
 
     DESCRIPTION, OF, SUBPROGRAM, CALLED,

@@ -6,6 +6,7 @@ import pulp.Expr;
 abstract class Stmt{
     interface Visitor<R> {
     R visitBlockStmt(Block stmt);
+    R visitProgramStmt(Program stmt);
     R visitExpressionStmt(Expression stmt);
     R visitPrintStmt(Print stmt);
     R visitVarStmt(Var stmt);
@@ -26,6 +27,20 @@ abstract class Stmt{
     }
 
     final List<Stmt> statements;
+  }
+ static class Program extends Stmt {
+    Program(Token name, List<Stmt.Subprogram> methods) {
+    this.name = name;
+    this.methods = methods;
+    }
+
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+    return visitor.visitProgramStmt(this);
+    }
+
+    final Token name;
+    final List<Stmt.Subprogram> methods;
   }
  static class Expression extends Stmt {
     Expression(Expr expression) {

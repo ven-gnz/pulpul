@@ -33,6 +33,11 @@ import java.util.Stack;
             return null;
         }
 
+        @Override
+        public Void visitProgramStmt(Stmt.Program stmt) {
+            return null;
+        }
+
         void resolve(List<Stmt> statements)
         {
             for(Stmt statement : statements)

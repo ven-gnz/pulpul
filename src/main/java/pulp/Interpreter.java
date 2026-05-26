@@ -278,6 +278,14 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         return null;
     }
 
+    @Override
+    public Void visitProgramStmt(Stmt.Program stmt) {
+        environment.define(stmt.name.lexeme, null);
+        PulpProgram program = new PulpProgram(stmt.name.lexeme);
+        environment.assign(stmt.name, program);
+        return null;
+    }
+
     void executeBlock(List<Stmt> statements, Environment environment)
     {
         Environment previous = this.environment;
