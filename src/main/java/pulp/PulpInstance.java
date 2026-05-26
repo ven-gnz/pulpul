@@ -20,8 +20,13 @@ public class PulpInstance {
         {
             return fields.get(name.lexeme);
         }
+
+        PulpFunction function = program.findMethod(name.lexeme);
+        if(function != null) return function;
         throw new RuntimeError(name, " undefined property '" + name.lexeme +" '!");
     }
+
+
 
     void set(Token name, Object value) {
         fields.put(name.lexeme, value);

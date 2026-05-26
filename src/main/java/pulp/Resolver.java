@@ -21,7 +21,8 @@ import java.util.Stack;
 
         private enum FunctionType {
             NONE,
-            FUNCTION
+            FUNCTION,
+            METHOD
         }
 
         @Override
@@ -35,6 +36,15 @@ import java.util.Stack;
 
         @Override
         public Void visitProgramStmt(Stmt.Program stmt) {
+
+            declare(stmt.name);
+            define(stmt.name);
+
+            for(Stmt.Subprogram subprogram : stmt.methods)
+            {
+                FunctionType declaration = FunctionType.METHOD;
+                resolveFunction(subprogram, declaration);
+            }
             return null;
         }
 

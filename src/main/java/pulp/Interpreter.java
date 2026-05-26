@@ -305,7 +305,13 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
     @Override
     public Void visitProgramStmt(Stmt.Program stmt) {
         environment.define(stmt.name.lexeme, null);
-        PulpProgram program = new PulpProgram(stmt.name.lexeme);
+        Map<String, PulpFunction> methods = new HashMap<>();
+        for(Stmt.Subprogram method : stmt.methods)
+        {
+            PulpFunction function = new PulpFunction(method, environment);
+            methods.put(method.name.lexeme, function);
+        }
+        PulpProgram program = new PulpProgram(stmt.name.lexeme, methods);
         environment.assign(stmt.name, program);
         return null;
     }

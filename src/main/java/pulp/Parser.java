@@ -66,47 +66,19 @@ class Parser {
         Token name = consume(IDENTIFIER, "Except program name.");
         consume(COLON, "Except : to start class body");
 
-        List<Stmt.Subprogram> methods = new ArrayList<>();
+        List<Stmt.Subprogram> body = new ArrayList<>();
         while(!check(DOT) && !isAtEnd())
         {
-            methods.add(method("method"));
+            body.add(subProgram("method"));
         }
         consume(DOT, "Except dot to end class body");
 
-        return new Stmt.Program(name, methods);
-    }
-
-    private Stmt.Subprogram method(String kind)
-    {
-        consume(DESCRIPTION, "Except description of method here");
-        consume(OF, "Except of as the next keyword to describe method");
-        consume(SUBPROGRAM, "Excepted keyword 'subprogram' as the next keyword in the subprogram definition");
-        consume(CALLED, "Excepted 'called' as the next keyword to describe method");
-
-        Token name = consume(IDENTIFIER, "Except identifier for method " + kind );
-        consume(ACTING, "Expected keyword 'acting' as the next keyword in the subprogram definition");
-        consume(ON, " Expected keyword 'of' as the next keyword in the subprogram definition");
-        consume(INPUTS, "Excepted keyword 'inputs' as the next keyword in the subprogram definition");
-
-        List<Token> parameters = new ArrayList<>();
-        if(!check(PRODUCING))
-        {
-            do {
-                if (parameters.size() >= 127)
-                {
-                    error(peek(), "Cannot exceed 127 parameters");
-                }
-                parameters.add(consume(IDENTIFIER, "Except parameter name."));
-            }while(match(COMMA));
-        }
-        consume(PRODUCING, "Expect keyword producing to end input argument list on function defition");
-        consume(OUTPUTS, "Expected keyword 'outputs' to begin list of function return values");
-        consume(COLON, "");
-        List<Stmt> body = block();
-        return new Stmt.Subprogram(name, parameters, body);
+        return new Stmt.Program(name, body);
     }
 
     private Stmt.Subprogram subProgram(String kind) {
+        consume(DESCRIPTION, "Excepted description for subprogram in here");
+        consume(OF, "Excepted keyword 'of' as the next keyword in subprogram definition");
         consume(SUBPROGRAM, "Excepted keyword 'subprogram' as the next keyword in the subprogram definition");
         consume(CALLED, "Excepted keyword 'called' as the next keyword in the subprogram definition");
 
