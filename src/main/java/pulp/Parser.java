@@ -45,7 +45,7 @@ class Parser {
             {
                 return whileStatement();
             }
-            if(match(DESCRIPTION))
+            if(match(DESCRIBING))
             {
                 return subProgram("function");
             }
@@ -77,8 +77,7 @@ class Parser {
     }
 
     private Stmt.Subprogram subProgram(String kind) {
-        consume(DESCRIPTION, "Excepted description for subprogram in here");
-        consume(OF, "Excepted keyword 'of' as the next keyword in subprogram definition");
+
         consume(SUBPROGRAM, "Excepted keyword 'subprogram' as the next keyword in the subprogram definition");
         consume(CALLED, "Excepted keyword 'called' as the next keyword in the subprogram definition");
 

@@ -58,7 +58,7 @@ Grammar for ULP (Un-natural language programming language)
 <looping_statement> ::= "repeat" "until" <logical_expression> <block>
 <break> ::= "break"
 -----------------
-<subprogram_definition> ::= "Description" "of" "subprogram" "called" <subprogram_name> "acting" "on" "inputs" <input_list> "producing" "outputs" <subprogram_output> <block>
+<subprogram_definition> ::= "Describing" "subprogram" "called" <subprogram_name> "acting" "on" "inputs" <input_list> "producing" "outputs" <subprogram_output> <block>
 <subprogram_name> ::= <identifier>
 <input_list> ::= <empty> | <parameter_list>
 <parameter_list> ::= <parameter> | <parameter> "," <parameter_list>

@@ -55,7 +55,7 @@ public class PScanner {
         keywords.put("repeat", REPEAT);
         keywords.put("until", UNTIL);
 
-        keywords.put("description", DESCRIPTION);
+        keywords.put("describing", DESCRIBING);
         keywords.put("of", OF);
         keywords.put("subprogram", SUBPROGRAM);
         keywords.put("called", CALLED);

@@ -19,7 +19,7 @@ public enum TokenType {
     PROGRAM,
 
 
-    DESCRIPTION, OF, SUBPROGRAM, CALLED,
+    DESCRIBING, SUBPROGRAM, CALLED,
     ACTING, ON, INPUTS,
     PRODUCING, OUTPUTS,
     CHECK, THEN, OTHERWISE,
@@ -29,9 +29,9 @@ public enum TokenType {
     AND,
 
 
-    //Multi word keywords
     TYPE_STRING, TYPE_BOOLEAN, WHOLE, REAL, NUMBER,
     TRUE, FALSE, STRING_LITERAL, NUMBER_LITERAL,
+    OF,
 
     INPUT, USER,
     REPEAT, UNTIL

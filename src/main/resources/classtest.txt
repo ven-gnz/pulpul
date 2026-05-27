@@ -2,9 +2,9 @@
 program myProgram:
 
 
-    Description of subprogram called mMethod acting on inputs producing outputs:
+    Describing subprogram called mMethod acting on inputs producing outputs:
         Display result "mMethod called".
 .
 
 
-display result myProgram mMethod()
+display result myProgram of mMethod()
