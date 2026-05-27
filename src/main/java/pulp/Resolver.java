@@ -299,6 +299,13 @@ import java.util.Stack;
         }
 
         @Override
+        public Void visitOfExpr(Expr.Of expr) {
+            resolve(expr.object);
+            resolve(expr.key);
+            return null;
+        }
+
+        @Override
         public Void visitUnaryExpr(Expr.Unary expr) {
             resolve(expr.right);
             return null;

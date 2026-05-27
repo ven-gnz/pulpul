@@ -27,9 +27,6 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
             @Override
             public String toString() { return "<native fn>"; }
         });
-
-
-
     }
 
 
@@ -154,6 +151,19 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         return null;
     }
 
+    @Override
+    public Object visitOfExpr(Expr.Of expr) {
+        Object object = evaluate(expr.object);
+        Object key = evaluate(expr.key);
+
+        if(!(object instanceof PulpInstance instance))
+        {
+            throw new RuntimeError("Only instances have properties");
+        }
+        String field = String.valueOf(key);
+        return instance.get(new Token(IDENTIFIER, field, null, 0));
+    }
+
     private void checkNumberOperand(Token operator, Object operand)
     {
         if(operand instanceof Double) return;
@@ -173,9 +183,6 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
 
 
 
-    /*
-        Is assign an expression or a statement ? Let's see what the book says
-     */
     @Override
     public Object visitAssignExpr(Expr.Assign expr) {
         Object value = evaluate(expr.value);

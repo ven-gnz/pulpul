@@ -339,8 +339,8 @@ class Parser {
             }
             else if (match(OF))
             {
-                Token name = consume(IDENTIFIER, "Except identifier after 'of'");
-                expr = new Expr.Get(expr,name);
+                Expr right = primary();
+                expr = new Expr.Of(expr,right);
             }
             else {
                 break;

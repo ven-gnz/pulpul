@@ -41,6 +41,11 @@ class AstPrinter implements Expr.Visitor<String> {
     }
 
     @Override
+    public String visitOfExpr(Expr.Of expr) {
+        return "";
+    }
+
+    @Override
     public String visitAssignExpr(Expr.Assign expr) {
         return "let " + expr.name + " be equal to " + expr.value.accept(this);
     }
