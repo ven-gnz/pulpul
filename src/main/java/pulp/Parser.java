@@ -71,18 +71,21 @@ class Parser {
         {
             body.add(subProgram("method"));
         }
-        consume(DOT, "Except dot to end class body");
-
+        consume(DOT, "Except dot to end program body");
         return new Stmt.Program(name, body);
     }
 
     private Stmt.Subprogram subProgram(String kind) {
 
+        // lol dorkaround
+        if(kind == "method")
+        {
+            consume(DESCRIBING, "Except 'describing' to start method definition");
+        }
         consume(SUBPROGRAM, "Excepted keyword 'subprogram' as the next keyword in the subprogram definition");
         consume(CALLED, "Excepted keyword 'called' as the next keyword in the subprogram definition");
 
         Token name = consume(IDENTIFIER, "Except "+kind+ " name");
-        // <subprogram_definition> ::= "Description" "of" "subprogram" "called" <subprogram_name> "acting" "on" "inputs" <input_list> "producing" "outputs" <subprogram_output> <block>
         consume(ACTING, "Expected keyword 'acting' as the next keyword in the subprogram definition");
         consume(ON, " Expected keyword 'of' as the next keyword in the subprogram definition");
         consume(INPUTS, "Excepted keyword 'inputs' as the next keyword in the subprogram definition");
@@ -115,7 +118,6 @@ class Parser {
 
     private Stmt ifStatement() {
 
-
         Expr condition = expression();
         consume(COMMA, "Except comma after boolean expression on if clause");
         consume(THEN, "Except then after comma on if clause");
@@ -127,19 +129,14 @@ class Parser {
             elseBranch = statement();
         }
         return new Stmt.If(condition, thenBrach, elseBranch);
-
     }
 
     private Stmt varDeclaration()
     {
-        // check for globals here
-
         Token name = consume(IDENTIFIER, "Except variable name");
-
         consume(BE, "Except 'be' after variable name in assignment");
         consume(EQUAL, "Except 'equal' after be for assignment");
         consume(TO, "Except 'to' after equal for assignment");
-
         return new Stmt.Var(name, expression());
     }
 
@@ -176,7 +173,6 @@ class Parser {
     private List <Stmt> block()
     {
         List<Stmt> statements = new ArrayList<>();
-
         while(!check(DOT) && !isAtEnd())
         {
             statements.add(declaration());
@@ -200,12 +196,10 @@ class Parser {
             expressions.add(expression());
         }
         return new Stmt.Print(expressions);
-
     }
 
     private Expr expression()
     {
-
         if(check(SET))
         {
             return assignment();
@@ -213,14 +207,10 @@ class Parser {
         if(match(IS)) {
             return parseLogicalExpression();
         }
-
-
         if (check(ADD) || check(REMOVE) || check(DIVIDE) || check(MULTIPLY)) {
             return arithmeticExpression();
         }
-
         return call();
-
     }
 
 
@@ -243,18 +233,13 @@ class Parser {
 
     private Expr parseString()
     {
-
-
         List<Expr> strings = new ArrayList<>();
-
         strings.add(new Expr.Literal(previous().literal));
         while(match(PLUS))
         {
             strings.add(expression());
         }
         return new Expr.Multistring(strings);
-
-
     }
 
     private Expr assignment()
@@ -275,7 +260,6 @@ class Parser {
 
     private Expr parseLogicalExpression() {
 
-
         Expr left = logicalTerm();
         if(check(AND))
        {
@@ -287,12 +271,9 @@ class Parser {
            consume(OR, "Except boolean expression after 'or'");
            return new Expr.Logical(left, previous(), expression());
        }
-
         return left;
-
     }
 
-    // this is logical term?
     private Expr logicalTerm()
     {
         Expr left = primary();
@@ -306,13 +287,11 @@ class Parser {
 
     private Expr arithmeticExpression()
     {
-
         if(match(ADD)) return addExpression();
         if(match(REMOVE)) return subtractExpression();
         if(match(MULTIPLY)) return multiplyExpression();
         if(match(DIVIDE)) return divideExpression();
         return primary();
-
     }
 
     private Expr subtractExpression()
@@ -351,10 +330,7 @@ class Parser {
 
     private Expr call()
     {
-
-
         Expr expr = primary();
-
         while(true)
         {
             if(match(LEFT_PAREN))
@@ -370,7 +346,6 @@ class Parser {
                 break;
             }
         }
-
         return expr;
     }
 
@@ -398,20 +373,16 @@ class Parser {
 
     private ComparisonType parseComparisonCriteria()
     {
-
-
         if(match(EQUAL))
         {
             consume(TO, "Except identifier");
             return ComparisonType.EQUAL;
         }
-
         if(match(NOT)){
             consume(EQUAL, "Except 'equal'");
             consume(TO, "Except 'to'");
             return ComparisonType.NOT_EQUAL;
         }
-        // add less than or equal to and more than or equal to cases
         if(match(LESS))
         {
             consume(THAN, "Except 'than' after less");
@@ -424,7 +395,6 @@ class Parser {
                 return ComparisonType.LESS;
             }
         }
-
         if(match(MORE))
         {
             consume(THAN, "Except 'than'");
@@ -435,10 +405,8 @@ class Parser {
                 return ComparisonType.GREATER_EQUAL;
             }
             else { return ComparisonType.GREATER; }
-
         }
-
-        // default case : delete
+        // default case to make java compiler happy
         throw error(peek(), "Invalid comparison");
     }
 
@@ -494,17 +462,12 @@ class Parser {
     private void synchronize()
     {
         System.out.println("Synchronizing error");
-
         advance();
-
         while(!isAtEnd())
         {
             if(previous().type == DOT) return;
-
             switch (peek().type)
-            {
-               // this needs some thinking : do I want really to do the dot, as to search for the next scope?
-            }
+            { }
         }
     }
 }

@@ -7,4 +7,4 @@ program myProgram:
 .
 
 
-display result myProgram of mMethod()
+display result mMethod() of myProgram
