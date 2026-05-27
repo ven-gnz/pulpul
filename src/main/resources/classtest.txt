@@ -3,8 +3,8 @@ program myProgram:
 
 
     Describing subprogram called mMethod acting on inputs producing outputs:
-        Display result "mMethod called".
+        return "mMethod called";.
 .
 
 
-display result mMethod()
+display result mMethod() of myProgram

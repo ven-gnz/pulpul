@@ -153,14 +153,18 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
 
     @Override
     public Object visitOfExpr(Expr.Of expr) {
-        Object object = evaluate(expr.object);
+
+        System.out.println("visiting of statement");
+        //Object object = evaluate(expr.object);
         Object key = evaluate(expr.key);
 
-        if(!(object instanceof PulpInstance instance))
+        if(!(key instanceof PulpInstance instance))
         {
             throw new RuntimeError("Only instances have properties");
         }
         String field = String.valueOf(key);
+        System.out.println("Hello why is this not firing");
+        System.out.println(field + " field");
         return instance.get(new Token(IDENTIFIER, field, null, 0));
     }
 
@@ -262,7 +266,8 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         {
             return environment.getAt(distance, name.lexeme);
         }
-        else { return globals.get(name); }
+        else {
+            return globals.get(name); }
     }
 
     @Override
@@ -311,6 +316,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
 
     @Override
     public Void visitProgramStmt(Stmt.Program stmt) {
+
         environment.define(stmt.name.lexeme, null);
         Map<String, PulpFunction> methods = new HashMap<>();
         for(Stmt.Subprogram method : stmt.methods)
@@ -320,6 +326,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         }
         PulpProgram program = new PulpProgram(stmt.name.lexeme, methods);
         environment.assign(stmt.name, program);
+        globals.define(program.name, program);
         return null;
     }
 

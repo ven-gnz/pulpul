@@ -330,6 +330,7 @@ class Parser {
 
     private Expr call()
     {
+
         Expr expr = primary();
         while(true)
         {
@@ -337,12 +338,9 @@ class Parser {
             {
                 expr = finishCall(expr);
             }
-            else if (match(OF))
+
+            else
             {
-                Expr right = primary();
-                expr = new Expr.Of(expr,right);
-            }
-            else {
                 break;
             }
         }
@@ -359,7 +357,15 @@ class Parser {
             }while(match(COMMA));
         }
         Token paren = consume(RIGHT_PAREN, "Except ')' to end argument list");
+        if(match(OF))
+        {
+            System.out.println("This is a member method call !");
+            Expr call = new Expr.Call(callee, paren, args);
+            Expr hostname = expression();
+            return new Expr.Of(call, hostname);
 
+        }
+        System.out.println(callee.getClass());
         return new Expr.Call(callee, paren, args);
     }
 

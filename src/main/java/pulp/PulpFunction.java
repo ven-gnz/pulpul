@@ -40,6 +40,6 @@ public class PulpFunction implements PulpCallable{
     @Override
     public String toString()
     {
-        return "<fn " + declaration.name.lexeme +  ">";
+        return  declaration.name.lexeme;
     }
 }
