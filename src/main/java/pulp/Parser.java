@@ -334,11 +334,12 @@ class Parser {
             {
                 expr = finishCall(expr);
             }
-            else if (match(OF))
+            else if (match(ACCESS))
             {
                 Token name = consume(IDENTIFIER, "Except identifier to access with 'of' ");
+                Expr right = expr;
+                expr = new Expr.Get(right, name);
 
-                expr = new Expr.Get(expr, name);
             }
             else
             { break; }
@@ -356,7 +357,6 @@ class Parser {
             }while(match(COMMA));
         }
         Token paren = consume(RIGHT_PAREN, "Except ')' to end argument list");
-        System.out.println(callee.getClass());
         return new Expr.Call(callee, paren, args);
     }
 

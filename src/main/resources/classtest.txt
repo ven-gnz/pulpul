@@ -10,4 +10,4 @@ program myProgram:
 .
 
 let obj be equal to myProgram()
-display result mMethod() of obj
+display result obj access mMethod()

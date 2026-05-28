@@ -57,7 +57,7 @@ public class PScanner {
         keywords.put("until", UNTIL);
 
         keywords.put("describing", DESCRIBING);
-        keywords.put("of", OF);
+        keywords.put("access", ACCESS);
         keywords.put("subprogram", SUBPROGRAM);
         keywords.put("called", CALLED);
 
