@@ -242,11 +242,6 @@ public class PrettyPrinter
         return withIndent("Set\n");
     }
 
-    @Override
-    public String visitOfExpr(Expr.Of expr)
-    {
-        return withIndent("OfExpr\n");
-    }
 
     @Override
     public String visitAddExpr(Expr.Add expr)

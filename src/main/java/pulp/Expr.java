@@ -9,7 +9,6 @@ abstract class Expr{
     R visitMultistringExpr(Multistring expr);
     R visitUnaryExpr(Unary expr);
     R visitLogicalExpr(Logical expr);
-    R visitSetExpr(Set expr);
     R visitThisExpr(This expr);
     R visitAssignExpr(Assign expr);
     R visitAddExpr(Add expr);
@@ -20,7 +19,7 @@ abstract class Expr{
     R visitVariableExpr(Variable expr);
     R visitCallExpr(Call expr);
     R visitGetExpr(Get expr);
-    R visitOfExpr(Of expr);
+    R visitSetExpr(Set expr);
  }
  static class Literal extends Expr {
     Literal(Object value) {
@@ -75,22 +74,6 @@ abstract class Expr{
     final Expr left;
     final Token operator;
     final Expr right;
-  }
- static class Set extends Expr {
-    Set(Expr object, Token name, Expr value) {
-    this.object = object;
-    this.name = name;
-    this.value = value;
-    }
-
-    @Override
-    <R> R accept(Visitor<R> visitor) {
-    return visitor.visitSetExpr(this);
-    }
-
-    final Expr object;
-    final Token name;
-    final Expr value;
   }
  static class This extends Expr {
     This(Token keyword) {
@@ -232,20 +215,21 @@ abstract class Expr{
     final Expr object;
     final Token name;
   }
-
- static class Of extends Expr {
-    Of(Expr object, Expr key) {
+ static class Set extends Expr {
+    Set(Expr object, Token name, Expr value) {
     this.object = object;
-    this.key = key;
+    this.name = name;
+    this.value = value;
     }
 
     @Override
     <R> R accept(Visitor<R> visitor) {
-    return visitor.visitOfExpr(this);
+    return visitor.visitSetExpr(this);
     }
 
     final Expr object;
-    final Expr key;
+    final Token name;
+    final Expr value;
   }
     abstract <R> R accept(Visitor<R> visitor);
 }

@@ -156,24 +156,6 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         return lookUpVariable(expr.keyword, expr);
     }
 
-    @Override
-    public Object visitOfExpr(Expr.Of expr) {
-
-        System.out.println("visiting of statement");
-        System.out.println(expr.object + " object");
-        System.out.println(expr.key + " key");
-        Object object = evaluate(expr.object);
-        Object key = evaluate(expr.key);
-
-        if(!(object instanceof PulpInstance instance))
-        {
-            throw new RuntimeError("Only instances have properties");
-        }
-        String field = expr.key.toString();
-        System.out.println("Hello why is this not firing");
-        System.out.println(field + " field");
-        return instance.get(new Token(IDENTIFIER, field, null, 0));
-    }
 
     private void checkNumberOperand(Token operator, Object operand)
     {

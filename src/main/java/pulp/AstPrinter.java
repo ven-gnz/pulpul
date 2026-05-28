@@ -51,15 +51,6 @@ class AstPrinter implements Expr.Visitor<String> {
         return "this";
     }
 
-    @Override
-    public String visitOfExpr(Expr.Of expr) {
-
-        return wrap(
-                expr.key.accept(this) +
-                        " of " +
-                        expr.object.accept(this)
-        );
-    }
 
     @Override
     public String visitAssignExpr(Expr.Assign expr) {

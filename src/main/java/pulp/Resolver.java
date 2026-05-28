@@ -330,12 +330,6 @@ import java.util.Stack;
             return null;
         }
 
-        @Override
-        public Void visitOfExpr(Expr.Of expr) {
-            resolve(expr.object);
-            resolve(expr.key);
-            return null;
-        }
 
         @Override
         public Void visitUnaryExpr(Expr.Unary expr) {

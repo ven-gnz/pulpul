@@ -334,6 +334,12 @@ class Parser {
             {
                 expr = finishCall(expr);
             }
+            else if (match(OF))
+            {
+                Token name = consume(IDENTIFIER, "Except identifier to access with 'of' ");
+
+                expr = new Expr.Get(expr, name);
+            }
             else
             { break; }
         }
@@ -350,14 +356,6 @@ class Parser {
             }while(match(COMMA));
         }
         Token paren = consume(RIGHT_PAREN, "Except ')' to end argument list");
-        if(match(OF))
-        {
-            System.out.println("This is a member method call !");
-            Expr call = new Expr.Call(callee, paren, args);
-            Expr hostname = expression();
-            return new Expr.Of(call, hostname);
-
-        }
         System.out.println(callee.getClass());
         return new Expr.Call(callee, paren, args);
     }
