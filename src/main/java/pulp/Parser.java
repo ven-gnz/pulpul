@@ -162,11 +162,7 @@ class Parser {
 
         Token keyword = previous();
         Expr value = null;
-        if(!check(SEMICOLON))
-        {
-            value = expression();
-        }
-        consume(SEMICOLON, "Except ';' after return value");
+        value = expression();
         return new Stmt.Return(keyword, value);
     }
 

@@ -3,7 +3,7 @@ program myProgram:
 
 
     Describing subprogram called mMethod acting on inputs producing outputs:
-        return "mMethod called";.
+        return "mMethod called".
 .
 
 
