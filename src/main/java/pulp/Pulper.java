@@ -80,6 +80,9 @@ public class Pulper {
         Parser parser = new Parser(tokens);
         List<Stmt> statements = parser.parse();
 
+        PrettyPrinter prettyPrinter = new PrettyPrinter();
+        prettyPrinter.print(statements);
+
         if(hadError)
         {
             hadError = false;

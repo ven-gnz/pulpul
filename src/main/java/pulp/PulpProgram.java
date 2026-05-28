@@ -22,12 +22,19 @@ public class PulpProgram implements PulpCallable{
 
     @Override
     public int arity() {
-        return 0;
+        PulpFunction initializer = findMethod("init");
+        if(initializer == null) return 0;
+        return initializer.arity();
     }
 
     @Override
     public Object call(Interpreter interpreter, List<Object> arguments) {
         PulpInstance instance = new PulpInstance(this);
+        PulpFunction initializer = findMethod("init");
+        if(initializer != null)
+        {
+            initializer.bind(instance).call(interpreter,arguments);
+        }
         return instance;
     }
 

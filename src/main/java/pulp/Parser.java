@@ -161,8 +161,7 @@ class Parser {
     private Stmt returnStatement() {
 
         Token keyword = previous();
-        Expr value = null;
-        value = expression();
+        Expr value = expression();
         return new Stmt.Return(keyword, value);
     }
 
@@ -222,6 +221,7 @@ class Parser {
         if(match(TRUE)) { return new Expr.Literal(TRUE); }
         if(match(FALSE)) { return new Expr.Literal(FALSE); }
         if(match(NOT)) { return new Expr.Unary(previous(), parseLogicalExpression()); }
+        if(match(THIS)) { return new Expr.This(previous()); }
 
         error(tokens.get(current), "Cannot parse expression");
         return null;
@@ -334,11 +334,8 @@ class Parser {
             {
                 expr = finishCall(expr);
             }
-
             else
-            {
-                break;
-            }
+            { break; }
         }
         return expr;
     }

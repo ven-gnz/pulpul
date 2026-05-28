@@ -152,17 +152,24 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
     }
 
     @Override
+    public Object visitThisExpr(Expr.This expr) {
+        return lookUpVariable(expr.keyword, expr);
+    }
+
+    @Override
     public Object visitOfExpr(Expr.Of expr) {
 
         System.out.println("visiting of statement");
-        //Object object = evaluate(expr.object);
+        System.out.println(expr.object + " object");
+        System.out.println(expr.key + " key");
+        Object object = evaluate(expr.object);
         Object key = evaluate(expr.key);
 
-        if(!(key instanceof PulpInstance instance))
+        if(!(object instanceof PulpInstance instance))
         {
             throw new RuntimeError("Only instances have properties");
         }
-        String field = String.valueOf(key);
+        String field = expr.key.toString();
         System.out.println("Hello why is this not firing");
         System.out.println(field + " field");
         return instance.get(new Token(IDENTIFIER, field, null, 0));
@@ -321,7 +328,8 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         Map<String, PulpFunction> methods = new HashMap<>();
         for(Stmt.Subprogram method : stmt.methods)
         {
-            PulpFunction function = new PulpFunction(method, environment);
+            PulpFunction function = new PulpFunction(method, environment,
+                    method.name.lexeme.equals("init"));
             methods.put(method.name.lexeme, function);
         }
         PulpProgram program = new PulpProgram(stmt.name.lexeme, methods);
@@ -424,7 +432,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
 
     @Override
     public Void visitSubprogramStmt(Stmt.Subprogram stmt) {
-        PulpFunction function = new PulpFunction(stmt, environment);
+        PulpFunction function = new PulpFunction(stmt, environment, false);
         environment.define(stmt.name.lexeme, function);
         return null;
     }

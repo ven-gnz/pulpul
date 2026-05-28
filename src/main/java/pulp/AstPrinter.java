@@ -37,12 +37,28 @@ class AstPrinter implements Expr.Visitor<String> {
 
     @Override
     public String visitSetExpr(Expr.Set expr) {
-        return "";
+        return wrap(
+                expr.object.accept(this) +
+                        "." +
+                        expr.name.lexeme +
+                        " = " +
+                        expr.value.accept(this)
+        );
+    }
+
+    @Override
+    public String visitThisExpr(Expr.This expr) {
+        return "this";
     }
 
     @Override
     public String visitOfExpr(Expr.Of expr) {
-        return "";
+
+        return wrap(
+                expr.key.accept(this) +
+                        " of " +
+                        expr.object.accept(this)
+        );
     }
 
     @Override
@@ -88,12 +104,36 @@ class AstPrinter implements Expr.Visitor<String> {
 
     @Override
     public String visitCallExpr(Expr.Call expr) {
-        return "";
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(
+                expr.callee.accept(this)
+        );
+
+        sb.append("(");
+
+        for(int i = 0; i < expr.arguments.size(); i++)
+        {
+            sb.append(expr.arguments.get(i).accept(this));
+
+            if(i < expr.arguments.size() - 1)
+            {
+                sb.append(", ");
+            }
+        }
+
+        sb.append(")");
+
+        return sb.toString();
     }
 
     @Override
     public String visitGetExpr(Expr.Get expr) {
-        return "";
+        return wrap(
+                expr.object.accept(this) +
+                        "." +
+                        expr.name.lexeme
+        );
     }
 
     private String comparisonToString(ComparisonType type) {

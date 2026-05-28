@@ -26,6 +26,7 @@ public class PScanner {
         keywords.put("break", BREAK);
         keywords.put("return", RETURN);
         keywords.put("program", PROGRAM);
+        keywords.put("this", THIS);
 
         keywords.put("with", WITH);
         keywords.put("check", CHECK);

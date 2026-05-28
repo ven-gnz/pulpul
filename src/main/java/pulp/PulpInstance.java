@@ -22,7 +22,7 @@ public class PulpInstance {
         }
 
         PulpFunction function = program.findMethod(name.lexeme);
-        if(function != null) return function;
+        if(function != null) return function.bind(this);
         throw new RuntimeError(name, " undefined property '" + name.lexeme +" '!");
     }
 

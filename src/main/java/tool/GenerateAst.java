@@ -22,7 +22,7 @@ public class GenerateAst {
                         "Multistring : List<Expr> strings",
                         "Unary : Token operator, Expr right",
                         "Logical : Expr left, Token operator, Expr right",
-                        "Set      : Expr object, Token name, Expr value",
+                        "This : Token keyword",
                         "Assign : Token name, Expr value",
                         "Add : Expr left, Expr right",
                         "Remove : Expr left, Expr right",

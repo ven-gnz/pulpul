@@ -12,6 +12,7 @@ import java.util.Stack;
         private final Interpreter interpreter;
         private final Stack<Map<String, Boolean>> scopes = new Stack<>();
         private FunctionType currentFunction = FunctionType.NONE;
+        private ClassType currentClass = ClassType.NONE;
         private int loopDepth = 0;
 
         Resolver(Interpreter inte)
@@ -22,7 +23,13 @@ import java.util.Stack;
         private enum FunctionType {
             NONE,
             FUNCTION,
+            INITIALIZER,
             METHOD
+        }
+
+        private enum ClassType
+        {
+            NONE, CLASS
         }
 
         @Override
@@ -37,14 +44,25 @@ import java.util.Stack;
         @Override
         public Void visitProgramStmt(Stmt.Program stmt) {
 
+            ClassType enclosingClass = currentClass;
+            currentClass = ClassType.CLASS;
+
             declare(stmt.name);
             define(stmt.name);
+
+            beginScope();
+            scopes.peek().put("this", true);
 
             for(Stmt.Subprogram subprogram : stmt.methods)
             {
                 FunctionType declaration = FunctionType.METHOD;
+                if (subprogram.name.lexeme.equals("init")) {
+                    declaration = FunctionType.INITIALIZER;
+                }
                 resolveFunction(subprogram, declaration);
             }
+            endScope();
+            currentClass = enclosingClass;
             return null;
         }
 
@@ -227,6 +245,10 @@ import java.util.Stack;
             {
                 Pulper.error(stmt.keyword, ": cannot resolve this keyword here, enclosing function missing");
             }
+            if (currentFunction == FunctionType.INITIALIZER) {
+                Pulper.error(stmt.keyword,
+                        "Can't return a value from an initializer.");
+            }
             if (stmt.value != null) {
                 resolve(stmt.value);
             }
@@ -295,6 +317,16 @@ import java.util.Stack;
         public Void visitSetExpr(Expr.Set expr) {
             resolve(expr.value);
             resolve(expr.object);
+            return null;
+        }
+
+        @Override
+        public Void visitThisExpr(Expr.This expr) {
+            if(currentClass == ClassType.NONE)
+            {
+                Pulper.error(expr.keyword , " cannot use this outside of class");
+            }
+            resolveLocal(expr, expr.keyword);
             return null;
         }
 
