@@ -2,15 +2,24 @@
 program myProgram:
 
     let a be equal to 5
-    let b be equal to 1
+    let b be equal to 2
+
     Describing subprogram called init acting on inputs producing outputs:
      display result "Initialized myProgram".
 
     Describing subprogram called mMethod acting on inputs producing outputs:
         return "mMethod called from inside myProgram".
+
+    Describing subprogram called basicArithmetics acting on inputs a,b producing outputs:
+        return multiply a by b.
+
     display result "executing a statement from inside myProgram"
 .
 
 let obj be equal to myProgram()
 display result obj access mMethod()
-display result "accessing a + b from obj : " add obj access a to obj access b
+display result "accessing a + b from obj : " + add obj access a to obj access b
+display result "accessing a * b from obj : " + multiply obj access a by obj access b
+display result "accessing a - b from obj : " + remove obj access b from obj access a
+display result "accessing a / b from obj : " + divide obj access a by obj access b
+display result " finally trying out passing parameters to a method " + obj access basicArithmetics(3,5)

@@ -300,33 +300,33 @@ class Parser {
 
     private Expr subtractExpression()
     {
-        Expr left = arithmeticExpression();
+        Expr left = expression();
         consume(FROM, "Except 'from' after left operand");
-        Expr right = arithmeticExpression();
+        Expr right = expression();
         return new Expr.Remove(left, right);
     }
 
     private Expr multiplyExpression()
     {
-        Expr left = arithmeticExpression();
+        Expr left = expression();
         consume(BY, "Except 'by' after left operand");
-        Expr right = arithmeticExpression();
+        Expr right = expression();
         return new Expr.Multiply(left, right);
     }
 
     private Expr addExpression()
     {
-        Expr left  = arithmeticExpression();
+        Expr left  = expression();
         consume(TO, "Except 'to' after left operand");
-        Expr right = arithmeticExpression();
+        Expr right = expression();
         return new Expr.Add(left,right);
     }
 
     private Expr divideExpression()
     {
-        Expr left = arithmeticExpression();
+        Expr left = expression();
         consume(BY, "Except 'by' after left operand");
-        Expr right = arithmeticExpression();
+        Expr right = expression();
         return new Expr.Divide(left,right);
     }
 
