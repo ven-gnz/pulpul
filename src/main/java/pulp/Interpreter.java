@@ -76,7 +76,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
     }
 
 
-    private Object evaluate(Expr expr)
+    Object evaluate(Expr expr)
     {
         return expr.accept(this);
     }
@@ -263,7 +263,6 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
     public Object visitCallExpr(Expr.Call expr) {
 
         Object callee = evaluate(expr.callee);
-        System.out.println(callee + " callee");
         List<Object> arguments = new ArrayList<>();
         for(Expr argument : expr.arguments)
         {
@@ -314,9 +313,10 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
                     method.name.lexeme.equals("init"));
             methods.put(method.name.lexeme, function);
         }
-        PulpProgram program = new PulpProgram(stmt.name.lexeme, methods);
+
+        PulpProgram program = new PulpProgram(stmt.name.lexeme, methods, stmt.statements);
         environment.assign(stmt.name, program);
-        globals.define(program.name, program);
+
         return null;
     }
 

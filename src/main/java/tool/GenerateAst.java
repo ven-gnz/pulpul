@@ -39,7 +39,7 @@ public class GenerateAst {
         defineAst(outputDir, "Stmt",
                 Arrays.asList(
                         "Block : List<Stmt> statements",
-                        "Program : Token name, List<Stmt.Subprogram> methods",
+                        "Program : Token name, List<Stmt.Subprogram> methods, List<Stmt> statements",
                         "Expression : Expr expression",
                         "Print : List<Expr> expressions",
                         "Var : Token name, Expr initializer",

@@ -1,13 +1,16 @@
 
 program myProgram:
 
-
+    let a be equal to 5
+    let b be equal to 1
     Describing subprogram called init acting on inputs producing outputs:
      display result "Initialized myProgram".
 
     Describing subprogram called mMethod acting on inputs producing outputs:
-        return "mMethod called".
+        return "mMethod called from inside myProgram".
+    display result "executing a statement from inside myProgram"
 .
 
 let obj be equal to myProgram()
 display result obj access mMethod()
+display result "accessing a + b from obj : " add obj access a to obj access b

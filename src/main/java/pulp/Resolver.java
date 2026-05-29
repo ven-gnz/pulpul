@@ -61,6 +61,16 @@ import java.util.Stack;
                 }
                 resolveFunction(subprogram, declaration);
             }
+
+            for(Stmt stmt1 : stmt.statements)
+            {
+                if(stmt1 instanceof Stmt.Var)
+                {
+                    Stmt.Var v = (Stmt.Var) stmt1;
+                    visitVarStmt(v);
+                }
+
+            }
             endScope();
             currentClass = enclosingClass;
             return null;

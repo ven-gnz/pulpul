@@ -67,12 +67,20 @@ class Parser {
         consume(COLON, "Except : to start class body");
 
         List<Stmt.Subprogram> body = new ArrayList<>();
+        List<Stmt> stmts = new ArrayList<>();
         while(!check(DOT) && !isAtEnd())
         {
-            body.add(subProgram("method"));
+            if(check(DESCRIBING))
+            {
+                body.add(subProgram("method"));
+            }
+            else{
+                Stmt s = declaration();
+                stmts.add(s);
+            }
         }
         consume(DOT, "Except dot to end program body");
-        return new Stmt.Program(name, body);
+        return new Stmt.Program(name, body, stmts);
     }
 
     private Stmt.Subprogram subProgram(String kind) {
@@ -336,7 +344,7 @@ class Parser {
             }
             else if (match(ACCESS))
             {
-                Token name = consume(IDENTIFIER, "Except identifier to access with 'of' ");
+                Token name = consume(IDENTIFIER, "Except identifier to access with 'access' ");
                 Expr right = expr;
                 expr = new Expr.Get(right, name);
 
