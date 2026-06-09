@@ -72,17 +72,20 @@ public class Pulper {
 
 
 
-/*
+
         for (Token token : tokens) {
             System.out.println(token.type + " " + token.lexeme);
         }
-*/
+
         Parser parser = new Parser(tokens);
         List<Stmt> statements = parser.parse();
-/*
+
         PrettyPrinter prettyPrinter = new PrettyPrinter();
         prettyPrinter.print(statements);
-*/
+
+
+        TypeChecker typeChecker = new TypeChecker(statements);
+        typeChecker.check();
         if(hadError)
         {
             hadError = false;
@@ -134,5 +137,10 @@ public class Pulper {
         } else {
             report(token.line, " at '" + token.lexeme + "'", message);
         }
+    }
+
+    static void error(String message)
+    {
+        System.err.println("Generic error : " + message);
     }
 }
