@@ -69,8 +69,9 @@ abstract class Stmt{
     final List<Expr> expressions;
   }
  static class Var extends Stmt {
-    Var(Token name, Expr initializer) {
+    Var(Token name, Type declaredType, Expr initializer) {
     this.name = name;
+    this.declaredType = declaredType;
     this.initializer = initializer;
     }
 
@@ -80,6 +81,7 @@ abstract class Stmt{
     }
 
     final Token name;
+    final Type declaredType;
     final Expr initializer;
   }
  static class Return extends Stmt {

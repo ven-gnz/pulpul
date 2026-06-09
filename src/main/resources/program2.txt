@@ -1,20 +1,4 @@
-:
-let a be equal to "global a"
-let b be equal to "global b"
-let c be equal to "global c"
-:
-let a be equal to "outer a"
-let b be equal to "outer b"
-:
-let a be equal to "inner a"
-display result a
-display result b
-display result c
-.
-display result a
-display result b
-display result c
-.
-display result a
-display result b
-display result c.
+
+let whole number a be equal to 5
+let text b be equal to "World!"
+display result "Hello " + b , "we print the value of a on the new line : " + a

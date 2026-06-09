@@ -72,17 +72,17 @@ public class Pulper {
 
 
 
-
+/*
         for (Token token : tokens) {
             System.out.println(token.type + " " + token.lexeme);
         }
-
+*/
         Parser parser = new Parser(tokens);
         List<Stmt> statements = parser.parse();
-
+/*
         PrettyPrinter prettyPrinter = new PrettyPrinter();
         prettyPrinter.print(statements);
-
+*/
         if(hadError)
         {
             hadError = false;
@@ -99,6 +99,8 @@ public class Pulper {
         }
 
         interpreter.interpret(statements);
+
+
     }
 
     static void error(int line, String message)

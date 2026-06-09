@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import static pulp.PrimitiveType.ULPPrimitive.*;
 import static pulp.Pulper.error;
 import static pulp.TokenType.*;
+import static pulp.TokenType.TEXT;
 
 class Parser {
 
@@ -141,11 +143,35 @@ class Parser {
 
     private Stmt varDeclaration()
     {
-        Token name = consume(IDENTIFIER, "Except variable name");
+        // parse for type here, then rest similarly as before
+        Type type;
+        if(match(WHOLE))
+        {
+            consume(NUMBER, "Excpected 'number' to complete declaration for whole number");
+            type = new PrimitiveType(WHOLE_NUMBER);
+        }
+        else if(match(REAL))
+        {
+            consume(NUMBER, "Excpected 'number' to complete declaration for real number");
+            type = new PrimitiveType(REAL_NUMBER);
+        }
+        else if(match(TRUE,FALSE))
+        {
+            type = new PrimitiveType(PrimitiveType.ULPPrimitive.TRUTH_VALUE);
+        }
+        else if(match(TokenType.TEXT))
+        {
+            type = new PrimitiveType(PrimitiveType.ULPPrimitive.TEXT);
+        }
+        else {
+            error(tokens.get(current), " not supported as a type");
+            return null;
+        }
+        Token name = consume(IDENTIFIER, "Except variable name here");
         consume(BE, "Except 'be' after variable name in assignment");
         consume(EQUAL, "Except 'equal' after be for assignment");
         consume(TO, "Except 'to' after equal for assignment");
-        return new Stmt.Var(name, expression());
+        return new Stmt.Var(name, type, expression());
     }
 
 

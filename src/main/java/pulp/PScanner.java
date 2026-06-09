@@ -67,8 +67,7 @@ public class PScanner {
         keywords.put("producing", PRODUCING);
         keywords.put("outputs", OUTPUTS);
 
-        keywords.put("boolean", TYPE_BOOLEAN);
-        keywords.put("string", TYPE_STRING);
+        keywords.put("text", TEXT);
         keywords.put("true", TRUE);
         keywords.put("false", FALSE);
 
