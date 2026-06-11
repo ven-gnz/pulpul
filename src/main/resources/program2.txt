@@ -1,3 +1,4 @@
 
-let boolean b be equal to true
-display result is b and true
+let boolean sunny_day be equal to true
+let text var be equal to "Otso"
+display result "hello " + var + "!",  "nice to meetcha"

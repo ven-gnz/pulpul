@@ -249,7 +249,7 @@ class Parser {
 
         if(match(IDENTIFIER)) { return new Expr.Variable(previous()); }
         if(match(STRING_LITERAL)) return parseString();
-        if(match(NUMBER_LITERAL)) parseNumberLiteral();
+        if(match(NUMBER_LITERAL)) return parseNumberLiteral();
         if(match(MINUS)) return new Expr.Unary(previous(),primary());
 
         if(match(TRUE, FALSE)) { return new Expr.Literal(TRUE, new PrimitiveType(TRUTH_VALUE)); }

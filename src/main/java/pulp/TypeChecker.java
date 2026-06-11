@@ -61,23 +61,7 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
 
     @Override
     public Type visitLiteralExpr(Expr.Literal expr) {
-        Object value = expr.value;
-
-        if(value instanceof Double d)
-        {
-            if(d == Math.floor(d)) {
-                return new PrimitiveType(WHOLE_NUMBER);
-            }
-            else {
-                return new PrimitiveType(REAL_NUMBER);
-            }
-        }
-        System.out.println("object value : " + value);
-        if (value instanceof String) return new PrimitiveType(TEXT);
-        if (value == TRUE || value == FALSE) return new PrimitiveType(TRUTH_VALUE);
-
-        Pulper.error("Unknown literal type : " + value);
-        return null;
+        return expr.type;
     }
 
     @Override
@@ -177,23 +161,20 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
         if (stmt.initializer != null) {
             initializerType = evaluate(stmt.initializer);
         }
-        System.out.println("INIT EXPR TYPE = " + initializerType);
+        //System.out.println("INIT EXPR TYPE = " + initializerType);
         Type declaredType = stmt.declaredType;
 
         if(declaredType != null && initializerType != null)
         {
             if(!declaredType.equals(initializerType))
             {
-                System.out.println("declaredType = " + debugType(declaredType));
-                System.out.println("initializerType = " + debugType(initializerType));
+                //System.out.println("declaredType = " + debugType(declaredType));
+                //System.out.println("initializerType = " + debugType(initializerType));
                 Pulper.error(stmt.name, "Type mismatch in variable declaration");
             }
         }
-
         Type finaltype = initializerType;
         variables.put(stmt.name.lexeme, finaltype);
-
-
 
         return null;
     }
