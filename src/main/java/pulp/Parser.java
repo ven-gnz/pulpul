@@ -155,11 +155,11 @@ class Parser {
             consume(NUMBER, "Excpected 'number' to complete declaration for real number");
             type = new PrimitiveType(REAL_NUMBER);
         }
-        else if(match(TRUE,FALSE))
+        else if(match(BOOLEAN))
         {
             type = new PrimitiveType(PrimitiveType.ULPPrimitive.TRUTH_VALUE);
         }
-        else if(match(TokenType.TEXT))
+        else if(match(TEXT))
         {
             type = new PrimitiveType(PrimitiveType.ULPPrimitive.TEXT);
         }
@@ -249,11 +249,11 @@ class Parser {
 
         if(match(IDENTIFIER)) { return new Expr.Variable(previous()); }
         if(match(STRING_LITERAL)) return parseString();
-        if(match(NUMBER_LITERAL)) return new Expr.Literal(previous().literal);
+        if(match(NUMBER_LITERAL)) parseNumberLiteral();
         if(match(MINUS)) return new Expr.Unary(previous(),primary());
 
-        if(match(TRUE)) { return new Expr.Literal(TRUE); }
-        if(match(FALSE)) { return new Expr.Literal(FALSE); }
+        if(match(TRUE, FALSE)) { return new Expr.Literal(TRUE, new PrimitiveType(TRUTH_VALUE)); }
+        if(match(FALSE)) { return new Expr.Literal(FALSE, new PrimitiveType(TRUTH_VALUE)); }
         if(match(NOT)) { return new Expr.Unary(previous(), parseLogicalExpression()); }
         if(match(THIS)) { return new Expr.This(previous()); }
 
@@ -261,10 +261,19 @@ class Parser {
         return null;
     }
 
+    private Expr parseNumberLiteral()
+    {
+        Token token = previous();
+        if(token.lexeme.contains(".")) {
+            return new Expr.Literal(token.literal, new PrimitiveType(REAL_NUMBER));
+        }
+        return new Expr.Literal(token.literal, new PrimitiveType(WHOLE_NUMBER));
+    }
+
     private Expr parseString()
     {
         List<Expr> strings = new ArrayList<>();
-        strings.add(new Expr.Literal(previous().literal));
+        strings.add(new Expr.Literal(previous().literal, new PrimitiveType(PrimitiveType.ULPPrimitive.TEXT)));
         while(match(PLUS))
         {
             strings.add(expression());
@@ -370,10 +379,9 @@ class Parser {
             }
             else if (match(ACCESS))
             {
-                Token name = consume(IDENTIFIER, "Except identifier to access with 'access' ");
+                Token name = consume(IDENTIFIER, "Consume error : Except identifier to access with 'access' ");
                 Expr right = expr;
                 expr = new Expr.Get(right, name);
-
             }
             else
             { break; }

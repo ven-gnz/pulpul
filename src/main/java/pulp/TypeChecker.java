@@ -8,6 +8,8 @@ import java.util.Map;
 
 
 import static pulp.PrimitiveType.ULPPrimitive.*;
+import static pulp.TokenType.FALSE;
+import static pulp.TokenType.TRUE;
 
 public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
 
@@ -25,20 +27,16 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
     {
         try
         {
-            for(Stmt s : statements)
-            {
+            for(Stmt s : statements) {
                 checkType(s);
             }
         }
-
         catch (RuntimeError error) { Pulper.runtimeError(error); }
     }
 
     private void checkType(Stmt s)
     {
         s.accept(this);
-
-
     }
 
 
@@ -67,17 +65,16 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
 
         if(value instanceof Double d)
         {
-            if(d == Math.floor(d))
-            {
+            if(d == Math.floor(d)) {
                 return new PrimitiveType(WHOLE_NUMBER);
             }
             else {
                 return new PrimitiveType(REAL_NUMBER);
             }
         }
-
+        System.out.println("object value : " + value);
         if (value instanceof String) return new PrimitiveType(TEXT);
-        if (value instanceof Boolean) return new PrimitiveType(TRUTH_VALUE);
+        if (value == TRUE || value == FALSE) return new PrimitiveType(TRUTH_VALUE);
 
         Pulper.error("Unknown literal type : " + value);
         return null;
@@ -85,7 +82,7 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
 
     @Override
     public Type visitMultistringExpr(Expr.Multistring expr) {
-        return null;
+        return new PrimitiveType(TEXT);
     }
 
     @Override
@@ -187,7 +184,6 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
         {
             if(!declaredType.equals(initializerType))
             {
-
                 System.out.println("declaredType = " + debugType(declaredType));
                 System.out.println("initializerType = " + debugType(initializerType));
                 Pulper.error(stmt.name, "Type mismatch in variable declaration");
@@ -234,13 +230,5 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
         return null;
     }
 
-    private boolean equals(Type a, Type b)
-    {
-        if(a == null || b == null) return false;
-        if(a instanceof PrimitiveType pa && b instanceof PrimitiveType pb)
-        {
-            return pa.kind == pb.kind;
-        }
-        return false;
-    }
+
 }

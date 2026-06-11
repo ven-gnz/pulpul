@@ -22,8 +22,9 @@ abstract class Expr{
     R visitSetExpr(Set expr);
  }
  static class Literal extends Expr {
-    Literal(Object value) {
+    Literal(Object value, Type type) {
     this.value = value;
+    this.type = type;
     }
 
     @Override
@@ -32,6 +33,7 @@ abstract class Expr{
     }
 
     final Object value;
+    final Type type;
   }
  static class Multistring extends Expr {
     Multistring(List<Expr> strings) {

@@ -1,5 +1,3 @@
 
-let whole number a be equal to "moi"
-display result add a to 3
-let text b be equal to "World!"
-display result "Hello " + b , "we print the value of a on the new line : " + a
+let boolean b be equal to true
+display result is b and true

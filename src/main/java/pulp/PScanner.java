@@ -74,6 +74,7 @@ public class PScanner {
         keywords.put("number", NUMBER);
         keywords.put("real", REAL);
         keywords.put("whole", WHOLE);
+        keywords.put("boolean", BOOLEAN);
 
 
 

@@ -42,6 +42,13 @@ class PrimitiveType extends Type{
     {
         return kind.hashCode();
     }
+
+    @Override
+    public String toString() {
+        return "PrimitiveType{" +
+                "kind=" + kind +
+                '}';
+    }
 }
 
 

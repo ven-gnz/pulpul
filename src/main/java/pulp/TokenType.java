@@ -35,7 +35,7 @@ public enum TokenType {
     REPEAT, UNTIL,
 
     WHOLE, REAL, NUMBER,
-    TEXT, TRUTH_VALUE
+    TEXT, BOOLEAN
 
 
 }
