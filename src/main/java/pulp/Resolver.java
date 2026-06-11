@@ -233,6 +233,11 @@ import java.util.Stack;
             return null;
         }
 
+        @Override
+        public Void visitErrorStmt(Stmt.Error stmt) {
+            return null;
+        }
+
         private void resolveFunction(Stmt.Subprogram subprogram, FunctionType type)
         {
             FunctionType enclosingFunction = currentFunction;

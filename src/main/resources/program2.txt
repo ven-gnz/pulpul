@@ -1,4 +1,10 @@
 
-let boolean sunny_day be equal to true
-let text var be equal to "Otso"
+asd asd asd asd asd
+
+let boolean isSunny be equal to true
+let text var be equal to "John Doe"
 display result "hello " + var + "!",  "nice to meetcha"
+check is isSunny, then:
+    display result "why if it isn't a sunny day!".
+otherwise:
+    display result "it's not too nice outside".

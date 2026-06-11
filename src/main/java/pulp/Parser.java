@@ -13,9 +13,14 @@ class Parser {
 
     private static class ParseError extends RuntimeException{};
 
+    private boolean isPanic = false;
+    private static final int perStatementMaxErrors = 3;
+    private int statementErrors = 0;
+
 
     private final List<Token> tokens;
     private int current = 0;
+    private Token lastToken;
 
     Parser(List<Token> tokens){
         this.tokens = tokens;
@@ -26,6 +31,7 @@ class Parser {
         List<Stmt> statements = new ArrayList<>();
         while(!isAtEnd())
         {
+            statementErrors = 0;
             statements.add(declaration());
         }
         return statements;
@@ -33,6 +39,7 @@ class Parser {
 
     private Stmt declaration()
     {
+        statementErrors = 0;
         try
         {
             if(match(LET))
@@ -59,8 +66,9 @@ class Parser {
             return statement();
         } catch (ParseError per)
         {
+            System.out.println("Parser error");
             synchronize();
-            return null;
+            return new Stmt.Error(lastToken, "invalid statement");
         }
     }
 
@@ -247,18 +255,32 @@ class Parser {
     private Expr primary()
     {
 
-        if(match(IDENTIFIER)) { return new Expr.Variable(previous()); }
+        if(check(IDENTIFIER)) {
+            Token id = peek();
+            if(isConsecutiveIdentifier(id))
+            {
+                throw error(id, "Unexpected identifier ");
+            }
+            advance();
+            return new Expr.Variable(id);
+        }
         if(match(STRING_LITERAL)) return parseString();
         if(match(NUMBER_LITERAL)) return parseNumberLiteral();
         if(match(MINUS)) return new Expr.Unary(previous(),primary());
 
-        if(match(TRUE, FALSE)) { return new Expr.Literal(TRUE, new PrimitiveType(TRUTH_VALUE)); }
+        if(match(TRUE)) { return new Expr.Literal(TRUE, new PrimitiveType(TRUTH_VALUE)); }
         if(match(FALSE)) { return new Expr.Literal(FALSE, new PrimitiveType(TRUTH_VALUE)); }
         if(match(NOT)) { return new Expr.Unary(previous(), parseLogicalExpression()); }
         if(match(THIS)) { return new Expr.This(previous()); }
 
-        error(tokens.get(current), "Cannot parse expression");
-        return null;
+        Token t = peek();
+        throw error(t, "unexpected token '" + t.lexeme + "', expected expression");
+    }
+
+    private boolean isConsecutiveIdentifier(Token current)
+    {
+        if(lastToken == null) return false;
+        return lastToken.type == IDENTIFIER && current.type == IDENTIFIER;
     }
 
     private Expr parseNumberLiteral()
@@ -467,7 +489,8 @@ class Parser {
 
     private Token advance() {
         if(!isAtEnd()) current++;
-        return previous();
+        lastToken = previous();
+        return lastToken;
     }
 
 
@@ -495,6 +518,15 @@ class Parser {
     private ParseError error(Token token, String msg)
     {
         Pulper.error(token, msg);
+        statementErrors++;
+        System.out.println("Statement errors " +statementErrors);
+        if(statementErrors >= perStatementMaxErrors)
+        {
+            isPanic = true;
+            System.out.println("PANIC");
+            throw new ParseError();
+        }
+
         return new ParseError();
     }
 
@@ -504,9 +536,18 @@ class Parser {
         advance();
         while(!isAtEnd())
         {
-            if(previous().type == DOT) return;
+
             switch (peek().type)
-            { }
+            {
+                case LET:
+                case DISPLAY:
+                case CHECK:
+                case REPEAT:
+                case DESCRIBING:
+                case PROGRAM:
+                    return;
+            }
+            advance();
         }
     }
 }

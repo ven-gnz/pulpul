@@ -127,6 +127,11 @@ public class PrettyPrinter
         return withIndent("Subprogram " + stmt.name.lexeme + "\n");
     }
 
+    @Override
+    public String visitErrorStmt(Stmt.Error stmt) {
+        return "";
+    }
+
 
     private String expr(Expr expr)
     {

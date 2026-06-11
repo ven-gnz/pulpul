@@ -15,6 +15,7 @@ abstract class Stmt{
     R visitWhileStmt(While stmt);
     R visitBreakStmt(Break stmt);
     R visitSubprogramStmt(Subprogram stmt);
+    R visitErrorStmt(Error stmt);
  }
  static class Block extends Stmt {
     Block(List<Stmt> statements) {
@@ -155,6 +156,20 @@ abstract class Stmt{
     final Token name;
     final List<Token> params;
     final List<Stmt> body;
+  }
+ static class Error extends Stmt {
+    Error(Token token, String message) {
+    this.token = token;
+    this.message = message;
+    }
+
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+    return visitor.visitErrorStmt(this);
+    }
+
+    final Token token;
+    final String message;
   }
     abstract <R> R accept(Visitor<R> visitor);
 }
