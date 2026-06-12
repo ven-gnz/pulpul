@@ -247,6 +247,11 @@ public class PrettyPrinter
         return withIndent("Set\n");
     }
 
+    @Override
+    public String visitErrorExpr(Expr.Error expr) {
+        return "";
+    }
+
 
     @Override
     public String visitAddExpr(Expr.Add expr)

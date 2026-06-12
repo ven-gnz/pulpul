@@ -1,0 +1,30 @@
+Expr
+----
+Literal      -> type CHECK
+Multistring  -> type CHECK, albeit the node has not a type
+Unary        -> type
+Logical      -> type
+This         -> type
+Assign       -> type
+Add          -> type
+Remove       -> type
+Multiply     -> type
+Divide       -> type
+Compare      -> type
+Variable     -> type
+Call         -> type
+Get          -> type
+Set          -> type
+
+Stmt
+----
+Block        -> no
+Program      -> no
+Expression   -> no
+Print        -> no
+Var          -> declaredType already present
+Return       -> optional expectedType
+If           -> no
+While        -> no
+Break        -> no
+Subprogram   -> returnType + parameter types

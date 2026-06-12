@@ -1,7 +1,6 @@
 package pulp;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 import static pulp.PrimitiveType.ULPPrimitive.*;
@@ -9,13 +8,33 @@ import static pulp.Pulper.error;
 import static pulp.TokenType.*;
 import static pulp.TokenType.TEXT;
 
+
+
 class Parser {
 
-    private static class ParseError extends RuntimeException{};
+    private Token errorToken(Token token, String msg)
+    {
+        diagnostics.add(new ErrorDiagnostic(
+                token.line, token.lexeme, msg));
 
-    private boolean isPanic = false;
-    private static final int perStatementMaxErrors = 3;
-    private int statementErrors = 0;
+        return new Token(
+                ERROR, "<error>",msg,token.line
+        );
+    }
+
+    private static class ParseError extends RuntimeException{
+        public ParseError(String msg)
+        {
+            super(msg);
+        }
+    };
+
+    public List<ErrorDiagnostic> diagnostics;
+    private final Map<Integer, Integer> perLineErrors;
+    private final Set<Integer> ignoredLines;
+    private static final int MAX_ERRORS = 50;
+    private static final int MAX_ERRORS_PER_LINE = 3;
+    private int errors = 0;
 
 
     private final List<Token> tokens;
@@ -24,6 +43,9 @@ class Parser {
 
     Parser(List<Token> tokens){
         this.tokens = tokens;
+        this.diagnostics = new ArrayList<>();
+        this.perLineErrors = new HashMap<>();
+        this.ignoredLines = new HashSet<>();
     }
 
     List<Stmt> parse()
@@ -31,15 +53,25 @@ class Parser {
         List<Stmt> statements = new ArrayList<>();
         while(!isAtEnd())
         {
-            statementErrors = 0;
             statements.add(declaration());
         }
         return statements;
     }
 
+    public void printDiagnostics()
+    {
+        for(ErrorDiagnostic d : diagnostics)
+        {
+            System.out.println(
+                    "[line " + d.line() + "] " +
+                            d.lexeme() + ": " +
+                            d.message()
+            );
+        }
+    }
+
     private Stmt declaration()
     {
-        statementErrors = 0;
         try
         {
             if(match(LET))
@@ -66,7 +98,6 @@ class Parser {
             return statement();
         } catch (ParseError per)
         {
-            System.out.println("Parser error");
             synchronize();
             return new Stmt.Error(lastToken, "invalid statement");
         }
@@ -259,9 +290,9 @@ class Parser {
             Token id = peek();
             if(isConsecutiveIdentifier(id))
             {
-                throw error(id, "Unexpected identifier ");
+                return errorExpr(id, "Unexpected identifier ");
             }
-            advance();
+            id = advance();
             return new Expr.Variable(id);
         }
         if(match(STRING_LITERAL)) return parseString();
@@ -274,7 +305,9 @@ class Parser {
         if(match(THIS)) { return new Expr.This(previous()); }
 
         Token t = peek();
-        throw error(t, "unexpected token '" + t.lexeme + "', expected expression");
+        advance();
+        return errorExpr(t, "unexpected token '" + t.lexeme + "', expected expression");
+
     }
 
     private boolean isConsecutiveIdentifier(Token current)
@@ -316,7 +349,7 @@ class Parser {
         if (target instanceof Expr.Get g) {
             return new Expr.Set(g.object, g.name, value);
         }
-        throw error(peek(), "Invalid assignment target");
+         return errorExpr(peek(), "Invalid assignment target");
     }
 
     private Expr parseLogicalExpression() {
@@ -468,7 +501,7 @@ class Parser {
             else { return ComparisonType.GREATER; }
         }
         // default case to make java compiler happy
-        throw error(peek(), "Invalid comparison");
+        return ComparisonType.EQUAL;
     }
 
     private boolean match(TokenType... types) {
@@ -484,7 +517,7 @@ class Parser {
     private Token consume(TokenType type, String msg)
     {
         if(check(type)) return advance();
-        throw error(peek(), msg);
+        return errorToken(peek(), msg);
     }
 
     private Token advance() {
@@ -515,19 +548,41 @@ class Parser {
         return tokens.get(current-1);
     }
 
-    private ParseError error(Token token, String msg)
-    {
-        Pulper.error(token, msg);
-        statementErrors++;
-        System.out.println("Statement errors " +statementErrors);
-        if(statementErrors >= perStatementMaxErrors)
-        {
-            isPanic = true;
-            System.out.println("PANIC");
-            throw new ParseError();
-        }
 
-        return new ParseError();
+
+    private void reportError(Token token, String msg)
+    {
+
+        errors++;
+        if(errors  >= MAX_ERRORS)
+        {
+            throw new RuntimeException("Too many parsing errors - aborting ");
+        }
+        int line = token.line;
+        if(ignoredLines.contains(line)) { return ; }
+
+        int count = perLineErrors.getOrDefault(line,0) + 1;
+        perLineErrors.put(line, count);
+
+        diagnostics.add(
+                new ErrorDiagnostic(
+                        line, token.lexeme, msg));
+        if(count == MAX_ERRORS_PER_LINE)
+        {
+            ignoredLines.add(line);
+            diagnostics.add(
+                    new ErrorDiagnostic(line,
+                            "",
+                            "Too many parse errors on line "+token.line));
+            throw new ParseError("Catastrophic line erro on line " + line + " - aborting statement");
+        }
+    }
+
+
+    private Expr errorExpr(Token token, String msg)
+    {
+        reportError(token, msg);
+        return new Expr.Error(token);
     }
 
     private void synchronize()

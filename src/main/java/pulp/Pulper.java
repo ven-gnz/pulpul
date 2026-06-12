@@ -79,6 +79,7 @@ public class Pulper {
 
         Parser parser = new Parser(tokens);
         List<Stmt> statements = parser.parse();
+        parser.printDiagnostics();
 
         PrettyPrinter prettyPrinter = new PrettyPrinter();
         prettyPrinter.print(statements);

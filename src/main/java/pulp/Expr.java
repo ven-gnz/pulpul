@@ -20,6 +20,7 @@ abstract class Expr{
     R visitCallExpr(Call expr);
     R visitGetExpr(Get expr);
     R visitSetExpr(Set expr);
+    R visitErrorExpr(Error expr);
  }
  static class Literal extends Expr {
     Literal(Object value, Type type) {
@@ -232,6 +233,18 @@ abstract class Expr{
     final Expr object;
     final Token name;
     final Expr value;
+  }
+ static class Error extends Expr {
+    Error(Token t) {
+    this.t = t;
+    }
+
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+    return visitor.visitErrorExpr(this);
+    }
+
+    final Token t;
   }
     abstract <R> R accept(Visitor<R> visitor);
 }

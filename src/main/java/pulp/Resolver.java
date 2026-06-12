@@ -336,6 +336,11 @@ import java.util.Stack;
         }
 
         @Override
+        public Void visitErrorExpr(Expr.Error expr) {
+            return null;
+        }
+
+        @Override
         public Void visitThisExpr(Expr.This expr) {
             if(currentClass == ClassType.NONE)
             {

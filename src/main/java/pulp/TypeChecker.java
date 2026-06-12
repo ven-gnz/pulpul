@@ -135,6 +135,11 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
     }
 
     @Override
+    public Type visitErrorExpr(Expr.Error expr) {
+        return null;
+    }
+
+    @Override
     public Void visitBlockStmt(Stmt.Block stmt) {
         return null;
     }

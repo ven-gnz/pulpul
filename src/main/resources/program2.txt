@@ -1,6 +1,4 @@
 
-asd asd asd asd asd
-
 let boolean isSunny be equal to true
 let text var be equal to "John Doe"
 display result "hello " + var + "!",  "nice to meetcha"
