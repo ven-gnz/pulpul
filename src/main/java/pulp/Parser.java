@@ -294,10 +294,6 @@ class Parser {
     private Expr expression()
     {
 
-        if(startsType())
-        {
-            // TODO
-        }
         if(check(SET)) return assignment();
         if(match(IS)) return parseLogicalExpression();
         if (check(ADD) || check(REMOVE) || check(DIVIDE) || check(MULTIPLY)) return arithmeticExpression();
@@ -307,7 +303,7 @@ class Parser {
     private boolean startsType()
     {
         return check(WHOLE)
-        ||check(REAL)
+        || check(REAL)
         || check(TEXT)
         || check(BOOLEAN);
     }
@@ -398,10 +394,19 @@ class Parser {
     }
 
 
-
+    /**
+     * The final expression node parsing method is a bit of a catch-all sink to whatever primaries or unaries are left,due to same last minute additions such as static typing.
+     * Idea is to support casting of expressions into types, and this idea came in relatively late into the development cycle.
+     * @return the parsed expression
+     */
     private Expr primary()
     {
 
+        if(startsType())
+        {
+            Type t = inferTypeFromTokens();
+            return new Expr.Cast(t, expression());
+        }
         if(check(IDENTIFIER)) {
             Token id = peek();
             if(isConsecutiveIdentifier(id))
@@ -483,13 +488,9 @@ class Parser {
 
 
 
-    private Expr logicalTerm()
-    {
+    private Expr logicalTerm() {
         Expr left = primary();
-        if(check(EQUAL) || check(NOT) || check(LESS) || check(MORE))
-        {
-            return comparisonExpression(left);
-        }
+        if(check(EQUAL) || check(NOT) || check(LESS) || check(MORE)) return comparisonExpression(left);
         return left;
     }
 

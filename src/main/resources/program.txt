@@ -4,7 +4,7 @@ check is a more than 2, then:
     repeat until is loopvar more than 0:
     let whole number b be equal to 3
     set a to multiply a by 2
-    set b to whole number 17
+    set b to 17
     display result add a to b
     display result loopvar
     set loopvar to remove 1 from loopvar

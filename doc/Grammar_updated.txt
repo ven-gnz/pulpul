@@ -16,7 +16,8 @@ Grammar for ULP (Un-natural language programming language)
 <assignment> ::= "let" <type> " " <identifier> "be" "equal" "to" <expression> | <reassignment>
 <reassignment> ::= "set" <identifier> "to" <opt_cast> <expression>
 <opt_cast> ::= <type> | <empty>
-<type> ::= "Whole" "Number" | "Real" "Number" | "String" | "Boolean"
+<type> ::= "Whole" <opt_number> | "Real" <opt_number> | "String" | "Boolean"
+<opt_number> ::= "number" | <empty>
 <identifier> ::= <letter> | <letter> <identifier>
 <letter> ::= [a-zA-Z]
 ----------------
@@ -33,7 +34,7 @@ Grammar for ULP (Un-natural language programming language)
 <boolean_literal> ::= "True" | "False"
 
 <arithmetic_expression> ::= <arithmetic_term> | <add_expression>| <subtract_expression> | <multiply_expression> | <divide_expression>
-<arithmetic_term> ::= <number_literal> | <identifier> #### Subprogram invocation later???
+<arithmetic_term> ::= <number_literal> | <identifier> | <subprogram_invocation_expression>
 <add_expression> ::= "add" <arithmetic_expression> "to" <arithmetic_expression>
 <subtract_expression> ::= "remove" <arithmetic_expression> "from" <arithmetic_expression>
 <multiply_expression> ::= "multiply" <arithmetic_expression> "by" <arithmetic_expression>
