@@ -9,12 +9,13 @@ Grammar for ULP (Un-natural language programming language)
 <statement_list> ::= <statement> "." | <statement> "," <block>
 <declaration> ::= <declaration> | <statement>
 <declaration> ::= <global_definition>
-<global_definition> ::= "let" "global" <type> <identifier> "be" "equal" "to" <expression>
+<global_definition> ::= "let" <type> <identifier> "be" "equal" "to" <expression>
 <statement> ::= <assignment> | <selection_statement> | <looping_statement> | <print_statement> | <expression>
 
 ---------------
 <assignment> ::= "let" <type> " " <identifier> "be" "equal" "to" <expression> | <reassignment>
-<reassignment> ::= "set" <identifier> "to" <expression>
+<reassignment> ::= "set" <identifier> "to" <opt_cast> <expression>
+<opt_cast> ::= <type> | <empty>
 <type> ::= "Whole" "Number" | "Real" "Number" | "String" | "Boolean"
 <identifier> ::= <letter> | <letter> <identifier>
 <letter> ::= [a-zA-Z]
@@ -47,15 +48,19 @@ Grammar for ULP (Un-natural language programming language)
 <argument_list> ::= <empty> | <expression_list>
 <empty> ::= ε
 <expression_list> ::= <expression> ";" | <expression> "," <expression_list>
-
+------
 <input_expression> ::= "input" "from" "user"
-
+-------
 ------------------
 <comparison_criteria> ::= ("less" "than" | "less" "than" "or" "equal" "to" | "more" "than" | "more" "than" "or" "equal" "to" | "equal" "to")
 ------------------
-<selection_statement> ::= "check" <logical_expression> "," "then" <block> "otherwise" <block>
+<selection_statement> ::= "check" <logical_expression> <opt_comm> <opt_then> <block> <othewise_opt>
+<opt_comma> ::= "," | <empty>
+<opt_then> ::= "then" | <empty>
+<otherwise_opt> ::= "otherwise" <block> | <empty>
 -----------------
-<looping_statement> ::= "repeat" "until" <logical_expression> <block>
+<looping_statement> ::= <opt_repeat> "until" <logical_expression> <block>
+<opt_repeat> ::= "repeat" | <empty>
 <break> ::= "break"
 -----------------
 <subprogram_definition> ::= "Describing" "subprogram" "called" <subprogram_name> "acting" "on" "inputs" <input_list> "producing" "outputs" <subprogram_output> <block>
@@ -65,7 +70,8 @@ Grammar for ULP (Un-natural language programming language)
 <parameter> ::= <type> " " <identifier>
 <subprogram_output> ::= <type> " " <identifier>
 --------------
-<print_statement> ::= "Display" "result" <printstring>
+<print_statement> ::= "Display" <opt_res> <printstring>
+<opt_res> ::= "result" | <empty>
 <printstring> ::= <empty> | <string_list>
 <string_list> ::= <expression> | <expression> "," <string_list>
 ----------------

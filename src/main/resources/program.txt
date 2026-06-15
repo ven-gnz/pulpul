@@ -1,13 +1,14 @@
-let a be equal to 5
-let loopvar be equal to 5
+let whole number a be equal to 5
+let whole number loopvar equal 5
 check is a more than 2, then:
     repeat until is loopvar more than 0:
-    let b be equal to 3
+    let whole number b be equal to 3
     set a to multiply a by 2
+    set b to whole number 17
     display result add a to b
     display result loopvar
     set loopvar to remove 1 from loopvar
-    check is a more than 42, then:
+    check is a more than 42:
         display result "break condition"
         break.
     .

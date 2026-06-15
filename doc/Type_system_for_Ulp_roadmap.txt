@@ -5,7 +5,7 @@ Multistring  -> type CHECK (trivially string)
 Unary        -> no CHECK
 Logical      -> type, although trivially only ever the primitive CHECK
 This         -> type
-Assign       -> type
+Assign       -> no type, there is no value to return
 Add          -> no CHECK
 Remove       -> no CHECK
 Multiply     -> no CHECK
@@ -14,7 +14,7 @@ Compare      -> type, always truth value CHECK
 Variable     -> no type on variable accessing, its stored in the declaration statement CHECK
 Call         -> type
 Get          -> no type, the type is stored in the variable declaration of the objects field CHECK
-Set          -> type
+Set          -> no type, there is no value to return
 
 Stmt
 ----
@@ -28,3 +28,11 @@ If           -> no
 While        -> no
 Break        -> no
 Subprogram   -> returnType + parameter types
+
+
+
+0. GRAMMAR TWEAKS & PARSER DOC
+1. FINISH TYPE SYSTEM
+2. FINISH TYPE CHECKER
+3. CAST STMT/EXPR
+4. INPUT OPERATOR

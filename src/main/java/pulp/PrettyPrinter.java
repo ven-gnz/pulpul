@@ -213,6 +213,11 @@ public class PrettyPrinter
     }
 
     @Override
+    public String visitCastExpr(Expr.Cast expr) {
+        return "";
+    }
+
+    @Override
     public String visitAssignExpr(Expr.Assign expr)
     {
         StringBuilder out = new StringBuilder();

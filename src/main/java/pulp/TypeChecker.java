@@ -125,6 +125,11 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
     }
 
     @Override
+    public Type visitCastExpr(Expr.Cast expr) {
+        return null;
+    }
+
+    @Override
     public Type visitGetExpr(Expr.Get expr) {
         return null;
     }
@@ -166,7 +171,6 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
         if (stmt.initializer != null) {
             initializerType = evaluate(stmt.initializer);
         }
-        //System.out.println("INIT EXPR TYPE = " + initializerType);
         Type declaredType = stmt.declaredType;
 
         if(declaredType != null && initializerType != null)

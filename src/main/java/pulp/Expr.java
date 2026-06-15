@@ -18,6 +18,7 @@ abstract class Expr{
     R visitCompareExpr(Compare expr);
     R visitVariableExpr(Variable expr);
     R visitCallExpr(Call expr);
+    R visitCastExpr(Cast expr);
     R visitGetExpr(Get expr);
     R visitSetExpr(Set expr);
     R visitErrorExpr(Error expr);
@@ -93,10 +94,9 @@ abstract class Expr{
     final Token keyword;
   }
  static class Assign extends Expr {
-    Assign(Token name, Expr value, Type type) {
+    Assign(Token name, Expr value) {
     this.name = name;
     this.value = value;
-    this.type = type;
     }
 
     @Override
@@ -106,7 +106,6 @@ abstract class Expr{
 
     final Token name;
     final Expr value;
-    final Type type;
   }
  static class Add extends Expr {
     Add(Expr left, Expr right) {
@@ -208,6 +207,20 @@ abstract class Expr{
     final Token paren;
     final List<Expr> arguments;
   }
+ static class Cast extends Expr {
+    Cast(Type targetType, Expr right) {
+    this.targetType = targetType;
+    this.right = right;
+    }
+
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+    return visitor.visitCastExpr(this);
+    }
+
+    final Type targetType;
+    final Expr right;
+  }
  static class Get extends Expr {
     Get(Expr object, Token name) {
     this.object = object;
@@ -223,11 +236,10 @@ abstract class Expr{
     final Token name;
   }
  static class Set extends Expr {
-    Set(Expr object, Token name, Expr value, Type type) {
+    Set(Expr object, Token name, Expr value) {
     this.object = object;
     this.name = name;
     this.value = value;
-    this.type = type;
     }
 
     @Override
@@ -238,7 +250,6 @@ abstract class Expr{
     final Expr object;
     final Token name;
     final Expr value;
-    final Type type;
   }
  static class Error extends Expr {
     Error(Token t) {

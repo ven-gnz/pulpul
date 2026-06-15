@@ -301,6 +301,11 @@ import java.util.Stack;
         }
 
         @Override
+        public Void visitCastExpr(Expr.Cast expr) {
+            return null;
+        }
+
+        @Override
         public Void visitGetExpr(Expr.Get expr) {
             resolve(expr.object);
             return null;
