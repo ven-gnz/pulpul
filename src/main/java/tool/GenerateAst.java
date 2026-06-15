@@ -23,7 +23,7 @@ public class GenerateAst {
                         "Unary : Token operator, Expr right",
                         "Logical : Expr left, Token operator, Expr right, Type type",
                         "This : Token keyword",
-                        "Assign : Token name, Expr value, Type type",
+                        "Assign : Token name, Expr value",
                         "Add : Expr left, Expr right",
                         "Remove : Expr left, Expr right",
                         "Multiply : Expr left, Expr right",
@@ -31,8 +31,9 @@ public class GenerateAst {
                         "Compare : Expr left, ComparisonType type, Expr right",
                         "Variable : Token name",
                         "Call : Expr callee, Token paren, List<Expr> arguments",
+                        "Cast : Type targetType, Expr right",
                         "Get      : Expr object, Token name",
-                        "Set      : Expr object, Token name, Expr value, Type type",
+                        "Set      : Expr object, Token name, Expr value",
                         "Error : Token t"
 
                 ));
