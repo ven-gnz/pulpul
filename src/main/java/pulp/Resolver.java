@@ -14,6 +14,7 @@ import java.util.Stack;
         private FunctionType currentFunction = FunctionType.NONE;
         private ClassType currentClass = ClassType.NONE;
         private int loopDepth = 0;
+        private final Map<String, Type> types = new HashMap<>();
 
         Resolver(Interpreter inte)
         {
@@ -112,6 +113,7 @@ import java.util.Stack;
                 resolve(stmt.initializer);
             }
             define(stmt.name);
+            types.put(stmt.name.lexeme, stmt.declaredType);
             return null;
         }
 
@@ -342,6 +344,7 @@ import java.util.Stack;
 
         @Override
         public Void visitErrorExpr(Expr.Error expr) {
+            System.out.println("Resolver visits error expr");
             return null;
         }
 
@@ -359,6 +362,21 @@ import java.util.Stack;
         @Override
         public Void visitUnaryExpr(Expr.Unary expr) {
             resolve(expr.right);
+            return null;
+        }
+
+        public Type getType(Token name)
+        {
+            for (int i = scopes.size() - 1; i >= 0; i--)
+            {
+                Map<String, Boolean> scope = scopes.get(i);
+
+                if (scope.containsKey(name.lexeme))
+                {
+                    return types.get(name.lexeme);
+                }
+            }
+
             return null;
         }
 

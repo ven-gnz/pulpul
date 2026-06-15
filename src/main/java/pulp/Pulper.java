@@ -68,11 +68,6 @@ public class Pulper {
         List<Token> tokens = scanner.scanTokens();
 
 
-
-
-
-
-
         for (Token token : tokens) {
             System.out.println(token.type + " " + token.lexeme);
         }
@@ -84,8 +79,11 @@ public class Pulper {
         PrettyPrinter prettyPrinter = new PrettyPrinter();
         prettyPrinter.print(statements);
 
+        Resolver resolver = new Resolver(interpreter);
+        resolver.resolve(statements);
 
-        TypeChecker typeChecker = new TypeChecker(statements);
+
+        TypeChecker typeChecker = new TypeChecker(statements, resolver);
         typeChecker.check();
         if(hadError)
         {
@@ -94,8 +92,7 @@ public class Pulper {
         }
         if(hadRuntimeError) System.exit(70);
 
-        Resolver resolver = new Resolver(interpreter);
-        resolver.resolve(statements);
+
 
         if(hadError)
         {

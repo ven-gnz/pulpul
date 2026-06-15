@@ -1,26 +1,20 @@
 package pulp;
-
-import java.sql.Statement;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 
 import static pulp.PrimitiveType.ULPPrimitive.*;
-import static pulp.TokenType.FALSE;
-import static pulp.TokenType.TRUE;
+
 
 public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
 
-    Map<String, Type> variables;
     List<Stmt> statements;
+    Resolver resolver;
 
-
-    public TypeChecker(List<Stmt> stmts)
+    public TypeChecker(List<Stmt> stmts, Resolver resolver)
     {
-        this.variables = new HashMap<>();
         this.statements = stmts;
+        this.resolver = resolver;
     }
 
     public void check()
@@ -34,28 +28,29 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
         catch (RuntimeError error) { Pulper.runtimeError(error); }
     }
 
+
+    private Type promote(Type a, Type b)
+    {
+        if(a instanceof PrimitiveType && b instanceof PrimitiveType)
+        {
+            if( ((PrimitiveType) a).kind == REAL_NUMBER &&
+                    ((PrimitiveType) b).kind == REAL_NUMBER)
+            {
+                return new PrimitiveType(REAL_NUMBER);
+            }
+        }
+        return new PrimitiveType(WHOLE_NUMBER);
+    }
+
     private void checkType(Stmt s)
     {
         s.accept(this);
     }
 
 
-
-    Type evaluate(Expr expr)
+    Type typeOf(Expr expr)
     {
         return expr.accept(this);
-    }
-
-    private Type lookUp(Token name)
-    {
-        Type type = variables.get(name.lexeme);
-        if(type == null)
-        {
-            Pulper.error(name, "undefined variable type of " + name.lexeme);
-            return null;
-        }
-
-        return type;
     }
 
 
@@ -71,12 +66,12 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
 
     @Override
     public Type visitUnaryExpr(Expr.Unary expr) {
-        return null;
+        return expr.right.accept(this);
     }
 
     @Override
     public Type visitLogicalExpr(Expr.Logical expr) {
-        return null;
+        return new PrimitiveType(TRUTH_VALUE);
     }
 
     @Override
@@ -91,7 +86,19 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
 
     @Override
     public Type visitAddExpr(Expr.Add expr) {
-        return null;
+
+        Type left = typeOf(expr.left);
+        Type right = typeOf(expr.right);
+
+        if(!isNumeric(left) || !isNumeric(right))
+        {
+            Pulper.error("Cannot add " + left + " and " + right);
+            return new ErrorType();
+        }
+        System.out.println("Both add were numeric!!!!!");
+
+
+        return promote(left,right);
     }
 
     @Override
@@ -116,7 +123,14 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
 
     @Override
     public Type visitVariableExpr(Expr.Variable expr) {
-        return lookUp(expr.name);
+        Type t = resolver.getType(expr.name);
+        System.out.println("RESOLVE: " + expr.name.lexeme + " -> " + t);
+        if(t == null)
+        {
+            Pulper.error(expr.name, "Undefined variable");
+            return null;
+        }
+        return t;
     }
 
     @Override
@@ -126,8 +140,44 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
 
     @Override
     public Type visitCastExpr(Expr.Cast expr) {
+
+        Type source = typeOf(expr.right);
+
+        if(!isCastable(source, expr.targetType))
+        {
+            Pulper.error(null, "Invalid cast operation");
+        }
+
         return null;
     }
+
+    public boolean isCastable(Type from, Type to)
+    {
+        if(from.equals(to)) return true;
+
+        if(isNumeric(from) && isNumeric(to)) return true;
+        if(isTextual(from) || isTextual(to)) return false;
+        return !isBoolean(from) && !isBoolean(to);
+    }
+
+    private boolean isNumeric(Type t)
+    {
+        if (!(t instanceof PrimitiveType p)) return false;
+        return p.kind == WHOLE_NUMBER
+                || p.kind == REAL_NUMBER;
+    }
+
+    private boolean isTextual(Type type)
+    {
+        return type instanceof PrimitiveType primitive &&
+                primitive.kind == TEXT;
+    }
+
+    private boolean isBoolean(Type type)
+    {
+        return type instanceof PrimitiveType primitive && primitive.kind == TRUTH_VALUE;
+    }
+
 
     @Override
     public Type visitGetExpr(Expr.Get expr) {
@@ -141,7 +191,8 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
 
     @Override
     public Type visitErrorExpr(Expr.Error expr) {
-        return null;
+        Pulper.error("Type error");
+        return new ErrorType();
     }
 
     @Override
@@ -169,7 +220,7 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
 
         Type initializerType = null;
         if (stmt.initializer != null) {
-            initializerType = evaluate(stmt.initializer);
+            initializerType = typeOf(stmt.initializer);
         }
         Type declaredType = stmt.declaredType;
 
@@ -183,8 +234,6 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
             }
         }
         Type finaltype = initializerType;
-        variables.put(stmt.name.lexeme, finaltype);
-
         return null;
     }
 
@@ -202,6 +251,7 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
 
     @Override
     public Void visitIfStmt(Stmt.If stmt) {
+
         return null;
     }
 
@@ -222,6 +272,7 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
 
     @Override
     public Void visitErrorStmt(Stmt.Error stmt) {
+        System.out.println("Checking error type");
         return null;
     }
 

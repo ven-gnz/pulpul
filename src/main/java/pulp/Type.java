@@ -51,6 +51,20 @@ class PrimitiveType extends Type{
     }
 }
 
+class ErrorType extends Type
+{
+
+    @Override
+    public boolean equals(Object o) {
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return 0;
+    }
+}
+
 
 class NamedType extends Type
 {

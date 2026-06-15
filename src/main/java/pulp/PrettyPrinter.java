@@ -254,14 +254,33 @@ public class PrettyPrinter
 
     @Override
     public String visitErrorExpr(Expr.Error expr) {
-        return "";
+
+        return "Error expression:" + expr.t;
     }
 
 
     @Override
     public String visitAddExpr(Expr.Add expr)
     {
-        return withIndent("Add\n");
+        StringBuilder out = new StringBuilder();
+
+        out.append(withIndent("Add\n"));
+
+        indent++;
+
+        out.append(withIndent("Left:\n"));
+        indent++;
+        out.append(expr(expr.left));
+        indent--;
+
+        out.append(withIndent("Right:\n"));
+        indent++;
+        out.append(expr(expr.right));
+        indent--;
+
+        indent--;
+
+        return out.toString();
     }
 
     @Override
