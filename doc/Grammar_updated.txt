@@ -9,6 +9,7 @@ Grammar for ULP (Un-natural language programming language)
 <statement_list> ::= <statement> "." | <statement> "," <block>
 <declaration> ::= <declaration> | <statement>
 <declaration> ::= <global_definition>
+<global_definition> ::= "let" "global" <type> <identifier> "be" "equal" "to" <expression>
 <statement> ::= <assignment> | <selection_statement> | <looping_statement> | <print_statement> | <expression>
 
 ---------------
