@@ -183,29 +183,7 @@ class Parser {
     private Stmt varDeclaration()
     {
         // parse for type here, then rest similarly as before
-        Type type;
-        if(match(WHOLE))
-        {
-            consume(NUMBER, "Excpected 'number' to complete declaration for whole number");
-            type = new PrimitiveType(WHOLE_NUMBER);
-        }
-        else if(match(REAL))
-        {
-            consume(NUMBER, "Excpected 'number' to complete declaration for real number");
-            type = new PrimitiveType(REAL_NUMBER);
-        }
-        else if(match(BOOLEAN))
-        {
-            type = new PrimitiveType(PrimitiveType.ULPPrimitive.TRUTH_VALUE);
-        }
-        else if(match(TEXT))
-        {
-            type = new PrimitiveType(PrimitiveType.ULPPrimitive.TEXT);
-        }
-        else {
-            error(tokens.get(current), " not supported as a type");
-            return null;
-        }
+        Type type = inferTypeFromTokens();
         Token name = consume(IDENTIFIER, "Except variable name here");
         consume(BE, "Except 'be' after variable name in assignment");
         consume(EQUAL, "Except 'equal' after be for assignment");
@@ -343,13 +321,41 @@ class Parser {
         Expr target = call();
         consume(TO, "Expected 'to' as the next keyword");
         Expr value = expression();
+        Type t = inferTypeFromTokens();
         if (target instanceof Expr.Variable v) {
-            return new Expr.Assign(v.name, value);
+            return new Expr.Assign(v.name, value,t);
         }
         if (target instanceof Expr.Get g) {
-            return new Expr.Set(g.object, g.name, value);
+            return new Expr.Set(g.object, g.name, value,t);
         }
          return errorExpr(peek(), "Invalid assignment target");
+    }
+
+    /**
+     * Helper method for consuming the type tokens and inferring the type to reduce redundancy
+     * @return the inferred type from tokens
+     */
+    private Type inferTypeFromTokens()
+    {
+
+        if(match(WHOLE))
+        {
+            consume(NUMBER, "Excpected 'number' to complete declaration for whole number");
+            return new PrimitiveType(WHOLE_NUMBER);
+        }
+        else if(match(REAL))
+        {
+            consume(NUMBER, "Excpected 'number' to complete declaration for real number");
+            return new PrimitiveType(REAL_NUMBER);
+        }
+        else if(match(BOOLEAN)) return new PrimitiveType(PrimitiveType.ULPPrimitive.TRUTH_VALUE);
+
+        else if(match(TEXT)) return new PrimitiveType(PrimitiveType.ULPPrimitive.TEXT);
+
+        else {
+            error(tokens.get(current), " not supported as a type");
+            return null;
+        }
     }
 
     private Expr parseLogicalExpression() {
@@ -358,12 +364,12 @@ class Parser {
         if(check(AND))
        {
            consume(AND, "Except boolean expression after 'and'");
-           return new Expr.Logical(left, previous(), expression());
+           return new Expr.Logical(left, previous(), expression(), new PrimitiveType(TRUTH_VALUE));
        }
        if(check(OR))
        {
            consume(OR, "Except boolean expression after 'or'");
-           return new Expr.Logical(left, previous(), expression());
+           return new Expr.Logical(left, previous(), expression(), new PrimitiveType(TRUTH_VALUE));
        }
         return left;
     }
@@ -459,7 +465,6 @@ class Parser {
 
     private Expr comparisonExpression(Expr left)
     {
-        System.out.println("COMPARISON EXPRESSION");
         ComparisonType type = parseComparisonCriteria();
         Expr right = arithmeticExpression();
         return new Expr.Compare(left, type, right);

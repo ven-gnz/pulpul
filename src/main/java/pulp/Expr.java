@@ -63,10 +63,11 @@ abstract class Expr{
     final Expr right;
   }
  static class Logical extends Expr {
-    Logical(Expr left, Token operator, Expr right) {
+    Logical(Expr left, Token operator, Expr right, Type type) {
     this.left = left;
     this.operator = operator;
     this.right = right;
+    this.type = type;
     }
 
     @Override
@@ -77,6 +78,7 @@ abstract class Expr{
     final Expr left;
     final Token operator;
     final Expr right;
+    final Type type;
   }
  static class This extends Expr {
     This(Token keyword) {
@@ -91,9 +93,10 @@ abstract class Expr{
     final Token keyword;
   }
  static class Assign extends Expr {
-    Assign(Token name, Expr value) {
+    Assign(Token name, Expr value, Type type) {
     this.name = name;
     this.value = value;
+    this.type = type;
     }
 
     @Override
@@ -103,6 +106,7 @@ abstract class Expr{
 
     final Token name;
     final Expr value;
+    final Type type;
   }
  static class Add extends Expr {
     Add(Expr left, Expr right) {
@@ -219,10 +223,11 @@ abstract class Expr{
     final Token name;
   }
  static class Set extends Expr {
-    Set(Expr object, Token name, Expr value) {
+    Set(Expr object, Token name, Expr value, Type type) {
     this.object = object;
     this.name = name;
     this.value = value;
+    this.type = type;
     }
 
     @Override
@@ -233,6 +238,7 @@ abstract class Expr{
     final Expr object;
     final Token name;
     final Expr value;
+    final Type type;
   }
  static class Error extends Expr {
     Error(Token t) {

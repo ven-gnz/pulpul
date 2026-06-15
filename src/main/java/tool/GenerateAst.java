@@ -21,9 +21,9 @@ public class GenerateAst {
                         "Literal : Object value, Type type",
                         "Multistring : List<Expr> strings",
                         "Unary : Token operator, Expr right",
-                        "Logical : Expr left, Token operator, Expr right",
+                        "Logical : Expr left, Token operator, Expr right, Type type",
                         "This : Token keyword",
-                        "Assign : Token name, Expr value",
+                        "Assign : Token name, Expr value, Type type",
                         "Add : Expr left, Expr right",
                         "Remove : Expr left, Expr right",
                         "Multiply : Expr left, Expr right",
@@ -32,7 +32,7 @@ public class GenerateAst {
                         "Variable : Token name",
                         "Call : Expr callee, Token paren, List<Expr> arguments",
                         "Get      : Expr object, Token name",
-                        "Set      : Expr object, Token name, Expr value",
+                        "Set      : Expr object, Token name, Expr value, Type type",
                         "Error : Token t"
 
                 ));

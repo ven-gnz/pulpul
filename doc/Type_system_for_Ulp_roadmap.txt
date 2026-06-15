@@ -1,19 +1,19 @@
 Expr
 ----
 Literal      -> type CHECK
-Multistring  -> type CHECK, albeit the node has not a type
-Unary        -> type
-Logical      -> type
+Multistring  -> type CHECK (trivially string)
+Unary        -> no CHECK
+Logical      -> type, although trivially only ever the primitive CHECK
 This         -> type
 Assign       -> type
-Add          -> type
-Remove       -> type
-Multiply     -> type
-Divide       -> type
-Compare      -> type
-Variable     -> type
+Add          -> no CHECK
+Remove       -> no CHECK
+Multiply     -> no CHECK
+Divide       -> no CHECK
+Compare      -> type, always truth value CHECK
+Variable     -> no type on variable accessing, its stored in the declaration statement CHECK
 Call         -> type
-Get          -> type
+Get          -> no type, the type is stored in the variable declaration of the objects field CHECK
 Set          -> type
 
 Stmt
