@@ -53,28 +53,99 @@ public class PrettyPrinter
     }
 
     @Override
-    public String visitVarStmt(Stmt.Var stmt) {
-        return "";
+    public String visitVarStmt(Stmt.Var stmt)
+    {
+        StringBuilder out = new StringBuilder();
+
+        out.append(withIndent("Var " + stmt.name.lexeme + "\n"));
+
+        if (stmt.initializer != null)
+        {
+            indent++;
+            out.append(withIndent("Initializer:\n"));
+            indent++;
+            out.append(expr(stmt.initializer));
+            indent -= 2;
+        }
+
+        return out.toString();
+    }
+
+
+    @Override
+    public String visitReturnStmt(Stmt.Return stmt)
+    {
+        StringBuilder out = new StringBuilder();
+
+        out.append(withIndent("Return\n"));
+
+        if (stmt.value != null)
+        {
+            indent++;
+            out.append(expr(stmt.value));
+            indent--;
+        }
+
+        return out.toString();
     }
 
     @Override
-    public String visitReturnStmt(Stmt.Return stmt) {
-        return "";
+    public String visitIfStmt(Stmt.If stmt)
+    {
+        StringBuilder out = new StringBuilder();
+
+        out.append(withIndent("If\n"));
+
+        indent++;
+        out.append(withIndent("Condition:\n"));
+        indent++;
+        out.append(expr(stmt.condition));
+        indent--;
+
+        out.append(withIndent("Then:\n"));
+        indent++;
+        out.append(stmt.thenBranch.accept(this));
+        indent--;
+
+        if (stmt.elseBranch != null)
+        {
+            out.append(withIndent("Else:\n"));
+            indent++;
+            out.append(stmt.elseBranch.accept(this));
+            indent--;
+        }
+
+        indent--;
+
+        return out.toString();
     }
 
     @Override
-    public String visitIfStmt(Stmt.If stmt) {
-        return "";
-    }
+    public String visitWhileStmt(Stmt.While stmt)
+    {
+        StringBuilder out = new StringBuilder();
 
-    @Override
-    public String visitWhileStmt(Stmt.While stmt) {
-        return "";
+        out.append(withIndent("While\n"));
+
+        indent++;
+        out.append(withIndent("Condition:\n"));
+        indent++;
+        out.append(expr(stmt.condition));
+        indent--;
+
+        out.append(withIndent("Body:\n"));
+        indent++;
+        out.append(stmt.body.accept(this));
+        indent--;
+
+        indent--;
+
+        return out.toString();
     }
 
     @Override
     public String visitBreakStmt(Stmt.Break stmt) {
-        return "";
+        return withIndent("Break\n");
     }
 
     @Override
@@ -96,8 +167,20 @@ public class PrettyPrinter
     }
 
     @Override
-    public String visitBlockStmt(Stmt.Block stmt) {
-        return "";
+    public String visitBlockStmt(Stmt.Block stmt)
+    {
+        StringBuilder out = new StringBuilder();
+
+        out.append(withIndent("Block\n"));
+
+        indent++;
+        for (Stmt s : stmt.statements)
+        {
+            out.append(s.accept(this));
+        }
+        indent--;
+
+        return out.toString();
     }
 
     @Override
@@ -128,9 +211,11 @@ public class PrettyPrinter
     }
 
     @Override
-    public String visitErrorStmt(Stmt.Error stmt) {
-        return "";
+    public String visitErrorStmt(Stmt.Error stmt)
+    {
+        return withIndent("ErrorStmt(" + stmt.token + ")\n");
     }
+
 
 
     private String expr(Expr expr)
@@ -213,8 +298,26 @@ public class PrettyPrinter
     }
 
     @Override
-    public String visitCastExpr(Expr.Cast expr) {
-        return "";
+    public String visitCastExpr(Expr.Cast expr)
+    {
+        StringBuilder out = new StringBuilder();
+
+        out.append(withIndent("Cast\n"));
+
+        indent++;
+        out.append(withIndent("Value:\n"));
+        indent++;
+        out.append(expr(expr.right));
+        indent--;
+
+        out.append(withIndent("Target:\n"));
+        indent++;
+        out.append(withIndent(expr.targetType + "\n"));
+        indent--;
+
+        indent--;
+
+        return out.toString();
     }
 
     @Override
@@ -237,19 +340,68 @@ public class PrettyPrinter
     @Override
     public String visitUnaryExpr(Expr.Unary expr)
     {
-        return withIndent("Unary(" + expr.operator.lexeme + ")\n");
+        StringBuilder out = new StringBuilder();
+
+        out.append(withIndent("Unary(" + expr.operator.lexeme + ")\n"));
+
+        indent++;
+        out.append(withIndent("Operand:\n"));
+        indent++;
+        out.append(expr(expr.right)); // typical Lox naming
+        indent--;
+        indent--;
+
+        return out.toString();
     }
 
     @Override
     public String visitLogicalExpr(Expr.Logical expr)
     {
-        return withIndent("Logical(" + expr.operator.lexeme + ")\n");
+        StringBuilder out = new StringBuilder();
+
+        out.append(withIndent("Logical(" + expr.operator.lexeme + ")\n"));
+
+        indent++;
+
+        out.append(withIndent("Left:\n"));
+        indent++;
+        out.append(expr(expr.left));
+        indent--;
+
+        out.append(withIndent("Right:\n"));
+        indent++;
+        out.append(expr(expr.right));
+        indent--;
+
+        indent--;
+
+        return out.toString();
     }
 
     @Override
     public String visitSetExpr(Expr.Set expr)
     {
-        return withIndent("Set\n");
+        StringBuilder out = new StringBuilder();
+
+        out.append(withIndent("Set\n"));
+
+        indent++;
+
+        out.append(withIndent("Object:\n"));
+        indent++;
+        out.append(expr(expr.object));
+        indent--;
+
+        out.append(withIndent("Field: " + expr.name.lexeme + "\n"));
+
+        out.append(withIndent("Value:\n"));
+        indent++;
+        out.append(expr(expr.value));
+        indent--;
+
+        indent--;
+
+        return out.toString();
     }
 
     @Override
@@ -286,19 +438,71 @@ public class PrettyPrinter
     @Override
     public String visitRemoveExpr(Expr.Remove expr)
     {
-        return withIndent("Remove\n");
+        StringBuilder out = new StringBuilder();
+
+        out.append(withIndent("Remove\n"));
+
+        indent++;
+        ;
+        out.append(withIndent("Target:\n"));
+        indent++;
+        // flipped as noted in the parser
+        out.append(withIndent(expr(expr.right)));
+        out.append("-");
+        out.append(withIndent(expr(expr.left)));
+        indent--;
+
+        indent--;
+
+        return out.toString();
     }
 
     @Override
     public String visitMultiplyExpr(Expr.Multiply expr)
     {
-        return withIndent("Multiply\n");
+        StringBuilder out = new StringBuilder();
+
+        out.append(withIndent("Multiply( )\n"));
+
+        indent++;
+
+        out.append(withIndent("Left:\n"));
+        indent++;
+        out.append(expr(expr.left));
+        indent--;
+
+        out.append(withIndent("Right:\n"));
+        indent++;
+        out.append(expr(expr.right));
+        indent--;
+
+        indent--;
+
+        return out.toString();
     }
 
     @Override
     public String visitDivideExpr(Expr.Divide expr)
     {
-        return withIndent("Divide\n");
+        StringBuilder out = new StringBuilder();
+
+        out.append(withIndent("Divide(" + ")\n"));
+
+        indent++;
+
+        out.append(withIndent("Left:\n"));
+        indent++;
+        out.append(expr(expr.left));
+        indent--;
+
+        out.append(withIndent("Right:\n"));
+        indent++;
+        out.append(expr(expr.right));
+        indent--;
+
+        indent--;
+
+        return out.toString();
     }
 
     @Override
