@@ -367,17 +367,7 @@ import java.util.Stack;
 
         public Type getType(Token name)
         {
-            for (int i = scopes.size() - 1; i >= 0; i--)
-            {
-                Map<String, Boolean> scope = scopes.get(i);
-
-                if (scope.containsKey(name.lexeme))
-                {
-                    return types.get(name.lexeme);
-                }
-            }
-
-            return null;
+           return types.get(name.lexeme);
         }
 
     }
