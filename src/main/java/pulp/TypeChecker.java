@@ -69,7 +69,28 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
 
     @Override
     public Type visitAssignExpr(Expr.Assign expr) {
-        return null;
+
+        Type valueType = typeOf(expr.value);
+
+        Symbol sym = resolver.getSymbol(expr.name);
+        if(sym == null)
+        {
+            Pulper.error(expr.name, "Trying to assign a non-initialized variable");
+            return new ErrorType();
+        }
+
+        if(sym.type != null && valueType != null)
+        {
+            if(!isAssignable(sym.type, valueType))
+            {
+                Pulper.error(expr.name, "Cannot assign "+valueType+ " to "+sym.type);
+                return new ErrorType();
+            }
+        }
+        sym.inferredType = valueType;
+        resolver.updateSymbol(sym);
+        return valueType;
+
     }
 
     @Override
@@ -134,18 +155,21 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
     @Override
     public Type visitCastExpr(Expr.Cast expr) {
 
+        System.out.println("Visiting cast operator in type checker");
         Type source = typeOf(expr.right);
-
+        System.out.println("CAST value = " + expr.right);
+        if(source == null) System.out.println("Error null on typeof right on cast");
         if(!isCastable(source, expr.targetType))
         {
             Pulper.error(null, "Invalid cast operation");
         }
 
-        return null;
+        return expr.targetType;
     }
 
     public boolean isCastable(Type from, Type to)
     {
+        System.out.println("Querying is castable");
         if(from.equals(to)) return true;
 
         if(isNumeric(from) && isNumeric(to)) return true;
@@ -200,6 +224,7 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
 
     @Override
     public Void visitExpressionStmt(Stmt.Expression stmt) {
+        stmt.expression.accept(this);
         return null;
     }
 

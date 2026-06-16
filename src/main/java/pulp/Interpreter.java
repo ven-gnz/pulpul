@@ -2,6 +2,8 @@ package pulp;
 
 import java.util.*;
 
+import static pulp.PrimitiveType.ULPPrimitive.REAL_NUMBER;
+import static pulp.PrimitiveType.ULPPrimitive.WHOLE_NUMBER;
 import static pulp.TokenType.*;
 
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
@@ -291,7 +293,24 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
 
     @Override
     public Object visitCastExpr(Expr.Cast expr) {
-        return null;
+        Object value = evaluate(expr.right);
+
+        if (expr.targetType instanceof PrimitiveType p) {
+
+            if (p.kind == WHOLE_NUMBER) {
+                if (value instanceof Double d) {
+                    return (int) d.doubleValue();
+                }
+            }
+
+            if (p.kind == REAL_NUMBER) {
+                if (value instanceof Integer i) {
+                    return (double) i;
+                }
+            }
+        }
+
+        return value;
     }
 
     @Override

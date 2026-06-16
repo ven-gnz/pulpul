@@ -1,8 +1,9 @@
 
-let boolean isSunny be equal to true
-let text var be equal to "John Doe"
-display result "hello " + var + "!",  "nice to meetcha"
-check is isSunny, then:
-    display result "why if it isn't a sunny day!".
-otherwise:
-    display result "it's not too nice outside".
+let real num5 be equal to 15
+let real num1 be equal to 4.5
+set num1 to whole number 4
+display result "result after casting " + num1
+display result "smoke screen num5 " + num5
+
+let text mystring be equal to "hello"
+display result add mystring to num1

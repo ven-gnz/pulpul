@@ -45,9 +45,8 @@ class PrimitiveType extends Type{
 
     @Override
     public String toString() {
-        return "PrimitiveType{" +
-                "kind=" + kind +
-                '}';
+        return "Primitive(" +
+                  kind +")";
     }
 }
 
@@ -85,5 +84,10 @@ class NamedType extends Type
     @Override
     public int hashCode() {
         return name.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return name.toString();
     }
 }
