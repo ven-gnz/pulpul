@@ -70,6 +70,11 @@ class NamedType extends Type
 {
     String name;
 
+    public NamedType(String name)
+    {
+        this.name = name;
+    }
+
     @Override
     public boolean equals(Object o) {
         if(this == o) return true;

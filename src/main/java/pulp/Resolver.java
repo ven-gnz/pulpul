@@ -14,7 +14,7 @@ import java.util.Stack;
         private FunctionType currentFunction = FunctionType.NONE;
         private ClassType currentClass = ClassType.NONE;
         private int loopDepth = 0;
-        private final Map<String, Type> types = new HashMap<>();
+        private final Map<String, Symbol> symbols = new HashMap<>();
 
         Resolver(Interpreter inte)
         {
@@ -107,13 +107,15 @@ import java.util.Stack;
         @Override
         public Void visitVarStmt(Stmt.Var stmt)
         {
+            System.out.println("RESOLVER saw: " + stmt.name.lexeme);
             declare(stmt.name);
             if(stmt.initializer != null)
             {
                 resolve(stmt.initializer);
             }
             define(stmt.name);
-            types.put(stmt.name.lexeme, stmt.declaredType);
+            symbols.put(stmt.name.lexeme,
+                    new Symbol(stmt.name.lexeme, stmt.declaredType, null, true));
             return null;
         }
 
@@ -304,6 +306,7 @@ import java.util.Stack;
 
         @Override
         public Void visitCastExpr(Expr.Cast expr) {
+            resolve(expr.right);
             return null;
         }
 
@@ -365,9 +368,15 @@ import java.util.Stack;
             return null;
         }
 
-        public Type getType(Token name)
+        public Symbol getSymbol(Token name)
         {
-           return types.get(name.lexeme);
+           return symbols.get(name.lexeme);
+        }
+
+        public boolean updateSymbol(Symbol s)
+        {
+            Symbol newSymbol = s;
+            return symbols.replace(s.name, symbols.get(s.name), s);
         }
 
     }

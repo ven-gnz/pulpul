@@ -129,7 +129,7 @@ class Parser {
         if(check(BE)) consume(BE,"Expect 'be' to be next optional keyword here");
         consume(EQUAL, "Except 'equal' after be for declaration");
         if(check(TO)) consume(TO, "Except 'to' as the next optional keyword here");
-        return new Stmt.Var(name, type, expression());
+        return new Stmt.Var(name, type, call());
     }
 
     /**
@@ -174,7 +174,8 @@ class Parser {
             consume(DESCRIBING, "Except 'describing' to start method definition");
         }
         consume(SUBPROGRAM, "Excepted keyword 'subprogram' as the next keyword in the subprogram definition");
-        consume(CALLED, "Excepted keyword 'called' as the next keyword in the subprogram definition");
+        if(check(CALLED)) consume(CALLED, "Excepted optional keyword 'called' as the next keyword in the subprogram definition");
+
 
         Token name = consume(IDENTIFIER, "Except "+kind+ " name");
         consume(ACTING, "Expected keyword 'acting' as the next keyword in the subprogram definition");
@@ -249,7 +250,7 @@ class Parser {
      */
     private Stmt printstatement()
     {
-        if(check(RESULT)) consume(RESULT, "Except 'result' after print command");
+        if(check(RESULT)) consume(RESULT, "Except 'result' after print command as an optional keyword");
         List<Expr> expressions = new ArrayList<>();
         expressions.add(expression());
         while(match(COMMA))
@@ -468,17 +469,20 @@ class Parser {
 
         if(match(WHOLE))
         {
-            consume(NUMBER, "Excpected 'number' to complete declaration for whole number");
+            if(check(NUMBER)) consume(NUMBER, "Excpected 'number' to complete declaration for whole number");
+
             return new PrimitiveType(WHOLE_NUMBER);
         }
         else if(match(REAL))
         {
-            consume(NUMBER, "Excpected 'number' to complete declaration for real number");
+            if(check(NUMBER)) consume(NUMBER, "Excpected 'number' to complete declaration for whole number");
             return new PrimitiveType(REAL_NUMBER);
         }
         else if(match(BOOLEAN)) return new PrimitiveType(PrimitiveType.ULPPrimitive.TRUTH_VALUE);
 
         else if(match(TEXT)) return new PrimitiveType(PrimitiveType.ULPPrimitive.TEXT);
+
+        else if(match(IDENTIFIER)) return new NamedType(previous().lexeme);
 
         else {
             error(tokens.get(current), " not supported as a type");

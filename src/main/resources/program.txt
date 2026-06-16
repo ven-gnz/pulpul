@@ -1,7 +1,7 @@
 let whole number a be equal to 5
 let whole number loopvar equal 5
 let text bad equal "hello"
-
+display add bad to a
 check is a more than 2, then:
     repeat until is loopvar more than 0:
     let whole number b be equal to 3

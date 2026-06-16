@@ -16,10 +16,11 @@ Grammar for ULP (Un-natural language programming language)
 <assignment> ::= "let" <type> " " <identifier> "be" "equal" "to" <expression> | <reassignment>
 <reassignment> ::= "set" <identifier> "to" <opt_cast> <expression>
 <opt_cast> ::= <type> | <empty>
-<type> ::= "Whole" <opt_number> | "Real" <opt_number> | "String" | "Boolean"
+<type> ::= "Whole" <opt_number> | "Real" <opt_number> | "String" | "Boolean" | <user_type>
 <opt_number> ::= "number" | <empty>
 <identifier> ::= <letter> | <letter> <identifier>
 <letter> ::= [a-zA-Z]
+<user_type> ::=
 ----------------
 <expression> ::= <primary_expression> | <arithmetic_expression> | <logical_expression>
 <primary_expression> ::= <literal> | <identifier> | <input_expression> | <subprogram_invocation_expression>
