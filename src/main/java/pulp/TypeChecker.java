@@ -41,6 +41,19 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
         return expr.accept(this);
     }
 
+    private Type promoteArithmetic(Type a, Type b)
+    {
+        if (a instanceof PrimitiveType pa && b instanceof PrimitiveType pb)
+        {
+            if (pa.kind == WHOLE_NUMBER && pb.kind == WHOLE_NUMBER)
+                return new PrimitiveType(WHOLE_NUMBER);
+
+            if (pa.kind == REAL_NUMBER || pb.kind == REAL_NUMBER)
+                return new PrimitiveType(REAL_NUMBER);
+        }
+        return new ErrorType();
+    }
+
 
     @Override
     public Type visitLiteralExpr(Expr.Literal expr) {
@@ -87,7 +100,7 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
                 return new ErrorType();
             }
         }
-        sym.inferredType = valueType;
+
         resolver.updateSymbol(sym);
         return valueType;
 
@@ -101,46 +114,75 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
 
         if(!isNumeric(left) || !isNumeric(right))
         {
-            Pulper.error("Cannot add " + left + " and " + right);
+            Pulper.error("TypeChecker: Cannot add " + left + " and " + right);
             return new ErrorType();
         }
-        System.out.println("Both add were numeric!!!!!");
-
-        return null;
+        return promoteArithmetic(left,right);
     }
 
     @Override
     public Type visitRemoveExpr(Expr.Remove expr) {
-        return null;
+
+        Type left = typeOf(expr.left);
+        Type right = typeOf(expr.right);
+
+        if(!isNumeric(left) || !isNumeric(right))
+        {
+            Pulper.error("TypeChecker: Cannot remove "+ right + " from " + left);
+            return new ErrorType();
+        }
+        return promoteArithmetic(left,right);
     }
 
     @Override
     public Type visitMultiplyExpr(Expr.Multiply expr) {
-        return null;
+
+        Type left = typeOf(expr.left);
+        Type right = typeOf(expr.right);
+
+        if(!isNumeric(left) || !isNumeric(right))
+        {
+            Pulper.error("TypeChecker:Cannot multiply " + left + " with " + right);
+            return new ErrorType();
+        }
+        return promoteArithmetic(left,right);
     }
 
     @Override
     public Type visitDivideExpr(Expr.Divide expr) {
-        return null;
+        Type left = typeOf(expr.left);
+        Type right = typeOf(expr.right);
+
+        if(!isNumeric(left) || !isNumeric(right))
+        {
+            Pulper.error("TypeChecker:Cannot divide " + left + " with " + right);
+            return new ErrorType();
+        }
+        return promoteArithmetic(left,right);
     }
 
     @Override
     public Type visitCompareExpr(Expr.Compare expr) {
-        return null;
+        return new PrimitiveType(TRUTH_VALUE);
     }
 
     @Override
     public Type visitVariableExpr(Expr.Variable expr) {
 
         Symbol s = resolver.getSymbol(expr.name);
+        if(s == null)
+        {
+            Pulper.error(expr.name, "TypeChecker : Undefined variable");
+            return new ErrorType();
+        }
         if(!s.initialized)
         {
-            Pulper.error(expr.name, "Undefined variable");
-            return null;
+            Pulper.error(expr.name, "TypeChecker: Undefined variable");
+            return new ErrorType();
         }
 
         if (s.type == null) {
-            Pulper.error(expr.name, "Variable used before type is known");
+            Pulper.error(expr.name, "TypeChecker: Variable used before type is known");
             return new ErrorType();
         }
 
@@ -154,27 +196,33 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
 
     @Override
     public Type visitCastExpr(Expr.Cast expr) {
-
-        System.out.println("Visiting cast operator in type checker");
         Type source = typeOf(expr.right);
-        System.out.println("CAST value = " + expr.right);
-        if(source == null) System.out.println("Error null on typeof right on cast");
+        if(source == null)
+        {
+            Pulper.error("TypeChecker: cast expression should not be cast onto null ");
+            return new ErrorType();
+        }
         if(!isCastable(source, expr.targetType))
         {
-            Pulper.error(null, "Invalid cast operation");
+            Pulper.error("TypeChecker: Invalid cast operation betweeen" + source + " and " + expr.targetType);
         }
-
         return expr.targetType;
     }
 
+    /**
+     * Pulp supports currently only conversions between numeric types. This provides the minimal strict rule
+     * between what types of primitives are castable : cast a real to an int or an int to a real when you need floating point.
+     * Would be nice to have a double parsing from string
+     * etc. but as of now the whole typechecker exists as a proof of concept for grading.
+     *
+     * @param from the original type of the right hand expr
+     * @param to the left hand type which the cast should result in
+     * @return success of cast
+     */
     public boolean isCastable(Type from, Type to)
     {
-        System.out.println("Querying is castable");
         if(from.equals(to)) return true;
-
-        if(isNumeric(from) && isNumeric(to)) return true;
-        if(isTextual(from) || isTextual(to)) return false;
-        return !isBoolean(from) && !isBoolean(to);
+        return isNumeric(from) && isNumeric(to);
     }
 
     private boolean isNumeric(Type t)
@@ -182,17 +230,6 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
         if (!(t instanceof PrimitiveType p)) return false;
         return p.kind == WHOLE_NUMBER
                 || p.kind == REAL_NUMBER;
-    }
-
-    private boolean isTextual(Type type)
-    {
-        return type instanceof PrimitiveType primitive &&
-                primitive.kind == TEXT;
-    }
-
-    private boolean isBoolean(Type type)
-    {
-        return type instanceof PrimitiveType primitive && primitive.kind == TRUTH_VALUE;
     }
 
 
@@ -219,6 +256,16 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
 
     @Override
     public Void visitProgramStmt(Stmt.Program stmt) {
+
+        for(Stmt s : stmt.statements)
+        {
+            checkType(s);
+        }
+
+        for(Stmt.Subprogram m : stmt.methods)
+        {
+            checkType(m);
+        }
         return null;
     }
 
@@ -312,11 +359,19 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
 
     @Override
     public Void visitReturnStmt(Stmt.Return stmt) {
+        if(stmt.value != null)
+        {
+            typeOf(stmt.value);
+        }
         return null;
     }
 
     @Override
     public Void visitIfStmt(Stmt.If stmt) {
+
+        Type cond = typeOf(stmt.condition);
+
+ // TODO : impart a good helper for figuring out whether or not the condition can expressed as a boolean/similar
 
         return null;
     }

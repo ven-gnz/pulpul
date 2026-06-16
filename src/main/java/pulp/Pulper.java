@@ -139,6 +139,6 @@ public class Pulper {
 
     static void error(String message)
     {
-        System.err.println("Generic error : " + message);
+        System.err.println(message);
     }
 }

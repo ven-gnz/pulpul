@@ -19,3 +19,5 @@ program myProgram:
 let myProgram obj equal myProgram()
 display result obj access mMethod()
 display  "accessing a + b from obj : " + add obj access a to obj access b
+
+display result obj access basicArithmetics(3,4) + " used member method"

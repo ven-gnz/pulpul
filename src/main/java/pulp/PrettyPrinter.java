@@ -2,6 +2,10 @@ package pulp;
 
 import java.util.List;
 
+
+/**
+ * Pretty standard debug printing tool.
+ */
 public class PrettyPrinter
         implements Expr.Visitor<String>,
         Stmt.Visitor<String> {
@@ -347,7 +351,7 @@ public class PrettyPrinter
         indent++;
         out.append(withIndent("Operand:\n"));
         indent++;
-        out.append(expr(expr.right)); // typical Lox naming
+        out.append(expr(expr.right));
         indent--;
         indent--;
 
