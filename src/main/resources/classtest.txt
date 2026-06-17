@@ -3,18 +3,19 @@ program myProgram:
 
     let whole a be equal to 5
     let whole b equal 2
+    let text mytext equal "hello"
+
     display result "executing a statement from inside myProgram"
     Describing subprogram called init acting on inputs producing outputs:
      display result "Initialized myProgram".
 
 
     Describing subprogram called basicArithmetics acting on inputs whole num, whole num2 producing outputs:
-        set num to "text"
         return multiply num by num2.
 
 
-    Describing subprogram called badComparison acting on inputs producing outputs:
-        return boolean is text "a" equal to "a".
+    Describing subprogram called stringComparison acting on inputs text str1, text str2 producing outputs:
+        return boolean is str1 equal to str2.
 
 
 .
@@ -24,5 +25,5 @@ display  "accessing a + b from obj : " +  obj access a + "+" + obj access b + "=
 
 display result "using member method " + obj access basicArithmetics(3, 4)
 , obj access basicArithmetics(5, 11) + " used member method again"
-let boolean test equal obj access badComparison()
+let boolean test equal obj access stringComparison("hello", obj access mytext)
 display result "tested string comparison method " + test

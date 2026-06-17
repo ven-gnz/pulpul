@@ -47,6 +47,7 @@ class Parser {
     private static final int MAX_ERRORS = 50;
     private static final int MAX_ERRORS_PER_LINE = 3;
     private int errors = 0;
+    private String currentProgramContext = "global";
 
 
     private final List<Token> tokens;
@@ -68,19 +69,6 @@ class Parser {
             statements.add(declaration());
         }
         return statements;
-    }
-
-    /**
-     * This method would need some updating, possible nice to have feature would be to dump all the diagnostics into a log file.
-     * Will not happen in course timescope.
-     */
-    public void printDiagnostics()
-    {
-        for(ErrorDiagnostic d : diagnostics) System.out.println(
-                    "[line " + d.line() + "] " +
-                            d.lexeme() + ": " +
-                            d.message());
-
     }
 
     /**
@@ -168,6 +156,7 @@ class Parser {
      */
     private Stmt.Subprogram subProgram(String kind) {
 
+        String previousContext = currentProgramContext;
 
         if(kind == "method") {
             consume(DESCRIBING, "Except 'describing' to start method definition");
@@ -177,6 +166,7 @@ class Parser {
 
 
         Token name = consume(IDENTIFIER, "Except "+kind+ " name");
+        currentProgramContext = currentProgramContext + "/" + name.lexeme + ": ";
         consume(ACTING, "Expected keyword 'acting' as the next keyword in the subprogram definition");
         consume(ON, " Expected keyword 'of' as the next keyword in the subprogram definition");
         consume(INPUTS, "Excepted keyword 'inputs' as the next keyword in the subprogram definition");
@@ -196,6 +186,7 @@ class Parser {
         consume(OUTPUTS, "Expected keyword 'outputs' to begin list of function return values");
         consume(COLON, "");
         List<Stmt> body = block();
+        currentProgramContext = previousContext;
         return new Stmt.Subprogram(name, parameters, body);
 
     }
@@ -214,7 +205,8 @@ class Parser {
         else if(match(TEXT)) type = new PrimitiveType(PrimitiveType.ULPPrimitive.TEXT);
         Token name = consume(IDENTIFIER, "Expected parameter name");
         if (type == null) {
-            type = new ErrorType(); // or "unknown type inference"
+            reportError(previous(), "Expected a type before parameter ");
+            type = new ErrorType();
         }
         return new Parameter(type, name);
     }
@@ -225,7 +217,9 @@ class Parser {
      * @return the parsed program item
      */
     private Stmt programDeclaration() {
+
         Token name = consume(IDENTIFIER, "Except program name.");
+        currentProgramContext =  name.lexeme;
         consume(COLON, "Except : to start class body");
 
         List<Stmt.Subprogram> body = new ArrayList<>();
@@ -242,6 +236,7 @@ class Parser {
             }
         }
         consume(DOT, "Except dot to end program body");
+        currentProgramContext = "global";
         return new Stmt.Program(name, body, stmts);
     }
 
@@ -452,6 +447,7 @@ class Parser {
             Token id = peek();
             if(isConsecutiveIdentifier(id))
             {
+                reportError(previous(), "Unexpected identifier");
                 return errorExpr(id, "Unexpected identifier ");
             }
             id = advance();
@@ -509,13 +505,13 @@ class Parser {
 
         if(match(WHOLE))
         {
-            if(check(NUMBER)) consume(NUMBER, "Excpected 'number' to complete declaration for whole number");
+            if(check(NUMBER)) consume(NUMBER, "Expected 'number' to complete declaration for whole number");
 
             return new PrimitiveType(WHOLE_NUMBER);
         }
         else if(match(REAL))
         {
-            if(check(NUMBER)) consume(NUMBER, "Excpected 'number' to complete declaration for whole number");
+            if(check(NUMBER)) consume(NUMBER, "Expected 'number' to complete declaration for whole number");
             return new PrimitiveType(REAL_NUMBER);
         }
         else if(match(BOOLEAN)) return new PrimitiveType(PrimitiveType.ULPPrimitive.TRUTH_VALUE);
@@ -525,8 +521,8 @@ class Parser {
         else if(match(IDENTIFIER)) return new NamedType(previous().lexeme);
 
         else {
-            error(tokens.get(current), " not supported as a type");
-            return null;
+            reportError(previous(), "Expected a type before variable ");
+            return new ErrorType();
         }
     }
 
@@ -659,9 +655,10 @@ class Parser {
         int count = perLineErrors.getOrDefault(line,0) + 1;
         perLineErrors.put(line, count);
 
+        String contextMsg = currentProgramContext + msg;
         diagnostics.add(
                 new ErrorDiagnostic(
-                        line, token.lexeme, msg));
+                        line, token.lexeme, contextMsg));
         if(count == MAX_ERRORS_PER_LINE)
         {
             ignoredLines.add(line);
@@ -669,7 +666,7 @@ class Parser {
                     new ErrorDiagnostic(line,
                             "",
                             "Too many parse errors on line "+token.line));
-            throw new ParseError("Catastrophic line error on line " + line + " - aborting statement");
+            synchronize();
         }
     }
 
@@ -687,16 +684,16 @@ class Parser {
         while(!isAtEnd())
         {
 
-            switch (peek().type)
+            if (peek().type == LET ||
+                    peek().type == DISPLAY ||
+                    peek().type == CHECK ||
+                    peek().type == REPEAT ||
+                    peek().type == DESCRIBING ||
+                    peek().type == PROGRAM)
             {
-                case LET:
-                case DISPLAY:
-                case CHECK:
-                case REPEAT:
-                case DESCRIBING:
-                case PROGRAM:
-                    return;
+                return;
             }
+
             advance();
         }
     }

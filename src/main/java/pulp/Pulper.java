@@ -73,13 +73,23 @@ public class Pulper {
 
         Parser parser = new Parser(tokens);
         List<Stmt> statements = parser.parse();
-        parser.printDiagnostics();
+        printParseErrors(parser.diagnostics);
+
+        if(hadError)
+        {
+            System.exit(60);
+        }
 
         PrettyPrinter prettyPrinter = new PrettyPrinter();
         prettyPrinter.print(statements);
 
         Resolver resolver = new Resolver(interpreter);
         resolver.resolve(statements);
+
+        if(hadError)
+        {
+            System.exit(61);
+        }
 
 
         TypeChecker typeChecker = new TypeChecker(statements, resolver);
@@ -93,6 +103,23 @@ public class Pulper {
         interpreter.interpret(statements);
         if(hadRuntimeError) System.exit(70);
 
+    }
+
+    private static void printParseErrors(List<ErrorDiagnostic> diagnostics)
+    {
+        if(diagnostics == null || diagnostics.isEmpty()) return;
+        for(ErrorDiagnostic d : diagnostics)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.append("Parser error - ");
+            sb.append(d.message());
+
+            sb.append("at'").append(d.lexeme()).append("'");
+
+            sb.append("[line ").append(d.line()).append("]");
+            System.err.println(sb.toString());
+        }
+        hadError = true;
     }
 
     static void error(int line, String message)
@@ -154,7 +181,7 @@ public class Pulper {
     /**
      *
      * @param token error generating token on expression parsing
-     * @param message additional message such as line
+     * @param message additional message
      */
     static void error(Token token, String message) {
         if (token.type == TokenType.EOF) {
