@@ -54,7 +54,7 @@ Grammar for ULP (Un-natural language programming language)
 <input_expression> ::= "input" "from" "user"
 -------
 ------------------
-<comparison_criteria> ::= ("less" "than" | "less" "than" "or" "equal" "to" | "more" "than" | "more" "than" "or" "equal" "to" | "equal" "to")
+<comparison_criteria> ::= ("less" "than" | "less" "than" "or" "equal" "to" | "greater" "than" | "greater" "than" "or" "equal" "to" | "equal" "to")
 ------------------
 <selection_statement> ::= "check" <logical_expression> <opt_comm> <opt_then> <block> <othewise_opt>
 <opt_comma> ::= "," | <empty>
