@@ -26,7 +26,7 @@ public class PulpFunction implements PulpCallable{
 
         for(int i = 0; i < declaration.params.size(); i++)
         {
-            environment.define(declaration.params.get(i).lexeme, arguments.get(i));
+            environment.define(declaration.params.get(i).name.lexeme, arguments.get(i));
         }
 
         try

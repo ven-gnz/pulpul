@@ -88,10 +88,23 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
 
         Type valueType = typeOf(expr.value);
 
+        System.out.println("Assigning to: " + expr.name.lexeme);
+
         Symbol sym = resolver.getSymbol(expr.name);
+
+        System.out.println("Symbol = " + sym);
+
+        if(sym != null)
+        {
+            System.out.println("Declared type = " + sym.type);
+        }
+
+        System.out.println("Value type = " + valueType);
+
+
         if(sym == null)
         {
-            Pulper.error(expr.name, "Trying to assign a non-initialized variable");
+            Pulper.typeError(expr.name, "trying to assign a non-initialized variable", currentProgram, currentSubProgram);
             return new ErrorType();
         }
 
@@ -99,7 +112,7 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
         {
             if(!isAssignable(sym.type, valueType))
             {
-                Pulper.error(expr.name, "Cannot assign "+valueType+ " to "+sym.type);
+                Pulper.typeError(expr.name,"Cannot assign " + sym.type + " to " + valueType,currentProgram,currentSubProgram);
                 return new ErrorType();
             }
         }
@@ -117,7 +130,7 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
 
         if(!isNumeric(left) || !isNumeric(right))
         {
-            Pulper.error("TypeChecker: Cannot add " + left + " and " + right);
+            Pulper.typeError(expr.keyword, "cannot add "+ left + " to " + right,currentProgram,currentSubProgram);
             return new ErrorType();
         }
         return promoteArithmetic(left,right);
@@ -131,7 +144,7 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
 
         if(!isNumeric(left) || !isNumeric(right))
         {
-            Pulper.error("TypeChecker: Cannot remove "+ right + " from " + left);
+            Pulper.typeError(expr.keyword, "cannot remove "+ right + " from " + left,currentProgram,currentSubProgram);
             return new ErrorType();
         }
         return promoteArithmetic(left,right);
@@ -334,9 +347,7 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
         if(declaredType != null && inferredType != null)
         {
             if(!isAssignable(declaredType, inferredType)) {
-                Pulper.error(stmt.name,
-                         "Cannot assign " +
-                        inferredType + " to " + declaredType);
+                Pulper.typeError(stmt.name,"Cannot assign " + inferredType + " to " + declaredType,currentProgram,currentSubProgram);
                 sym.type = new ErrorType();
             } else {
                 sym.type = declaredType; }
@@ -368,10 +379,10 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
     private boolean isAssignable(Type to, Type from) {
         if (to instanceof PrimitiveType a && from instanceof PrimitiveType b) {
 
-            // exact match
+
             if (a.kind == b.kind) return true;
 
-            // numeric widening example
+
             if (isNumeric(a) && isNumeric(b)) return true;
 
             return false;
@@ -389,7 +400,7 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
 
     @Override
     public Void visitReturnStmt(Stmt.Return stmt) {
-        System.out.println("Checking retunrn type");
+        System.out.println("Checking return type");
         Type t = null;
         if(stmt.value != null)
         {
@@ -422,6 +433,16 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
     @Override
     public Void visitSubprogramStmt(Stmt.Subprogram stmt) {
         currentSubProgram = stmt;
+
+        for(Parameter p : stmt.params)
+        {
+            Symbol s = resolver.getSymbol(p.name);
+            if(s != null)
+            {
+                s.type = p.type;
+                resolver.updateSymbol(s);
+            }
+        }
         for(Stmt s : stmt.body)
         {
             checkType(s);

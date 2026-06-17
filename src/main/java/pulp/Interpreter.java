@@ -5,8 +5,7 @@ import java.util.*;
 import static pulp.PrimitiveType.ULPPrimitive.REAL_NUMBER;
 import static pulp.PrimitiveType.ULPPrimitive.WHOLE_NUMBER;
 import static pulp.TokenType.*;
-import static pulp.TokenType.EQUAL;
-import static pulp.TokenType.LESS;
+
 
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
 

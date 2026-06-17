@@ -7,11 +7,10 @@ program myProgram:
     Describing subprogram called init acting on inputs producing outputs:
      display result "Initialized myProgram".
 
-    Describing subprogram called mMethod acting on inputs producing outputs:
-        return "mMethod called from inside myProgram".
 
-    Describing subprogram called basicArithmetics acting on inputs a,b producing outputs:
-        return multiply a by b.
+    Describing subprogram called basicArithmetics acting on inputs whole num, whole num2 producing outputs:
+        set num to "text"
+        return multiply num by num2.
 
 
     Describing subprogram called badComparison acting on inputs producing outputs:
@@ -21,11 +20,9 @@ program myProgram:
 .
 
 let myProgram obj equal myProgram()
-display result obj access mMethod()
 display  "accessing a + b from obj : " +  obj access a + "+" + obj access b + "=" + add obj access a to obj access b
 
 display result "using member method " + obj access basicArithmetics(3, 4)
-, obj access basicArithmetics(17, 11) + " used member method again"
+, obj access basicArithmetics(5, 11) + " used member method again"
 let boolean test equal obj access badComparison()
 display result "tested string comparison method " + test
-

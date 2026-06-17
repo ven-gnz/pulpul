@@ -214,7 +214,14 @@ public class PrettyPrinter
     @Override
     public String visitSubprogramStmt(Stmt.Subprogram stmt)
     {
-        return withIndent("Subprogram " + stmt.name.lexeme + "\n");
+        StringBuilder sb = new StringBuilder(withIndent("Subprogram " + stmt.name.lexeme + "\n"));
+        indent++;
+        for(Stmt s : stmt.body)
+        {
+            sb.append(withIndent(s.accept(this)));
+        }
+        indent--;
+        return sb.toString();
     }
 
     @Override

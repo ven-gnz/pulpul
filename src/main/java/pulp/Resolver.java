@@ -107,7 +107,7 @@ import java.util.Stack;
         @Override
         public Void visitVarStmt(Stmt.Var stmt)
         {
-            System.out.println("RESOLVER saw: " + stmt.name.lexeme);
+
             declare(stmt.name);
             if(stmt.initializer != null)
             {
@@ -252,10 +252,15 @@ import java.util.Stack;
             currentFunction = type;
 
             beginScope();
-            for(Token param : subprogram.params)
+            for(Parameter param : subprogram.params)
             {
-                declare(param);
-                define(param);
+                Symbol s = new Symbol(param.name.lexeme, param.type, null, true);
+                symbols.put(s.name, s);
+
+                declare(param.name);
+                define(param.name);
+                Symbol sym = getSymbol(param.name);
+                sym.type = param.type;
             }
             resolve(subprogram.body);
             endScope();

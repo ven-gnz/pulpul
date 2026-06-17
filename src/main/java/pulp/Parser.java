@@ -169,8 +169,7 @@ class Parser {
     private Stmt.Subprogram subProgram(String kind) {
 
 
-        if(kind == "method")
-        {
+        if(kind == "method") {
             consume(DESCRIBING, "Except 'describing' to start method definition");
         }
         consume(SUBPROGRAM, "Excepted keyword 'subprogram' as the next keyword in the subprogram definition");
@@ -182,7 +181,7 @@ class Parser {
         consume(ON, " Expected keyword 'of' as the next keyword in the subprogram definition");
         consume(INPUTS, "Excepted keyword 'inputs' as the next keyword in the subprogram definition");
 
-        List<Token> parameters = new ArrayList<>();
+        List<Parameter> parameters = new ArrayList<>();
         if(!check(PRODUCING))
         {
             do {
@@ -190,7 +189,7 @@ class Parser {
                 {
                     error(peek(), "Cannot exceed 127 parameters");
                 }
-                parameters.add(consume(IDENTIFIER, "Except parameter name."));
+                parameters.add(parseParameter());
             }while(match(COMMA));
         }
         consume(PRODUCING, "Expect keyword producing to end input argument list on function defition");
@@ -199,6 +198,25 @@ class Parser {
         List<Stmt> body = block();
         return new Stmt.Subprogram(name, parameters, body);
 
+    }
+
+    private Parameter parseParameter()
+    {
+        Type type = null;
+        if(match(WHOLE)) {
+            if(check(NUMBER)) consume(NUMBER, "Excepted number as the next possible optional keyword");
+            type = new PrimitiveType(WHOLE_NUMBER);
+        }
+        else if(match(REAL)) {
+            if(check(NUMBER)) consume(NUMBER, "Excepted number as the next possible optional keyword");
+            type = new PrimitiveType(REAL_NUMBER);
+        }else if(match(BOOLEAN)) type = new PrimitiveType(TRUTH_VALUE);
+        else if(match(TEXT)) type = new PrimitiveType(PrimitiveType.ULPPrimitive.TEXT);
+        Token name = consume(IDENTIFIER, "Expected parameter name");
+        if (type == null) {
+            type = new ErrorType(); // or "unknown type inference"
+        }
+        return new Parameter(type, name);
     }
 
 

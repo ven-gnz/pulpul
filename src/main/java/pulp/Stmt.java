@@ -140,7 +140,7 @@ abstract class Stmt{
     final Token keyword;
   }
  static class Subprogram extends Stmt {
-    Subprogram(Token name, List<Token> params, List<Stmt> body) {
+    Subprogram(Token name, List<Parameter> params, List<Stmt> body) {
     this.name = name;
     this.params = params;
     this.body = body;
@@ -152,7 +152,7 @@ abstract class Stmt{
     }
 
     final Token name;
-    final List<Token> params;
+    final List<Parameter> params;
     final List<Stmt> body;
   }
  static class Error extends Stmt {

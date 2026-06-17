@@ -49,7 +49,7 @@ public class GenerateAst {
                         "If : Expr condition, Stmt thenBranch," + "Stmt elseBranch",
                         "While : Expr condition, Stmt body",
                         "Break : Token keyword",
-                        "Subprogram : Token name, List<Token> params," + " List<Stmt> body",
+                        "Subprogram : Token name, List<Parameter> params," + " List<Stmt> body",
                         "Error: Token token, String message"
                 ));
     }
