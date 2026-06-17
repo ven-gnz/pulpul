@@ -26,9 +26,21 @@ The package provided is a simple java implementation, mostly in tune with the bo
 itself well to testing big programs or complex software. In its current most basic form the language does not even support reading code from multiple
 files ie importing modules, but is on the same roadmap.
 
+### Usage
+
+The standard approach to testing the project is to provide a .txt file as an argument to the Pulper class, which houses the main method on the package. Alternatively, the user can input lines into the console to have them be interpreted as a standalone statement.
 
 
+#### Grading
+
+For easier grading of this project, let it be known that the student has introduced themselves to(at least to an extent) and produced variably working implementations on:
+- Lexical scoping inside methods, blocks and selection
+- Static type checking for primitive types, with cast expression and a compile time type checker
+- More meaningful error reporting - current context(nested in program and subprogram items) and lines are propagated to parser and type checker errors
+- Top-down parser and AST generation of arbitrarily nested nodes down to primitives, which is in turn interpretable by the java interpreter provided in the package, enabling arbitrary nesting, or at least as much stack space as JVM implementation allows
+
+So by default the students target mark is 4/5 in case the student has understood the grading criteria correctly and is
+eligible for points in said implementations of the language.
 
 
-
-#### Status : Ongoing
+#### Status : Grading break

@@ -1,6 +1,4 @@
 TYPE CHECKER:
 
-- extend parser to notify user of missing parameter types in declaring subprograms
-- anything else that might come up in tryin to finish basic operations
 - documenting
-- input operation???j
+- input operation?
