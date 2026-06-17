@@ -220,9 +220,13 @@ import java.util.Stack;
         @Override
         public Void visitPrintStmt(Stmt.Print stmt)
         {
-            for(Expr expr : stmt.expressions)
+
+            for(List<Expr> lines : stmt.expressions)
             {
-                resolve(expr);
+                for(Expr expr : lines)
+                {
+                    resolve(expr);
+                }
             }
             return null;
         }

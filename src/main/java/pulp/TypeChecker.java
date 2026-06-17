@@ -245,7 +245,7 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
 
     @Override
     public Type visitErrorExpr(Expr.Error expr) {
-        Pulper.error("Type error");
+        Pulper.error("Type error :" + expr.t);
         return new ErrorType();
     }
 
@@ -278,10 +278,14 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
     @Override
     public Void visitPrintStmt(Stmt.Print stmt) {
 
-        for(Expr e : stmt.expressions)
+        for(List<Expr> lines : stmt.expressions)
         {
-            typeOf(e);
+            for(Expr e : lines)
+            {
+                typeOf(e);
+            }
         }
+
         return null;
     }
 

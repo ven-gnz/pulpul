@@ -3,7 +3,7 @@ program myProgram:
 
     let whole a be equal to 5
     let whole b equal 2
-
+    display result "executing a statement from inside myProgram"
     Describing subprogram called init acting on inputs producing outputs:
      display result "Initialized myProgram".
 
@@ -13,11 +13,14 @@ program myProgram:
     Describing subprogram called basicArithmetics acting on inputs a,b producing outputs:
         return multiply a by b.
 
-    display result "executing a statement from inside myProgram"
+
 .
 
 let myProgram obj equal myProgram()
 display result obj access mMethod()
-display  "accessing a + b from obj : " + add obj access a to obj access b
+display  "accessing a + b from obj : " +  obj access a + "+" + obj access b + "=" + add obj access a to obj access b
 
-display result obj access basicArithmetics(3,4) + " used member method"
+display result "using member method " + obj access basicArithmetics(3, 4)
+, obj access basicArithmetics(17, 11) + " used member method again"
+
+display result "using member method with bad argument count " + obj access basicArithmetics(17,17,17)

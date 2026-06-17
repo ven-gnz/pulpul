@@ -160,11 +160,14 @@ public class PrettyPrinter
         out.append(withIndent("DisplayStmt\n"));
 
         indent++;
-        for(Expr e : stmt.expressions)
-        {
-            out.append(e.accept(this));
-        }
 
+        for(List<Expr> lines : stmt.expressions)
+        {
+            for(Expr e : lines)
+            {
+                out.append(e.accept(this));
+            }
+        }
         indent--;
 
         return out.toString();

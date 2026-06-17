@@ -58,7 +58,7 @@ abstract class Stmt{
     final Expr expression;
   }
  static class Print extends Stmt {
-    Print(List<Expr> expressions) {
+    Print(List<List<Expr>> expressions) {
     this.expressions = expressions;
     }
 
@@ -67,7 +67,7 @@ abstract class Stmt{
     return visitor.visitPrintStmt(this);
     }
 
-    final List<Expr> expressions;
+    final List<List<Expr>> expressions;
   }
  static class Var extends Stmt {
     Var(Token name, Type declaredType, Expr initializer) {

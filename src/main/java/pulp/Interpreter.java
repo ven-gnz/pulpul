@@ -373,10 +373,18 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
 
     @Override
     public Void visitPrintStmt(Stmt.Print stmt) {
-        for(Expr e : stmt.expressions)
+
+        StringBuilder lineBuilder = new StringBuilder();
+        for(List<Expr> lines : stmt.expressions)
         {
-            Object value = evaluate(e);
-            System.out.println(stringify(value));
+            for(Expr e : lines)
+            {
+                Object value = evaluate(e);
+                lineBuilder.append(value);
+            }
+
+            System.out.println(lineBuilder);
+            lineBuilder.setLength(0);
         }
 
         return null;
@@ -450,6 +458,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
 
     @Override
     public Void visitErrorStmt(Stmt.Error stmt) {
+        Pulper.error(stmt.token, stmt.message);
         return null;
     }
 

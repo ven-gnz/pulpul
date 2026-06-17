@@ -244,20 +244,38 @@ class Parser {
 
     /**
      * Print statements also features an optional keyword as denoted in the grammar. After display, the optional result can be used(due to earlier language design).
-     * Alternatively, other keywords are parsed as a typical print string where the expression nodes are constructed normally.
-     * Furthermore, additional expressions can be inserted by using the comma operator.
+     * Alternatively, other keywords are parsed normally, but decipted as print strings, meaning that expressions get evaluated as expected.
+     * Uses the print segment method to garner a segment
+     * Furthermore, additional lines of expressions can be inserted by using the comma operator.
      * @return the print statement
      */
     private Stmt printstatement()
     {
         if(check(RESULT)) consume(RESULT, "Except 'result' after print command as an optional keyword");
-        List<Expr> expressions = new ArrayList<>();
-        expressions.add(expression());
-        while(match(COMMA))
-        {
-            expressions.add(expression());
-        }
-        return new Stmt.Print(expressions);
+        List<List<Expr>> lines = new ArrayList<>();
+        do {
+            lines.add(printSegment());
+        } while (match(COMMA));
+        return new Stmt.Print(lines);
+    }
+
+    /**
+     * This is convenience method, or a workaround on the language design.
+     * By design, the + operator is for string concatenation. But in the primary parsing method,
+     * only a string literal starting multistring will start the parsing for additional string.
+     * So for generating throwaway printable strings
+     * for better developer experience, this convenience method was deemed necessary for users to print
+     * their multistrings that can start with any expression, and the value is then evaluated.
+     * This affects only the printed result.
+     * @return the parsed segment possibly containing multistring
+     */
+    private List<Expr> printSegment()
+    {
+        List<Expr> parsed = new ArrayList<>();
+        do {
+            parsed.add(expression());
+        } while (match(PLUS));
+        return parsed;
     }
 
 
