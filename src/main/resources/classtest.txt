@@ -10,9 +10,12 @@ program myProgram:
     Describing subprogram called mMethod acting on inputs producing outputs:
         return "mMethod called from inside myProgram".
 
+    Describing subprogram called basicArithmetics acting on inputs a,b producing outputs:
+        return multiply a by b.
+
 
     Describing subprogram called badComparison acting on inputs producing outputs:
-        return boolean is text "a" greater than or equal to 15
+        return boolean is text "a" equal to "a".
 
 
 .
@@ -23,4 +26,6 @@ display  "accessing a + b from obj : " +  obj access a + "+" + obj access b + "=
 
 display result "using member method " + obj access basicArithmetics(3, 4)
 , obj access basicArithmetics(17, 11) + " used member method again"
+let boolean test equal obj access badComparison()
+display result "tested string comparison method " + test
 

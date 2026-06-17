@@ -175,7 +175,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
     private void checkNumberOperands(Token operator, Object left, Object right)
     {
 
-        if(left instanceof Double && right instanceof Double)
+        if((left instanceof Double && right instanceof Double) || left instanceof String && right instanceof String)
         {
             return;
         }
@@ -236,10 +236,10 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
 
         Object left_eval = evaluate(expr.left);
         Object right_eval = evaluate(expr.right);
+        if(left_eval instanceof String && right_eval instanceof String) return left_eval.equals(right_eval);
         checkNumberOperands(expr.operator, left_eval, right_eval);
         switch(expr.operator.type)
         {
-
             case GREATER -> { return (double)left_eval > (double)right_eval; }
             case LESS -> { return (double)left_eval < (double)right_eval; }
             case EQUAL -> { return(double)left_eval == (double)right_eval; }
