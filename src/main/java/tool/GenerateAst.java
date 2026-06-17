@@ -28,7 +28,7 @@ public class GenerateAst {
                         "Remove : Token keyword, Expr left, Expr right",
                         "Multiply : Token keyword, Expr left, Expr right",
                         "Divide : Token keyword, Expr left, Expr right",
-                        "Compare : Expr left, ComparisonType type, Expr right",
+                        "Compare : Expr left, Token operator, Expr right",
                         "Variable : Token name",
                         "Call : Expr callee, Token paren, List<Expr> arguments",
                         "Cast : Type targetType, Expr right",

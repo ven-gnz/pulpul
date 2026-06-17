@@ -516,7 +516,7 @@ class Parser {
 
     private Expr logicalTerm() {
         Expr left = primary();
-        if(check(EQUAL) || check(NOT) || check(LESS) || check(MORE)) return comparisonExpression(left);
+        if(check(EQUAL) || check(NOT) || check(LESS) || check(GREATER)) return comparisonExpression(left);
         return left;
     }
 
@@ -540,53 +540,45 @@ class Parser {
         return new Expr.Call(callee, paren, args);
     }
 
-    private Expr comparisonExpression(Expr left)
-    {
-        ComparisonType cType = parseComparisonCriteria();
-        if(cType == null)
-        {
-            Token bad = tokens.get(current);
-            error(bad, "Cannot parse comparison token");
-            return new Expr.Error(bad);
+    private Expr comparisonExpression(Expr left) {
+        if (match(EQUAL)) {
+            Token op = previous();
+            consume(TO, "Expected 'to'");
+            Expr right = expression();
+            return new Expr.Compare(left, op, right);
         }
-        Expr right = arithmeticExpression();
-        return new Expr.Compare(left, cType, right);
-    }
 
-    private ComparisonType parseComparisonCriteria()
-    {
-        if(match(EQUAL))
-        {
-            consume(TO, "Except identifier");
-            return ComparisonType.EQUAL;
+        if (match(NOT)) {
+            Token op = previous();
+            consume(EQUAL, "Expected 'equal'");
+            consume(TO, "Expected 'to'");
+            Expr right = expression();
+            return new Expr.Compare(left, op, right);
         }
-        if(match(NOT)){
-            consume(EQUAL, "Except 'equal'");
-            consume(TO, "Except 'to'");
-            return ComparisonType.NOT_EQUAL;
-        }
-        if(match(LESS))
-        {
-            consume(THAN, "Except 'than' after less");
-            if(match(OR)){
-                consume(EQUAL, "Except 'equal' after or");
-                consume(TO, "Except 'to' after equal");
-                return ComparisonType.LESS_EQUAL;
+
+        if (match(LESS)) {
+            Token op = previous();
+            consume(THAN, "Expected 'than'");
+            if (match(OR)) {
+                consume(EQUAL, "Expected 'equal'");
+                consume(TO, "Expected 'to'");
             }
-            else return ComparisonType.LESS;
+            Expr right = expression();
+            return new Expr.Compare(left, op, right);
         }
-        if(match(MORE))
-        {
-            consume(THAN, "Except 'than'");
-            if(match(OR))
-            {
-                consume(EQUAL, "Except 'equal' after or");
-                consume(TO, "Except 'to' after equal");
-                return ComparisonType.GREATER_EQUAL;
+
+        if (match(GREATER)) {
+            Token op = previous();
+            consume(THAN, "Expected 'than'");
+            if (match(OR)) {
+                consume(EQUAL, "Expected 'equal'");
+                consume(TO, "Expected 'to'");
             }
-            else return ComparisonType.GREATER;
+            Expr right = expression();
+            return new Expr.Compare(left, op, right);
         }
-        return null;
+
+        return left;
     }
 
     private boolean match(TokenType... types) {

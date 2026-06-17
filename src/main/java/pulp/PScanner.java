@@ -43,7 +43,7 @@ public class PScanner {
 
         keywords.put("equal", EQUAL);
         keywords.put("or", OR);
-        keywords.put("more", MORE);
+        keywords.put("greater", GREATER);
         keywords.put("less", LESS);
         keywords.put("is", IS);
         keywords.put("than", THAN);

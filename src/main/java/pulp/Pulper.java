@@ -134,13 +134,13 @@ public class Pulper {
 
         sb.append("TypeError: ");
         if (program != null) {
-            sb.append(" in program: ")
-                    .append(program.name.lexeme);
+            sb.append(" program(")
+                    .append(program.name.lexeme).append(")");
         }
 
         if (subprogram != null) {
-            sb.append(" in subprogram: ")
-                    .append(subprogram.name.lexeme);
+            sb.append(" in subprogram(")
+                    .append(subprogram.name.lexeme).append(") -");
         }
         sb.append("\n");
         sb.append(message);

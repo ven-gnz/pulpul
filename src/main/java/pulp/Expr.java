@@ -1,7 +1,5 @@
 package pulp;
 import java.util.List;
-import pulp.ComparisonType;
-import pulp.Expr;
 
 abstract class Expr{
     interface Visitor<R> {
@@ -172,9 +170,9 @@ abstract class Expr{
     final Expr right;
   }
  static class Compare extends Expr {
-    Compare(Expr left, ComparisonType type, Expr right) {
+    Compare(Expr left, Token operator, Expr right) {
     this.left = left;
-    this.type = type;
+    this.operator = operator;
     this.right = right;
     }
 
@@ -184,7 +182,7 @@ abstract class Expr{
     }
 
     final Expr left;
-    final ComparisonType type;
+    final Token operator;
     final Expr right;
   }
  static class Variable extends Expr {

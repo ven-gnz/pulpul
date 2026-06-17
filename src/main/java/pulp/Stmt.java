@@ -1,7 +1,5 @@
 package pulp;
 import java.util.List;
-import pulp.ComparisonType;
-import pulp.Expr;
 
 abstract class Stmt{
     interface Visitor<R> {

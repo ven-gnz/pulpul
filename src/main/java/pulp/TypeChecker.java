@@ -4,6 +4,7 @@ import java.util.List;
 
 
 import static pulp.PrimitiveType.ULPPrimitive.*;
+import static pulp.TokenType.EQUAL;
 
 
 public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
@@ -157,7 +158,7 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
 
         if(!isNumeric(left) || !isNumeric(right))
         {
-            Pulper.error("TypeChecker:Cannot divide " + left + " with " + right);
+
             return new ErrorType();
         }
         return promoteArithmetic(left,right);
@@ -165,7 +166,28 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
 
     @Override
     public Type visitCompareExpr(Expr.Compare expr) {
+        Type left = typeOf(expr.left);
+        Type right = typeOf(expr.right);
+
+        if(!isComparable(left, right))
+        {
+            Pulper.typeError(expr.operator, "cannot compare between "+ left + " and " + right,currentProgram,currentSubProgram);
+        }
+        else if(left instanceof PrimitiveType pLeft && pLeft.kind == PrimitiveType.ULPPrimitive.TEXT && expr.operator.type != EQUAL)
+        {
+            Pulper.typeError(expr.operator, "cannot compare equality of strings between "+ left + " and " + right,currentProgram,currentSubProgram);
+        }
         return new PrimitiveType(TRUTH_VALUE);
+    }
+
+    private boolean isComparable(Type a, Type b)
+    {
+        if(a instanceof PrimitiveType pa && b instanceof PrimitiveType pb)
+        {
+            if(isNumeric(a) && isNumeric(b)) return true;
+            return pa.kind == TEXT && pb.kind == TEXT;
+        }
+        return false;
     }
 
     @Override
@@ -206,7 +228,7 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
         }
         if(!isCastable(source, expr.targetType))
         {
-            Pulper.error("TypeChecker: Invalid cast operation betweeen" + source + " and " + expr.targetType);
+            Pulper.error("TypeChecker: Invalid cast operation between" + source + " and " + expr.targetType);
         }
         return expr.targetType;
     }

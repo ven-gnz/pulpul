@@ -9,12 +9,6 @@ public class RuntimeError extends RuntimeException{
         this.token = tokne;
     }
 
-    RuntimeError(ComparisonType type, String message)
-    {
-        super(message);
-        this.token = null;
-    }
-
     RuntimeError(String message)
     {
         super(message);

@@ -5,6 +5,8 @@ import java.util.*;
 import static pulp.PrimitiveType.ULPPrimitive.REAL_NUMBER;
 import static pulp.PrimitiveType.ULPPrimitive.WHOLE_NUMBER;
 import static pulp.TokenType.*;
+import static pulp.TokenType.EQUAL;
+import static pulp.TokenType.LESS;
 
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
 
@@ -170,15 +172,14 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         throw new RuntimeError(operator, "Operand must be number type! ");
     }
 
-    private void checkNumberOperands(ComparisonType type, Object left, Object right)
+    private void checkNumberOperands(Token operator, Object left, Object right)
     {
-
 
         if(left instanceof Double && right instanceof Double)
         {
             return;
         }
-        throw new RuntimeError(type, " Cannot compare between non-numbers");
+        throw new RuntimeError(operator,"Interpreter: Cannot compare between non-numbers");
     }
 
 
@@ -235,8 +236,8 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
 
         Object left_eval = evaluate(expr.left);
         Object right_eval = evaluate(expr.right);
-        checkNumberOperands(expr.type, left_eval, right_eval);
-        switch(expr.type)
+        checkNumberOperands(expr.operator, left_eval, right_eval);
+        switch(expr.operator.type)
         {
 
             case GREATER -> { return (double)left_eval > (double)right_eval; }
@@ -245,8 +246,8 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
             case NOT_EQUAL -> { return (double)left_eval != (double)right_eval; }
             case GREATER_EQUAL -> { return (double)left_eval >= (double)right_eval; }
             case LESS_EQUAL -> { return (double)left_eval <= (double)right_eval; }
+            default -> throw new RuntimeError(expr.operator,"Cannot interpret this comparison operator here :" + expr.operator);
         }
-        return null;
     }
 
     @Override
