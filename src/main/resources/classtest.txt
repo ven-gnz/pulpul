@@ -11,7 +11,7 @@ program myProgram:
         return "mMethod called from inside myProgram".
 
     Describing subprogram called basicArithmetics acting on inputs a,b producing outputs:
-        return multiply a by b.
+        return multiply a by "hello".
 
 
 .
@@ -23,4 +23,4 @@ display  "accessing a + b from obj : " +  obj access a + "+" + obj access b + "=
 display result "using member method " + obj access basicArithmetics(3, 4)
 , obj access basicArithmetics(17, 11) + " used member method again"
 
-display result "using member method with bad argument count " + obj access basicArithmetics(17,17,17)
+display result obj access basicArithmetics(17,17,17)

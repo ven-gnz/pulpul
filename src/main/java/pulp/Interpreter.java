@@ -285,8 +285,8 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
 
         if(arguments.size() != function.arity())
         {
-            throw new RuntimeError(expr.paren + "Expected " + function.arity() + " arguments, "
-            + arguments.size() + " were passed.");
+            throw new RuntimeError(expr.paren,  "Expected " + function.arity() + " arguments to function " + callee  + ", "
+            + arguments.size() + " were passed. ");
         }
         return function.call(this, arguments);
     }

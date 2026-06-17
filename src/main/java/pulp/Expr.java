@@ -108,7 +108,8 @@ abstract class Expr{
     final Expr value;
   }
  static class Add extends Expr {
-    Add(Expr left, Expr right) {
+    Add(Token keyword, Expr left, Expr right) {
+    this.keyword = keyword;
     this.left = left;
     this.right = right;
     }
@@ -118,11 +119,13 @@ abstract class Expr{
     return visitor.visitAddExpr(this);
     }
 
+    final Token keyword;
     final Expr left;
     final Expr right;
   }
  static class Remove extends Expr {
-    Remove(Expr left, Expr right) {
+    Remove(Token keyword, Expr left, Expr right) {
+    this.keyword = keyword;
     this.left = left;
     this.right = right;
     }
@@ -132,11 +135,13 @@ abstract class Expr{
     return visitor.visitRemoveExpr(this);
     }
 
+    final Token keyword;
     final Expr left;
     final Expr right;
   }
  static class Multiply extends Expr {
-    Multiply(Expr left, Expr right) {
+    Multiply(Token keyword, Expr left, Expr right) {
+    this.keyword = keyword;
     this.left = left;
     this.right = right;
     }
@@ -146,11 +151,13 @@ abstract class Expr{
     return visitor.visitMultiplyExpr(this);
     }
 
+    final Token keyword;
     final Expr left;
     final Expr right;
   }
  static class Divide extends Expr {
-    Divide(Expr left, Expr right) {
+    Divide(Token keyword, Expr left, Expr right) {
+    this.keyword = keyword;
     this.left = left;
     this.right = right;
     }
@@ -160,6 +167,7 @@ abstract class Expr{
     return visitor.visitDivideExpr(this);
     }
 
+    final Token keyword;
     final Expr left;
     final Expr right;
   }

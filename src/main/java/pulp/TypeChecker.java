@@ -10,6 +10,8 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
 
     List<Stmt> statements;
     Resolver resolver;
+    private Stmt.Program currentProgram = null;
+    private Stmt.Subprogram currentSubProgram = null;
 
     public TypeChecker(List<Stmt> stmts, Resolver resolver)
     {
@@ -142,7 +144,7 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
 
         if(!isNumeric(left) || !isNumeric(right))
         {
-            Pulper.error("TypeChecker:Cannot multiply " + left + " with " + right);
+            Pulper.typeError(expr.keyword, "cannot multiply "+ left + " with " + right,currentProgram,currentSubProgram);
             return new ErrorType();
         }
         return promoteArithmetic(left,right);
@@ -257,6 +259,7 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
     @Override
     public Void visitProgramStmt(Stmt.Program stmt) {
 
+        currentProgram = stmt;
         for(Stmt s : stmt.statements)
         {
             checkType(s);
@@ -266,6 +269,7 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
         {
             checkType(m);
         }
+        currentProgram = null;
         return null;
     }
 
@@ -363,10 +367,13 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
 
     @Override
     public Void visitReturnStmt(Stmt.Return stmt) {
+        System.out.println("Checking retunrn type");
+        Type t = null;
         if(stmt.value != null)
         {
-            typeOf(stmt.value);
+            t = typeOf(stmt.value);
         }
+        System.out.println("type of return : " +t.toString());
         return null;
     }
 
@@ -392,6 +399,12 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
 
     @Override
     public Void visitSubprogramStmt(Stmt.Subprogram stmt) {
+        currentSubProgram = stmt;
+        for(Stmt s : stmt.body)
+        {
+            checkType(s);
+        }
+        currentSubProgram = null;
         return null;
     }
 

@@ -90,17 +90,9 @@ public class Pulper {
             hadError = false;
             System.exit(65);
         }
-        if(hadRuntimeError) System.exit(70);
-
-
-
-        if(hadError)
-        {
-            return;
-        }
 
         interpreter.interpret(statements);
-
+        if(hadRuntimeError) System.exit(70);
 
     }
 
@@ -111,17 +103,53 @@ public class Pulper {
 
     static void runtimeError(RuntimeError error)
     {
+        String location = "";
         if(error.token != null)
         {
-            System.err.println(error.getMessage() + "\n[line " + error.token.line + "]");
+            location = "[line " + error.token.line + "] ";
         }
-        hadRuntimeError = false;
+        System.err.println("Runtime error: " + error.getMessage() + location);
+        hadRuntimeError = true;
     }
 
     private static void report(int line, String where, String message)
     {
         System.err.println("[line " + line + "] Error" + where + ": " + message);
         hadError=true;
+    }
+
+    public static void typeError(Token token, String message, Stmt.Program program, Stmt.Subprogram subprogram)
+    {
+        System.err.println(formatTypeError(token,message,program,subprogram));
+        hadError = true;
+    }
+
+    private static String formatTypeError(
+            Token token,
+            String message,
+            Stmt.Program program,
+            Stmt.Subprogram subprogram)
+    {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("TypeError: ");
+        if (program != null) {
+            sb.append(" in program: ")
+                    .append(program.name.lexeme);
+        }
+
+        if (subprogram != null) {
+            sb.append(" in subprogram: ")
+                    .append(subprogram.name.lexeme);
+        }
+        sb.append("\n");
+        sb.append(message);
+
+        if (token != null) {
+            sb.append(" [line ").append(token.line).append("]");
+        }
+
+        return sb.toString();
     }
 
     /**

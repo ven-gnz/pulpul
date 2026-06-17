@@ -367,28 +367,32 @@ class Parser {
         return primary(); }
 
     private Expr subtractExpression() {
+        Token keyword = previous();
         Expr left = expression();
         consume(FROM, "Except 'from' after left operand");
         Expr right = expression();
-        return new Expr.Remove(left, right); }
+        return new Expr.Remove(keyword,left, right); }
 
     private Expr multiplyExpression() {
+        Token keyword = previous();
         Expr left = expression();
         consume(BY, "Except 'by' after left operand");
         Expr right = expression();
-        return new Expr.Multiply(left, right);}
+        return new Expr.Multiply(keyword,left, right);}
 
     private Expr addExpression() {
+        Token keyword = previous();
         Expr left  = expression();
         consume(TO, "Except 'to' after left operand");
         Expr right = expression();
-        return new Expr.Add(left,right); }
+        return new Expr.Add(keyword,left,right); }
 
     private Expr divideExpression() {
+        Token keyword = previous();
         Expr left = expression();
         consume(BY, "Except 'by' after left operand");
         Expr right = expression();
-        return new Expr.Divide(left,right); }
+        return new Expr.Divide(keyword,left,right); }
 
     private Expr call()
     {
