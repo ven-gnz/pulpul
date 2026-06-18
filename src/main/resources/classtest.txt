@@ -1,29 +1,25 @@
+#Calculator program, 18.06.2026
+program myCalculator:
 
-program myProgram:
-
-    let whole a be equal to 5
-    let whole b equal 2
-    let text mytext equal "hello"
-
-    display result "executing a statement from inside myProgram"
     Describing subprogram called init acting on inputs producing outputs:
-     display result "Initialized myProgram".
+     display result "Initialized myCalculator".
 
+    Describing subprogram called addition acting on inputs real num1, real num2 producing outputs:
+        set previous_number to
+        return add num1 to num2.
 
-    Describing subprogram called basicArithmetics acting on inputs whole num, whole num2 producing outputs:
-        return multiply num by num2.
+    Describing subprogram called subtraction acting on inputs real num1, real num2 producing outputs:
+            return remove num2 from num1.
 
+    Describing subprogram called multiplication acting on inputs real num1, real num2 producing outputs:
+        return multiply num1 by num2.
 
-    Describing subprogram called stringComparison acting on inputs text str1, text str2 producing outputs:
-        return boolean is str1 equal to str2.
-
-
+    Describing subprogram called division acting on inputs real num1, real num2 producing outputs:
+        return divide num1 by num2.
 .
 
-let myProgram obj equal myProgram()
-display  "accessing a + b from obj : " +  obj access a + "+" + obj access b + "=" + add obj access a to obj access b
+let myCalculator obj equal myProgram()
+let text operator equal ""
+display "Welcome to the calculator program!"
+input to operator "choose operator"
 
-display result "using member method " + obj access basicArithmetics(3, 4)
-, obj access basicArithmetics(5, 11) + " used member method again"
-let boolean test equal obj access stringComparison("hello", obj access mytext)
-display result "tested string comparison method " + test

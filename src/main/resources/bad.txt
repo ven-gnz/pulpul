@@ -1,3 +1,4 @@
+#This programs tests the parser stop on too many errors and diagnostic gathering
 asdqwr w3 34a
 u ws64u6u 465s346o3i34 432lk5j asd asdasd asd asd asd as
 esy 4a35 5y

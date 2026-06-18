@@ -5,12 +5,13 @@ Grammar for ULP (Un-natural language programming language)
 
 <program> ::= <program_item> | <program_item> <program>
 <program_item> ::= <block> | <subprogram_definition> | <declaration>
-<block> ::= ":" <statement_list>
-<statement_list> ::= <statement> "." | <statement> "," <block>
+<block> ::= ":" <statement_list> "."
+<statement_list> ::= <statement> <opt_statement>
+<opt_statement> ::= <statement> <opt_statement> | <empty>
 <declaration> ::= <declaration> | <statement>
 <declaration> ::= <global_definition>
 <global_definition> ::= "let" <type> <identifier> "be" "equal" "to" <expression>
-<statement> ::= <assignment> | <selection_statement> | <looping_statement> | <print_statement> | <expression>
+<statement> ::= <assignment> | <reassignment> | <selection_statement> | <looping_statement> | <print_statement> | <subprogram_definition> | <return_statement> | <expression>
 
 ---------------
 <assignment> ::= "let" <type> " " <identifier> "be" "equal" "to" <expression> | <reassignment>
@@ -65,16 +66,17 @@ Grammar for ULP (Un-natural language programming language)
 <opt_repeat> ::= "repeat" | <empty>
 <break> ::= "break"
 -----------------
-<subprogram_definition> ::= "Describing" "subprogram" "called" <subprogram_name> "acting" "on" "inputs" <input_list> "producing" "outputs" <subprogram_output> <block>
+<subprogram_definition> ::= "Describing" "subprogram" "called" <subprogram_name> "acting" "on" "inputs" <input_list> "producing" "outputs" <block>
 <subprogram_name> ::= <identifier>
 <input_list> ::= <empty> | <parameter_list>
 <parameter_list> ::= <parameter> | <parameter> "," <parameter_list>
 <parameter> ::= <type> " " <identifier>
-<subprogram_output> ::= <type> " " <identifier>
 --------------
 <print_statement> ::= "Display" <opt_res> <printstring>
 <opt_res> ::= "result" | <empty>
 <printstring> ::= <empty> | <string_list>
 <string_list> ::= <expression> | <expression> "," <string_list>
+----------------
+<return_statement> ::= "return" <expression>
 ----------------
 <comment> ::= "#" <string_literal>

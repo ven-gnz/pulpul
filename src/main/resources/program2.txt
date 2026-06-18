@@ -1,7 +1,0 @@
-
-let real num5 be equal to 15
-let real num1 be equal to 4.5
-set num1 to whole number 4
-display result "result after casting " + num1
-
-let text mystring be equal to "hello"
