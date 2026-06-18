@@ -40,7 +40,9 @@ For easier grading of this project, let it be known that the student has introdu
 - Top-down parser and AST generation of arbitrarily nested nodes down to primitives, which is in turn interpretable by the java interpreter provided in the package, enabling arbitrary nesting, or at least as much stack space as JVM implementation allows
 
 So by default the students target mark is 4/5 in case the student has understood the grading criteria correctly and is
-eligible for points in said implementations of the language.
-
+eligible for points in said implementations of the language. It should be noted however, that the static typing
+system does not extend to the input operation which is checked at runtime, and since technically the interpreter
+only ever uses doubles for the arithmetic, the results of for example integer division might not be exactly honoring
+the static typing system.
 
 #### Status : Grading break

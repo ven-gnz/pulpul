@@ -79,7 +79,7 @@ public class Pulper {
         {
             printParseErrors(parser.diagnostics);
         }
-
+        printParseErrors(parser.diagnostics);
 
 
         if(hadError)

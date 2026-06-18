@@ -157,6 +157,7 @@ public class PScanner {
             case ')':addToken(RIGHT_PAREN); break;
             case '"':string(); break;
             case '+':addToken(TokenType.PLUS); break;
+            case '#':comment();
 
             case ' ':
             case '\r':
@@ -178,6 +179,14 @@ public class PScanner {
                 }
 
 
+        }
+    }
+
+    private void comment()
+    {
+        while(peek() != '\n' && !isAtEnd())
+        {
+            advance();
         }
     }
 

@@ -51,7 +51,7 @@ Grammar for ULP (Un-natural language programming language)
 <empty> ::= ε
 <expression_list> ::= <expression> ";" | <expression> "," <expression_list>
 ------
-<input_expression> ::= "input" "from" "user"
+<input_expression> ::= "input" "to" <identifier> <string_literal>
 -------
 ------------------
 <comparison_criteria> ::= ("less" "than" | "less" "than" "or" "equal" "to" | "greater" "than" | "greater" "than" "or" "equal" "to" | "equal" "to")
@@ -77,3 +77,4 @@ Grammar for ULP (Un-natural language programming language)
 <printstring> ::= <empty> | <string_list>
 <string_list> ::= <expression> | <expression> "," <string_list>
 ----------------
+<comment> ::= "#" <string_literal>

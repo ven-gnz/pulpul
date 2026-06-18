@@ -238,6 +238,11 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         return (double)left / (double)right;
     }
 
+    public boolean isNumeric(Object o)
+    {
+        return o instanceof Double || o instanceof Integer;
+    }
+
     @Override
     public Object visitCompareExpr(Expr.Compare expr) {
 
@@ -467,24 +472,16 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
     @Override
     public Void visitInputStmt(Stmt.Input stmt) {
 
-        if(stmt.prompt != null)
-        {
-            Object evalPrompt = evaluate(stmt.prompt);
-            System.out.println(stringify(evalPrompt));
+
+
+        if (stmt.prompt != null) {
+            System.out.println(evaluate(stmt.prompt));
         }
+
         String line = scanner.nextLine();
         Symbol sym = resolver.getSymbol(stmt.name);
         Object value = parseInput(line, sym.type);
-        System.out.println("Type of value : "+ value.getClass());
-
-        Integer distance = locals.get(stmt.prompt);
-        if (distance != null) {
-            environment.assignAt(distance, stmt.name, value);
-        } else {
-            globals.assign(stmt.name, value);
-        }
-
-        //environment.assign(stmt.name, value);
+        environment.assign(stmt.name, value);
         return null;
     }
 
@@ -500,7 +497,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
 
                 case WHOLE_NUMBER:
                     try {
-                        return Integer.parseInt(line.trim());
+                        return Double.parseDouble(line.trim());
                     } catch (NumberFormatException e) {
                         throw new RuntimeError("Expected whole number, got " + line);
                     }
