@@ -11,7 +11,7 @@ Grammar for ULP (Un-natural language programming language)
 <declaration> ::= <declaration> | <statement>
 <declaration> ::= <global_definition>
 <global_definition> ::= "let" <type> <identifier> "be" "equal" "to" <expression>
-<statement> ::= <assignment> | <reassignment> | <selection_statement> | <looping_statement> | <print_statement> | <subprogram_definition> | <return_statement> | <expression>
+<statement> ::= <assignment> | <reassignment> | <selection_statement> | <looping_statement> | <print_statement> | <subprogram_definition> | <return_statement> | <expression_statement>
 
 ---------------
 <assignment> ::= "let" <type> " " <identifier> "be" "equal" "to" <expression> | <reassignment>
@@ -22,6 +22,8 @@ Grammar for ULP (Un-natural language programming language)
 <identifier> ::= <letter> | <letter> <identifier>
 <letter> ::= [a-zA-Z]
 <user_type> ::=
+----------------
+<expression_statement> ::= <expression>
 ----------------
 <expression> ::= <primary_expression> | <arithmetic_expression> | <logical_expression>
 <primary_expression> ::= <literal> | <identifier> | <input_expression> | <subprogram_invocation_expression>
@@ -34,14 +36,16 @@ Grammar for ULP (Un-natural language programming language)
 <string_characters> ::= <empty> | <string_character> <string_characters>
 <string_character> ::= [^"]
 <boolean_literal> ::= "True" | "False"
-
-<arithmetic_expression> ::= <arithmetic_term> | <add_expression>| <subtract_expression> | <multiply_expression> | <divide_expression>
-<arithmetic_term> ::= <number_literal> | <identifier> | <subprogram_invocation_expression>
-<add_expression> ::= "add" <arithmetic_expression> "to" <arithmetic_expression>
-<subtract_expression> ::= "remove" <arithmetic_expression> "from" <arithmetic_expression>
-<multiply_expression> ::= "multiply" <arithmetic_expression> "by" <arithmetic_expression>
-<divide_expression> ::= "divide" <arithmetic_expression> "by" <arithmetic_expression>
-
+--------
+<arithmetic_expression> ::= <arithmetic_term> | <arithmetic_operation>
+<arithmetic_term> ::= <number_literal> | <identifier>| <subprogram_invocation_expression>
+<arithmetic_operation> ::= <add_oper> | <subtract_oper> | <multiply_oper> | <divide_oper>
+<add_oper> ::= "add" <operand> "to" <operand>
+<subtract_oper> ::= "remove" <operand> "from" <operand>
+<multiply_oper> ::= "multiply" <operand> "by" <operand>
+<divide_oper> ::= "divide" <operand> "by" <operand>
+<operand> ::= <arithmetic_term> | <arithmetic_operation>
+--------
 <logical_expression> ::= <logical_expression> "and" <logical_expression> | <logical_expression> "or" <logical expression> | <logic_term>
 <logic_term> ::= "is" (<boolean_literal> | <comparison_expression> | <not_expression>)
 <not_expression> ::= "not" <logical_expression>
