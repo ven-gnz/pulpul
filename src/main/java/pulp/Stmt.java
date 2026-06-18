@@ -1,5 +1,6 @@
 package pulp;
 import java.util.List;
+import pulp.Expr;
 
 abstract class Stmt{
     interface Visitor<R> {
@@ -13,6 +14,7 @@ abstract class Stmt{
     R visitWhileStmt(While stmt);
     R visitBreakStmt(Break stmt);
     R visitSubprogramStmt(Subprogram stmt);
+    R visitInputStmt(Input stmt);
     R visitErrorStmt(Error stmt);
  }
  static class Block extends Stmt {
@@ -154,6 +156,20 @@ abstract class Stmt{
     final Token name;
     final List<Parameter> params;
     final List<Stmt> body;
+  }
+ static class Input extends Stmt {
+    Input(Token name, Expr prompt) {
+    this.name = name;
+    this.prompt = prompt;
+    }
+
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+    return visitor.visitInputStmt(this);
+    }
+
+    final Token name;
+    final Expr prompt;
   }
  static class Error extends Stmt {
     Error(Token token, String message) {

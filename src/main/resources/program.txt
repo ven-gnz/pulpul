@@ -1,23 +1,6 @@
-let whole number a be equal to 5
-let whole number loopvar equal 5
-let text bad equal "hello"
-display add bad to a
-check is a more than 2, then:
-    repeat until is loopvar more than 0:
-    let whole number b be equal to 3
-    set a to multiply a by 2
-    set b to 17
-    display result add a to b
-
-    display result loopvar
-    set loopvar to remove 1 from loopvar
-    check is a more than 42:
-        display result "break condition"
-        break.
-    .
-.
-otherwise:
-    display result "your condition was not true".
+let text name equal ""
+input to name "What is your name?"
+display result "Hello " + name + "!"
 
 
 

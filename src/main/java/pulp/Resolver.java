@@ -14,7 +14,7 @@ import java.util.Stack;
         private FunctionType currentFunction = FunctionType.NONE;
         private ClassType currentClass = ClassType.NONE;
         private int loopDepth = 0;
-        private final Map<String, Symbol> symbols = new HashMap<>();
+        public final Map<String, Symbol> symbols = new HashMap<>();
 
         Resolver(Interpreter inte)
         {
@@ -238,6 +238,12 @@ import java.util.Stack;
             declare(subprogram.name);
             define(subprogram.name);
             resolveFunction(subprogram,FunctionType.FUNCTION);
+            return null;
+        }
+
+        @Override
+        public Void visitInputStmt(Stmt.Input stmt) {
+            resolve(stmt.prompt);
             return null;
         }
 

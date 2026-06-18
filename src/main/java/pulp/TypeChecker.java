@@ -452,6 +452,12 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
     }
 
     @Override
+    public Void visitInputStmt(Stmt.Input stmt) {
+
+        return null;
+    }
+
+    @Override
     public Void visitErrorStmt(Stmt.Error stmt) {
         System.out.println("Checking error type");
         return null;

@@ -50,6 +50,7 @@ public class GenerateAst {
                         "While : Expr condition, Stmt body",
                         "Break : Token keyword",
                         "Subprogram : Token name, List<Parameter> params," + " List<Stmt> body",
+                        "Input : Token name, Expr prompt",
                         "Error: Token token, String message"
                 ));
     }
@@ -66,7 +67,6 @@ public class GenerateAst {
 
             writer.println("package pulp;");
             writer.println("import java.util.List;");
-            writer.println("import pulp.ComparisonType;");
             writer.println("import pulp.Expr;");
             writer.println();
             writer.println("abstract class " + baseName + "{");

@@ -21,8 +21,7 @@ class Parser {
      */
     private Token errorToken(Token token, String msg)
     {
-        diagnostics.add(new ErrorDiagnostic(
-                token.line, token.lexeme, msg));
+        reportError(token, msg);
 
         return new Token(
                 ERROR, "<error>",msg,token.line
@@ -47,7 +46,7 @@ class Parser {
     private static final int MAX_ERRORS = 50;
     private static final int MAX_ERRORS_PER_LINE = 3;
     private int errors = 0;
-    private String currentProgramContext = "global";
+    private String currentProgramContext = "global/ ";
 
 
     private final List<Token> tokens;
@@ -243,15 +242,16 @@ class Parser {
 
 
     /**
-     * Essentially a helper method for statement level parsing. I guess th
-     * @return
+     * Essentially a helper method for statement level parsing.
+     * @return the parsed statement
      */
     private Stmt statement()
     {
         if(match(DISPLAY)) return printstatement();
         if(match(COLON)) return new Stmt.Block(block());
-        if(match(BREAK)) { return new Stmt.Break(previous()); }
-        if(match(RETURN)) { return returnStatement(); }
+        if(match(BREAK)) return new Stmt.Break(previous());
+        if(match(RETURN)) return returnStatement();
+        if(match(INPUT)) return inputStatement();
         return expressionStatement();
     }
 
@@ -317,6 +317,21 @@ class Parser {
     private Stmt expressionStatement()
     {
         return new Stmt.Expression(expression());
+    }
+
+    private Stmt inputStatement()
+    {
+        consume(TO, "Expect to in input");
+        Token name = consume(IDENTIFIER, "Expect variable name after 'input to'.");
+
+        Expr prompt = null;
+
+        if (match(STRING_LITERAL))
+        {
+            prompt = new Expr.Literal(previous().literal, new PrimitiveType(PrimitiveType.ULPPrimitive.TEXT));
+        }
+
+        return new Stmt.Input(name, prompt);
     }
 
     /**
@@ -647,7 +662,8 @@ class Parser {
         errors++;
         if(errors  >= MAX_ERRORS)
         {
-            throw new RuntimeException("Too many parsing errors - aborting ");
+            new ErrorDiagnostic(token.line, token.lexeme , " ");
+            throw new RuntimeError("Parser : aborting parsing due to too many parser errors ");
         }
         int line = token.line;
         if(ignoredLines.contains(line)) { return ; }
@@ -679,7 +695,6 @@ class Parser {
 
     private void synchronize()
     {
-        System.out.println("Synchronizing error");
         advance();
         while(!isAtEnd())
         {

@@ -72,8 +72,15 @@ public class Pulper {
 
 
         Parser parser = new Parser(tokens);
-        List<Stmt> statements = parser.parse();
-        printParseErrors(parser.diagnostics);
+        List<Stmt> statements = new ArrayList<>();
+        try {
+           statements = parser.parse();
+        }catch (RuntimeException parserRunTimeException)
+        {
+            printParseErrors(parser.diagnostics);
+        }
+
+
 
         if(hadError)
         {
@@ -99,7 +106,7 @@ public class Pulper {
             hadError = false;
             System.exit(65);
         }
-
+        interpreter.setResolver(resolver);
         interpreter.interpret(statements);
         if(hadRuntimeError) System.exit(70);
 
@@ -111,7 +118,7 @@ public class Pulper {
         for(ErrorDiagnostic d : diagnostics)
         {
             StringBuilder sb = new StringBuilder();
-            sb.append("Parser error - ");
+            sb.append("Parser error -m ");
             sb.append(d.message());
 
             sb.append("at'").append(d.lexeme()).append("'");

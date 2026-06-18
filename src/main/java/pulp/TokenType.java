@@ -31,7 +31,7 @@ public enum TokenType {
     TRUE, FALSE, STRING_LITERAL, NUMBER_LITERAL,
     ACCESS,
 
-    INPUT, USER,
+    INPUT,
     REPEAT, UNTIL,
 
     WHOLE, REAL, NUMBER,

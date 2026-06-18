@@ -2,9 +2,10 @@ package pulp;
 
 import java.util.*;
 
-import static pulp.PrimitiveType.ULPPrimitive.REAL_NUMBER;
-import static pulp.PrimitiveType.ULPPrimitive.WHOLE_NUMBER;
+import static pulp.PrimitiveType.ULPPrimitive.*;
+import static pulp.Pulper.runtimeError;
 import static pulp.TokenType.*;
+import static pulp.TokenType.TEXT;
 
 
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
@@ -13,9 +14,12 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
     final Environment globals = new Environment();
     private Environment environment = globals;
     private final Map<Expr, Integer> locals = new HashMap<>();
+    private Resolver resolver;
+    private final Scanner scanner = new Scanner(System.in);
 
     Interpreter()
     {
+
         globals.define("clock", new PulpCallable() {
             @Override
             public int arity() {
@@ -32,6 +36,9 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         });
     }
 
+    public void setResolver(Resolver resolver) {
+        this.resolver = resolver;
+    }
 
     void interpret(List<Stmt> statements)
     {
@@ -41,7 +48,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
 
             }
         }
-        catch (RuntimeError error) { Pulper.runtimeError(error); }
+        catch (RuntimeError error) { runtimeError(error); }
 
 
         }
@@ -168,6 +175,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
     private void checkNumberOperand(Token operator, Object operand)
     {
         if(operand instanceof Double) return;
+        else if(operand instanceof Integer) return;
         throw new RuntimeError(operator, "Operand must be number type! ");
     }
 
@@ -454,6 +462,63 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         PulpFunction function = new PulpFunction(stmt, environment, false);
         environment.define(stmt.name.lexeme, function);
         return null;
+    }
+
+    @Override
+    public Void visitInputStmt(Stmt.Input stmt) {
+
+        if(stmt.prompt != null)
+        {
+            Object evalPrompt = evaluate(stmt.prompt);
+            System.out.println(stringify(evalPrompt));
+        }
+        String line = scanner.nextLine();
+        Symbol sym = resolver.getSymbol(stmt.name);
+        Object value = parseInput(line, sym.type);
+        System.out.println("Type of value : "+ value.getClass());
+
+        Integer distance = locals.get(stmt.prompt);
+        if (distance != null) {
+            environment.assignAt(distance, stmt.name, value);
+        } else {
+            globals.assign(stmt.name, value);
+        }
+
+        //environment.assign(stmt.name, value);
+        return null;
+    }
+
+    private Object parseInput(String line, Type type)
+    {
+
+        if (type instanceof PrimitiveType pt)
+        {
+            switch (pt.kind)
+            {
+                case TEXT:
+                    return line;
+
+                case WHOLE_NUMBER:
+                    try {
+                        return Integer.parseInt(line.trim());
+                    } catch (NumberFormatException e) {
+                        throw new RuntimeError("Expected whole number, got " + line);
+                    }
+
+                case REAL_NUMBER:
+                    try {
+                        return Double.parseDouble(line.trim());
+                    } catch (NumberFormatException e) {
+                        throw new RuntimeError("Expected real number, got " + line);
+                    }
+
+                case TRUTH_VALUE:
+                    if (line.equalsIgnoreCase("true")) return true;
+                    if (line.equalsIgnoreCase("false")) return false;
+                    throw new RuntimeError("Expected boolean, got " + line);
+            }
+        }
+        throw new IllegalStateException("Unknown type: " + type);
     }
 
     @Override

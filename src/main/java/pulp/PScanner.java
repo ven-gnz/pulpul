@@ -52,7 +52,7 @@ public class PScanner {
         keywords.put("result", RESULT);
 
         keywords.put("input", INPUT);
-        keywords.put("user", USER);
+
         keywords.put("repeat", REPEAT);
         keywords.put("until", UNTIL);
 

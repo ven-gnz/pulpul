@@ -225,6 +225,11 @@ public class PrettyPrinter
     }
 
     @Override
+    public String visitInputStmt(Stmt.Input stmt) {
+        return "";
+    }
+
+    @Override
     public String visitErrorStmt(Stmt.Error stmt)
     {
         return withIndent("ErrorStmt(" + stmt.token + ")\n");
