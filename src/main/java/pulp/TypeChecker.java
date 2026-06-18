@@ -13,6 +13,7 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
     Resolver resolver;
     private Stmt.Program currentProgram = null;
     private Stmt.Subprogram currentSubProgram = null;
+    private int loopDepth = 0;
 
     public TypeChecker(List<Stmt> stmts, Resolver resolver)
     {
@@ -379,10 +380,7 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
     private boolean isAssignable(Type to, Type from) {
         if (to instanceof PrimitiveType a && from instanceof PrimitiveType b) {
 
-
             if (a.kind == b.kind) return true;
-
-
             if (isNumeric(a) && isNumeric(b)) return true;
 
             return false;
@@ -391,22 +389,16 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
         return false;
     }
 
-    private String debugType(Type t) {
-        if (t instanceof PrimitiveType p) {
-            return "PrimitiveType(" + p.kind + ")";
-        }
-        return String.valueOf(t);
-    }
 
     @Override
     public Void visitReturnStmt(Stmt.Return stmt) {
-        System.out.println("Checking return type");
+
         Type t = null;
         if(stmt.value != null)
         {
             t = typeOf(stmt.value);
         }
-        System.out.println("type of return : " +t.toString());
+
         return null;
     }
 
@@ -415,19 +407,44 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
 
         Type cond = typeOf(stmt.condition);
 
- // TODO : impart a good helper for figuring out whether or not the condition can expressed as a boolean/similar
+        if (!isBoolean(cond)) {
+            Pulper.error("If condition must be boolean");
+        }
+
+        checkType(stmt.thenBranch);
+
+        if (stmt.elseBranch != null) {
+            checkType(stmt.elseBranch);
+        }
 
         return null;
     }
 
     @Override
     public Void visitWhileStmt(Stmt.While stmt) {
+
+        Type cond = typeOf(stmt.condition);
+
+        if (!isBoolean(cond)) {
+            Pulper.error("While condition must be boolean");
+        }
+
+        loopDepth++;
+        checkType(stmt.body);
+        loopDepth--;
+
         return null;
     }
 
     @Override
     public Void visitBreakStmt(Stmt.Break stmt) {
         return null;
+    }
+
+    private boolean isBoolean(Type type)
+    {
+        return type instanceof PrimitiveType p
+                && p.kind == TRUTH_VALUE;
     }
 
     @Override
@@ -451,6 +468,11 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
         return null;
     }
 
+    /**
+     *
+     * @param stmt the input statement
+     * @return nothing, handled at runtime
+     */
     @Override
     public Void visitInputStmt(Stmt.Input stmt) {
 
@@ -459,7 +481,7 @@ public class TypeChecker implements Expr.Visitor<Type>, Stmt.Visitor<Void>{
 
     @Override
     public Void visitErrorStmt(Stmt.Error stmt) {
-        System.out.println("Checking error type");
+        Pulper.error(stmt.token, " Cannot check expression type!");
         return null;
     }
 
