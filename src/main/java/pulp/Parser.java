@@ -291,7 +291,6 @@ class Parser {
         return parsed;
     }
 
-
     private Stmt returnStatement() {
 
         Token keyword = previous();
@@ -521,7 +520,6 @@ class Parser {
         if(match(WHOLE))
         {
             if(check(NUMBER)) consume(NUMBER, "Expected 'number' to complete declaration for whole number");
-
             return new PrimitiveType(WHOLE_NUMBER);
         }
         else if(match(REAL))

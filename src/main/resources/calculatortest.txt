@@ -1,0 +1,53 @@
+#Calculator program, 18.06.2026
+program myCalculator:
+
+    Describing subprogram called init acting on inputs producing outputs:
+     display result "Initialized myCalculator".
+
+    Describing subprogram called addition acting on inputs real num1, real num2 producing outputs:
+        return add num1 to num2.
+
+    Describing subprogram called subtraction acting on inputs real num1, real num2 producing outputs:
+            return remove num2 from num1.
+
+    Describing subprogram called multiplication acting on inputs real num1, real num2 producing outputs:
+        return multiply num1 by num2.
+
+    Describing subprogram called division acting on inputs real num1, real num2 producing outputs:
+        return divide num1 by num2.
+.
+
+let myCalculator obj equal myCalculator()
+let text operator equal ""
+display "Welcome to the calculator program"
+
+
+    let Real num1 be equal to 0
+    let Real num2 be equal to 0
+    let Real res be equal to 0
+    input to operator "Enter operator (+, -, *, /)"
+    input to num1 "Enter first number"
+    input to num2 "Enter second number"
+
+
+
+    check is operator equal to "+", then :
+            set res to obj access addition(num1, num2).
+        otherwise :
+            check is operator equal to "-" ,then :
+                set res to obj access subtraction(num1, num2).
+            otherwise :
+                check is operator equal to "*", then :
+                    set res to obj access multiplication(num1, num2).
+                otherwise :
+                    check is operator equal to "/", then :
+                        set res to obj access division(num1, num2).
+                    otherwise :
+                        Display result "Invalid operator".
+                    .
+                .
+            .
+Display "Expression result:"
+Display num1 + " " + operator + " " + num2 + " = " + res
+display "Goodbye"
+
